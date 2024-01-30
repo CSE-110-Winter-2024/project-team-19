@@ -1,4 +1,4 @@
-# Team 19 Project Team 
+# Team 19 Project - Successorator
 
 ---
 
