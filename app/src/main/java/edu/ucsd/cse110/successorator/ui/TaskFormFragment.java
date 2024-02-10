@@ -24,8 +24,9 @@ public class TaskFormFragment extends DialogFragment {
                 dismiss(); // Close the popup when the close button is clicked
             }
         });
-        
+
         Button btnSubmit = view.findViewById(R.id.submit_button);
+
 
         return view;
 
