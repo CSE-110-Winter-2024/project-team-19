@@ -6,6 +6,10 @@ import androidx.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 
+/*
+This class was adapted from the Flashcard class provided in CSE 110 Lab 5.
+https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
+ */
 public class Task implements Serializable {
     private final @Nullable Integer id;
     private final @NonNull String taskName;
