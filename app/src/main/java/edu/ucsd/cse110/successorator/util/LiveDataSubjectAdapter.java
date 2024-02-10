@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
 import edu.ucsd.cse110.successorator.lib.util.Observer;
+
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 /*
