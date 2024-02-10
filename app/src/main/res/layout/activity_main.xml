@@ -19,24 +19,23 @@
 
     <ImageButton
         android:id="@+id/add_task_button"
-        android:layout_width="82dp"
-        android:layout_height="75dp"
-        android:layout_marginEnd="25dp"
+        android:layout_width="102dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
         android:src="@drawable/add_task_icon"
-        app:layout_constraintBottom_toBottomOf="@+id/date_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.714" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/date_text"
-        android:layout_width="122dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="183dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
         android:text="Add Date here"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/add_task_button"
-        app:layout_constraintHorizontal_bias="0.289"
+        android:textAlignment="viewStart"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
