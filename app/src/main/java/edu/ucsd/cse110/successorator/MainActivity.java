@@ -27,11 +27,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         var view = ActivityMainBinding.inflate(getLayoutInflater(), null, false);
-        view.placeholderText.setText(R.string.hello_world);
+        // TODO: Uncomment below (need it to test that main works)
+        //view.placeholderText.setText(R.string.hello_world);
 
         LocalDateTime myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
-        view.dateText.setText(myDateObj.format(myFormatObj));
+        // TODO: Uncomment below
+        //view.dateText.setText(myDateObj.format(myFormatObj));
 
         setContentView(view.getRoot());
 
