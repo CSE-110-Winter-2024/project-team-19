@@ -27,7 +27,6 @@ public class TaskFormFragment extends DialogFragment {
 
         Button btnSubmit = view.findViewById(R.id.submit_button);
 
-
         return view;
 
     }

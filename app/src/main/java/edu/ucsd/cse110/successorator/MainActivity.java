@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
         //view.placeholderText.setText(R.string.hello_world);
 
         LocalDateTime myDateObj = LocalDateTime.now();
+        LocalTime rolloverTime = LocalTime.of(14, 0);
+        if (myDateObj.toLocalTime().isBefore(rolloverTime)) {
+            myDateObj = myDateObj.with(rolloverTime);
+        } else {
+            myDateObj = myDateObj.plusDays(1).with(rolloverTime);
+        }
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
         // TODO: Uncomment below
         //view.dateText.setText(myDateObj.format(myFormatObj));
