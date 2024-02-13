@@ -45,18 +45,23 @@ public class RoomTasksRepository implements TaskRepository {
     }
 
     @Override
-    public void append(Task task){
+    public void insert(Task task){
+        // TODO: Insert new tasks at bottom of uncompleted tasks
         tasksDao.append(TaskEntity.fromTask(task));
-    }
-
-    @Override
-    public void prepend(Task task){
-        tasksDao.prepend(TaskEntity.fromTask(task));
     }
 
     @Override
     public void remove(int id){
         tasksDao.delete(id);
+    }
+
+    @Override
+    public void prepend(Task task){
+        //TODO
+    }
+    @Override
+    public void append(Task task){
+        //TODO
     }
 }
 

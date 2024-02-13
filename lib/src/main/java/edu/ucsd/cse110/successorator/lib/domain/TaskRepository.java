@@ -13,6 +13,7 @@ public interface TaskRepository {
     Subject<List<Task>> findAll();
     void save(Task task);
     void remove(int id);
-    void append(Task task);
+    void insert(Task task);
     void prepend(Task task);
+    void append(Task task);
 }

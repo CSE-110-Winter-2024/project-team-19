@@ -1,32 +1,49 @@
 package edu.ucsd.cse110.successorator.ui;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
+
+
+import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
+import edu.ucsd.cse110.successorator.databinding.FragmentAddTaskFormBinding;
+import edu.ucsd.cse110.successorator.lib.domain.Task;
+
 public class TaskFormFragment extends DialogFragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_add_task_form, container, false);
 
-        View view = inflater.inflate(R.layout.addtaskform, container, false);
+        super.onCreate(savedInstanceState);
+
+        var modelOwner = requireActivity();
+        var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
+        var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
+        var activityModel = modelProvider.get(MainViewModel.class);
 
         Button btnClose = view.findViewById(R.id.close_button);
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss(); // Close the popup when the close button is clicked
-            }
+        btnClose.setOnClickListener(v -> {
+            dismiss(); // Close the popup when the close button is clicked
         });
 
         Button btnSubmit = view.findViewById(R.id.submit_button);
 
+        btnSubmit.setOnClickListener(v -> {
+            EditText taskText = view.findViewById(R.id.task_text);
+            String taskTextString = taskText.getText().toString();
+            activityModel.insertNewTask(new Task(null, taskTextString, -1));
+        });
 
         return view;
 
