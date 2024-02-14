@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.successorator.ui.TaskFormFragment;
+import edu.ucsd.cse110.successorator.ui.TaskListFragment;
 
 import android.view.View;
 import android.widget.ListView;
@@ -27,6 +28,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.view = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(view.getRoot());
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, TaskListFragment.newInstance())
+                .commit();
         // TODO: Uncomment below (need it to test that main works)
         //view.placeholderText.setText(R.string.hello_world);
 
@@ -41,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         // TODO: Uncomment below
         //view.dateText.setText(myDateObj.format(myFormatObj));
 
+
+        /*
         ImageButton addTaskButton = findViewById(R.id.add_task_button);
 
         addTaskButton.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
                 taskFormFragment.show(fragmentManager,"TaskFormFragment");
             }
         });
+
+         */
 
     }
 }
