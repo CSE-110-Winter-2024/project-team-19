@@ -22,18 +22,9 @@ import java.time.format.DateTimeFormatter;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding view;
-    String[] mobileArray = {"Android","IPhone","WindowsMobile","Blackberry",
-            "WebOS","Ubuntu","Windows7","Max OS X"};
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_task_list);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                R.layout.fragment_task_list, mobileArray);
-
-        ListView listView = (ListView) findViewById(R.id.task_list);
-        listView.setAdapter(adapter);
         this.view = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(view.getRoot());
         // TODO: Uncomment below (need it to test that main works)
