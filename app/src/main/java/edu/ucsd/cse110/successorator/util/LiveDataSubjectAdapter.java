@@ -7,6 +7,7 @@ import edu.ucsd.cse110.successorator.lib.util.Observer;
 
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 
+
 /*
 This class was provided in CSE 110 Lab 5.
 https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit

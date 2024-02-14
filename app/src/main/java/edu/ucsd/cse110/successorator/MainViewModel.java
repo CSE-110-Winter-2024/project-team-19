@@ -63,7 +63,7 @@ public class MainViewModel extends ViewModel {
         taskRepository.insert(task);
     }
 
-    public Subject<List<Task>> getOrderedCards() {
+    public Subject<List<Task>> getOrderedTasks() {
         return orderedTasks;
     }
 }

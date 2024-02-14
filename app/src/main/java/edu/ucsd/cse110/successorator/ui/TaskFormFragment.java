@@ -1,6 +1,5 @@
 package edu.ucsd.cse110.successorator.ui;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +11,29 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
+import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.R;
-import edu.ucsd.cse110.successorator.databinding.FragmentAddTaskFormBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 public class TaskFormFragment extends DialogFragment {
 
+    private MainViewModel activityModel;
+    private FragmentTaskListBinding view;
+
+    public TaskFormFragment() {
+
+    }
+
+    public static TaskFormFragment newInstance() {
+        var fragment = new TaskFormFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,3 +65,8 @@ public class TaskFormFragment extends DialogFragment {
     }
 
 }
+
+
+
+
+
