@@ -55,10 +55,6 @@ public class TaskListFragment extends Fragment {
 
         // Initialize the Adapter (with an empty list for now)
         this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
-            //activityModel.insertNewTask(task);
-           /*var id = task.id();
-            assert id != null;
-            activityModel.remove(id);*/
             activityModel.completeTask(task);
             adapter.notifyDataSetChanged();
         });
