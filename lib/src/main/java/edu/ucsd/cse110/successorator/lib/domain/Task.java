@@ -50,8 +50,9 @@ public class Task implements Serializable {
         return Objects.hash(id, taskName, sortOrder);
     }
 
-    public Task withSortOder(int sortOrder){
+    public Task withSortOrder(int sortOrder){
         return new Task(this.id, this.taskName, sortOrder);
     }
+
 
 }

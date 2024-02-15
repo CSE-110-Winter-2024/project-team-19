@@ -42,7 +42,7 @@ public class TaskTest {
     @Test
     public void withSortOder() {
         Task task = new Task(20,"Get 2 Groceries",3);
-        task = task.withSortOder(5);
+        task = task.withSortOrder(5);
         Task expected = new Task(20, "Get 2 Groceries",5);
 
 

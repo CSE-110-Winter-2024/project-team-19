@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.lib.domain.TaskRepository;
+import edu.ucsd.cse110.successorator.lib.domain.Tasks;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
@@ -61,6 +62,22 @@ public class MainViewModel extends ViewModel {
 
     public void insertNewTask(Task task){
         taskRepository.insert(task);
+    }
+
+    public void remove(int taskId){
+        taskRepository.remove(taskId);
+    }
+
+    public void completeTask(Task task) {
+        var tasks = this.orderedTasks.getValue();
+        if (tasks == null) return;
+        var newTasks = Tasks.completeTaskOrder(tasks, task);
+        taskRepository.save(newTasks);
+    }
+
+
+    public void append(int taskId) {
+        //TODO
     }
 
     public Subject<List<Task>> getOrderedTasks() {

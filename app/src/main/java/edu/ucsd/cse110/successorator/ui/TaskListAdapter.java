@@ -1,11 +1,15 @@
 package edu.ucsd.cse110.successorator.ui;
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +18,11 @@ import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 public class TaskListAdapter extends ArrayAdapter<Task> {
-    Consumer<Integer> onDeleteClick;
+    Consumer<Task> onDeleteClick;
 
-    public TaskListAdapter(Context context, List<Task> flashcards, Consumer<Integer> onDeleteClick) {
+    private ArrayList<Task> completedTasks = new ArrayList<Task>();
+
+    public TaskListAdapter(Context context, List<Task> flashcards, Consumer<Task> onDeleteClick) {
         // This sets a bunch of stuff internally, which we can access
         // with getContext() and getItem() for example.
         //
@@ -29,7 +35,8 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the flashcard for this position.
+
+        // Get the task for this position.
         var task = getItem(position);
         assert task != null;
 
@@ -44,8 +51,16 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
             binding = ListItemTaskBinding.inflate(layoutInflater, parent, false);
         }
 
+
         // Populate the view with the flashcard's data.
         binding.taskContent.setText(task.taskName());
+
+        binding.taskDash.setOnClickListener(v -> {
+            binding.taskDash.setText("☑");
+            var id = task.id();
+            assert id != null;
+            onDeleteClick.accept(task);
+        });
 
         return binding.getRoot();
     }

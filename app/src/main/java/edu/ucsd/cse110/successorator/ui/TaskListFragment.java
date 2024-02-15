@@ -15,12 +15,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
+import edu.ucsd.cse110.successorator.data.db.TaskEntity;
+import edu.ucsd.cse110.successorator.data.db.TasksDao;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
+import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
+import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 public class TaskListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentTaskListBinding view;
+
+    private ListItemTaskBinding taskItem;
     private TaskListAdapter adapter;
+
+    private TasksDao tasksDao;
+
+    private TaskEntity taskEntity;
 
     public TaskListFragment() {
         // Required empty public constructor
@@ -44,12 +54,18 @@ public class TaskListFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new TaskListAdapter(requireContext(), List.of(), id -> {
+        this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
+            //activityModel.insertNewTask(task);
+           /*var id = task.id();
+            assert id != null;
+            activityModel.remove(id);*/
+            activityModel.completeTask(task);
+            adapter.notifyDataSetChanged();
         });
-        activityModel.getOrderedTasks().observe(cards -> {
-            if (cards == null) return;
+        activityModel.getOrderedTasks().observe(tasks -> {
+            if (tasks == null) return;
             adapter.clear();
-            adapter.addAll(new ArrayList<>(cards)); // remember the mutable copy here!
+            adapter.addAll(new ArrayList<>(tasks)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
     }
