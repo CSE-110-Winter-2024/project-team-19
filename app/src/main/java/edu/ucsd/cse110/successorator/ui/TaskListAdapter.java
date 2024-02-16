@@ -1,6 +1,9 @@
 package edu.ucsd.cse110.successorator.ui;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,11 @@ import edu.ucsd.cse110.successorator.lib.domain.Task;
 public class TaskListAdapter extends ArrayAdapter<Task> {
     Consumer<Task> onDeleteClick;
 
-    private ArrayList<Task> completedTasks = new ArrayList<Task>();
+
+    private SharedPreferences sharedPreferences;
+
+
+    private TextView taskText;
 
     public TaskListAdapter(Context context, List<Task> flashcards, Consumer<Task> onDeleteClick) {
         // This sets a bunch of stuff internally, which we can access
@@ -30,7 +35,13 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         // or it will crash!
         super(context, 0, new ArrayList<>(flashcards));
         this.onDeleteClick = onDeleteClick;
+        sharedPreferences = context.getSharedPreferences("task_prefs", Context.MODE_PRIVATE);
     }
+
+    public boolean isComplete(Task task) {
+        return sharedPreferences.getBoolean("task_" + task.id(), false);
+    }
+
 
     @NonNull
     @Override
@@ -55,8 +66,27 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         // Populate the view with the flashcard's data.
         binding.taskContent.setText(task.taskName());
 
+        final boolean isTaskCompleted = sharedPreferences.getBoolean("task_" + task.id(), false);
+        if (isTaskCompleted) {
+            binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            binding.taskDash.setText("+");
+            binding.taskDash.setTextColor(Color.LTGRAY);
+        } else {
+            binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            binding.taskDash.setText("−");
+            binding.taskDash.setTextColor(Color.RED);
+        }
+
+
         binding.taskDash.setOnClickListener(v -> {
-            binding.taskDash.setText("☑");
+            if (!isTaskCompleted) {
+                // If task is not completed, mark it as completed
+                sharedPreferences.edit().putBoolean("task_" + task.id(), true).apply();
+            }
+            if (isTaskCompleted) {
+                // If task is not completed, mark it as completed
+                sharedPreferences.edit().putBoolean("task_" + task.id(), false).apply();
+            }
             var id = task.id();
             assert id != null;
             onDeleteClick.accept(task);
