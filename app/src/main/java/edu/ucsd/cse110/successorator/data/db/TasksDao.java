@@ -49,7 +49,7 @@ public interface TasksDao {
     default int append(TaskEntity task){
         var maxSortOrder = getMaxSortOrder();
         var newtask = new TaskEntity(
-                task.taskName, maxSortOrder + 1
+                task.taskName, maxSortOrder + 1, task.complete
         );
         return Math.toIntExact(insert(newtask));
     }
@@ -59,7 +59,7 @@ public interface TasksDao {
         shiftSortOrders(getMinSortOrder(), getMaxSortOrder(), 1);
         var maxSortOrder = getMaxSortOrder();
         var newtask = new TaskEntity(
-                task.taskName, maxSortOrder - 1
+                task.taskName, maxSortOrder - 1, task.complete
         );
         return Math.toIntExact(insert(newtask));
     }

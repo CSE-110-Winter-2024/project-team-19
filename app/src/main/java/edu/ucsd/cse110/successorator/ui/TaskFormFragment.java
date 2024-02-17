@@ -56,7 +56,7 @@ public class TaskFormFragment extends DialogFragment {
         btnSubmit.setOnClickListener(v -> {
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
-            activityModel.insertNewTask(new Task(null, taskTextString, -1));
+            activityModel.insertNewTask(new Task(null, taskTextString, 2, false));
             dismiss();
         });
 

@@ -72,6 +72,7 @@ public class MainViewModel extends ViewModel {
         var tasks = this.orderedTasks.getValue();
         if (tasks == null) return;
         var newTasks = Tasks.completeTaskOrder(tasks, task);
+        task.complete();
         taskRepository.save(newTasks);
     }
 

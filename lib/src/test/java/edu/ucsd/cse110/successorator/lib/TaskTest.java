@@ -9,30 +9,30 @@ public class TaskTest {
 
     @Test
     public void id() {
-        Task task1 = new Task(20,"Get 2 Groceries",3);
+        Task task1 = new Task(20,"Get 2 Groceries",3, false);
         long idResult = task1.id();
         assertEquals(idResult,20);
     }
 
     @Test
     public void taskName() {
-        Task task1 = new Task(20,"Get 2 Groceries",3);
+        Task task1 = new Task(20,"Get 2 Groceries",3, false);
         String taskResult = task1.taskName();
         assertEquals(taskResult,"Get 2 Groceries");
     }
 
     @Test
     public void sortOrder() {
-        Task task1 = new Task(10,"Get 2 Groceries",5);
+        Task task1 = new Task(10,"Get 2 Groceries",5, false);
         int sortOrderResult = task1.sortOrder();
 
     }
 
     @Test
     public void withId() {
-        Task task = new Task(20,"Get 2 Groceries",3);
+        Task task = new Task(20,"Get 2 Groceries",3, false);
         task = task.withId(5);
-        Task expected = new Task(5, "Get 2 Groceries",3);
+        Task expected = new Task(5, "Get 2 Groceries",3, false);
 
 
         boolean taskEquality = expected.equals(task);
@@ -41,9 +41,9 @@ public class TaskTest {
 
     @Test
     public void withSortOder() {
-        Task task = new Task(20,"Get 2 Groceries",3);
+        Task task = new Task(20,"Get 2 Groceries",3, false);
         task = task.withSortOrder(5);
-        Task expected = new Task(20, "Get 2 Groceries",5);
+        Task expected = new Task(20, "Get 2 Groceries",5, false);
 
 
         boolean taskEquality = expected.equals(task);

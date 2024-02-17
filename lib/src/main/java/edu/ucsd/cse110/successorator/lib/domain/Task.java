@@ -15,10 +15,13 @@ public class Task implements Serializable {
     private final @NonNull String taskName;
     private final int sortOrder;
 
-    public Task(Integer id, String taskName, int sortOrder){
+    private boolean complete;
+
+    public Task(Integer id, String taskName, int sortOrder, boolean complete){
         this.id = id;
         this.taskName = taskName;
         this.sortOrder = sortOrder;
+        this.complete = complete;
     }
 
     public @Nullable Integer id(){
@@ -34,7 +37,7 @@ public class Task implements Serializable {
     }
 
     public Task withId(Integer id){
-        return new Task(id, this.taskName, this.sortOrder);
+        return new Task(id, this.taskName, this.sortOrder, this.complete);
     }
 
     @Override
@@ -51,8 +54,14 @@ public class Task implements Serializable {
     }
 
     public Task withSortOrder(int sortOrder){
-        return new Task(this.id, this.taskName, sortOrder);
+        return new Task(this.id, this.taskName, sortOrder , this.complete);
     }
+
+    public void complete(){
+        complete = true;
+    }
+
+    public boolean isComplete(){return complete;}
 
 
 }

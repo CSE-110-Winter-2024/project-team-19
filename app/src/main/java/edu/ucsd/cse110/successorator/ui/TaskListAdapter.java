@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -66,10 +67,12 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         // Populate the view with the flashcard's data.
         binding.taskContent.setText(task.taskName());
 
+        Typeface tf = Typeface.defaultFromStyle(Typeface.ITALIC);
+
         final boolean isTaskCompleted = sharedPreferences.getBoolean("task_" + task.id(), false);
         if (isTaskCompleted) {
             binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            binding.taskDash.setText("+");
+            binding.taskDash.setText("");
             binding.taskDash.setTextColor(Color.LTGRAY);
         } else {
             binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));

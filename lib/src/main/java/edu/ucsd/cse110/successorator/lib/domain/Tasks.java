@@ -14,7 +14,9 @@ public class Tasks {
                 nextSortOrder++;
             }
         }
-        newTasks.add(task.withSortOrder(nextSortOrder+100)); // Add the new task with the last sortOrder
+        Task compTask = task.withSortOrder(nextSortOrder);
+        compTask.complete();
+        newTasks.add(compTask); // Add the new task with the last sortOrder
         return newTasks;
     }
 
