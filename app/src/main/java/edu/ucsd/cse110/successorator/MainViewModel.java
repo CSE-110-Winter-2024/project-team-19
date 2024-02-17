@@ -76,6 +76,13 @@ public class MainViewModel extends ViewModel {
         taskRepository.save(newTasks);
     }
 
+    public void uncompleteTask(Task task) {
+        var tasks = this.orderedTasks.getValue();
+        if (tasks == null) return;
+        task.uncomplete();
+        taskRepository.save(tasks);
+    }
+
 
     public void append(int taskId) {
         //TODO

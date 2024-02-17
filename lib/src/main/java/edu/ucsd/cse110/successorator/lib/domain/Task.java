@@ -61,6 +61,10 @@ public class Task implements Serializable {
         complete = true;
     }
 
+    public void uncomplete(){
+        complete = false;
+    }
+
     public boolean isComplete(){return complete;}
 
 

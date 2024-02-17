@@ -72,7 +72,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         final boolean isTaskCompleted = sharedPreferences.getBoolean("task_" + task.id(), false);
         if (isTaskCompleted) {
             binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            binding.taskDash.setText("");
+            binding.taskDash.setText("+");
             binding.taskDash.setTextColor(Color.LTGRAY);
         } else {
             binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));

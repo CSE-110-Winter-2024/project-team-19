@@ -20,5 +20,9 @@ public class Tasks {
         return newTasks;
     }
 
+    public static void uncompleteTaskOrder(List<Task> tasks, Task task) {
+        //TODO
+    }
+
 }
 

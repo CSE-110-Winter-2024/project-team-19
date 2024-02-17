@@ -55,7 +55,11 @@ public class TaskListFragment extends Fragment {
 
         // Initialize the Adapter (with an empty list for now)
         this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
-            activityModel.completeTask(task);
+            if (!task.isComplete()) {
+                activityModel.completeTask(task);
+            } else {
+                activityModel.uncompleteTask(task);
+            }
             adapter.notifyDataSetChanged();
         });
         activityModel.getOrderedTasks().observe(tasks -> {
