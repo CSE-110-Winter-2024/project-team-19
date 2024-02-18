@@ -68,6 +68,10 @@ public class MainViewModel extends ViewModel {
         taskRepository.complete(task);
     }
 
+    public void remove(int id) {
+        taskRepository.remove(id);
+    }
+
     public Subject<List<Task>> getOrderedTasks() {
         return orderedTasks;
     }
