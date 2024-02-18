@@ -61,31 +61,11 @@ public class MainViewModel extends ViewModel {
     }
 
     public void insertNewTask(Task task){
-        taskRepository.insert(task);
+        taskRepository.save(task);
     }
 
-    public void remove(int taskId){
-        taskRepository.remove(taskId);
-    }
-
-    public void completeTask(Task task) {
-        var tasks = this.orderedTasks.getValue();
-        if (tasks == null) return;
-        var newTasks = Tasks.completeTaskOrder(tasks, task);
-        task.complete();
-        taskRepository.save(newTasks);
-    }
-
-    public void uncompleteTask(Task task) {
-        var tasks = this.orderedTasks.getValue();
-        if (tasks == null) return;
-        task.uncomplete();
-        taskRepository.save(tasks);
-    }
-
-
-    public void append(int taskId) {
-        //TODO
+    public void completeTask(Task task){
+        taskRepository.complete(task);
     }
 
     public Subject<List<Task>> getOrderedTasks() {

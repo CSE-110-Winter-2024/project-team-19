@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,8 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
 
         Typeface tf = Typeface.defaultFromStyle(Typeface.ITALIC);
 
-        final boolean isTaskCompleted = sharedPreferences.getBoolean("task_" + task.id(), false);
+        final boolean isTaskCompleted = task.complete();
+//        Log.d("ugh", "task:" + task.taskName() + " complete: " + task.complete());
         if (isTaskCompleted) {
             binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             binding.taskDash.setText("+");
@@ -82,16 +84,6 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
 
 
         binding.taskDash.setOnClickListener(v -> {
-            if (!isTaskCompleted) {
-                // If task is not completed, mark it as completed
-                sharedPreferences.edit().putBoolean("task_" + task.id(), true).apply();
-            }
-            if (isTaskCompleted) {
-                // If task is not completed, mark it as completed
-                sharedPreferences.edit().putBoolean("task_" + task.id(), false).apply();
-            }
-            var id = task.id();
-            assert id != null;
             onDeleteClick.accept(task);
         });
 

@@ -24,5 +24,28 @@ public class Tasks {
         //TODO
     }
 
+    public static List<Task> addNewTask(List<Task> tasks, Task task){
+        var newTasks = new ArrayList<Task>();
+        for(var tempTask : tasks){
+            if(!tempTask.complete()){
+                newTasks.add(task);
+            }
+            newTasks.add(tempTask);
+        }
+        return newTasks;
+    }
+
+    public static List<Task> completeTask(List<Task> tasks, Task task){
+        var newTasks = new ArrayList<Task>();
+        Task toComplete = null;
+        for(var tempTask : tasks){
+            if(!tempTask.equals(task)){
+                newTasks.add(tempTask);
+            }else{
+                toComplete = tempTask;
+            }
+        }
+        return newTasks;
+    }
 }
 

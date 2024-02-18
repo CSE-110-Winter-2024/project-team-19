@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.successorator.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,10 +56,12 @@ public class TaskListFragment extends Fragment {
 
         // Initialize the Adapter (with an empty list for now)
         this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
-            if (!task.isComplete()) {
-                activityModel.completeTask(task);
+            if (task.complete()) {
+                Log.d("Debug", "Fragment called insertNewTask");
+                activityModel.insertNewTask(task);
             } else {
-                activityModel.uncompleteTask(task);
+                Log.d("Debug", "Fragment called completeTask");
+                activityModel.completeTask(task);
             }
             adapter.notifyDataSetChanged();
         });

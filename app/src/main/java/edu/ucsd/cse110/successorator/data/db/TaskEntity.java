@@ -33,7 +33,7 @@ public class TaskEntity {
     }
 
     public static TaskEntity fromTask(@NonNull Task task){
-        var taskEntity = new TaskEntity(task.taskName(), task.sortOrder(), task.isComplete());
+        var taskEntity = new TaskEntity(task.taskName(), task.sortOrder(), task.complete());
         taskEntity.id = task.id();
         return taskEntity;
     }
