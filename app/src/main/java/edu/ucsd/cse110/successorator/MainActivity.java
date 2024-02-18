@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 TaskFormFragment taskFormFragment = new TaskFormFragment();
                 taskFormFragment.show(fragmentManager,"TaskFormFragment");
+                we can probably delete all this ^ss
             }
         });
 
