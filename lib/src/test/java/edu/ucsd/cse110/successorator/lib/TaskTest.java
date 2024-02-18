@@ -50,4 +50,15 @@ public class TaskTest {
         assertTrue(taskEquality);
 
     }
+
+    @Test
+    public void withComplete(){
+        Task task = new Task(20,"Get 2 Groceries",3, false);
+        task = task.withComplete(true);
+        Task expected = new Task(20, "Get 2 Groceries",3, true);
+
+
+        boolean taskEquality = expected.equals(task);
+        assertTrue(taskEquality);
+    }
 }
