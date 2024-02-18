@@ -22,16 +22,15 @@ import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
+/*
+This class was adapted from the CardListFragment class provided in CSE 110 Lab 5.
+https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
+ */
 public class TaskListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentTaskListBinding view;
-
-    private ListItemTaskBinding taskItem;
     private TaskListAdapter adapter;
 
-    private TasksDao tasksDao;
-
-    private TaskEntity taskEntity;
 
     public TaskListFragment() {
         // Required empty public constructor

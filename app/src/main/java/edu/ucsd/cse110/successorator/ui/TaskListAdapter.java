@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +12,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
+/*
+This class was adapted from the CardListAdapter class provided in CSE 110 Lab 5.
+https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
+ */
 public class TaskListAdapter extends ArrayAdapter<Task> {
-    Consumer<Task> onDeleteClick;
+    Consumer<Task> onCompleteClick;
 
 
     private SharedPreferences sharedPreferences;
@@ -36,7 +38,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         // Also note that ArrayAdapter NEEDS a mutable List (ArrayList),
         // or it will crash!
         super(context, 0, new ArrayList<>(flashcards));
-        this.onDeleteClick = onDeleteClick;
+        this.onCompleteClick = onDeleteClick;
         sharedPreferences = context.getSharedPreferences("task_prefs", Context.MODE_PRIVATE);
     }
 
@@ -84,7 +86,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
 
 
         binding.taskDash.setOnClickListener(v -> {
-            onDeleteClick.accept(task);
+            onCompleteClick.accept(task);
         });
 
         return binding.getRoot();

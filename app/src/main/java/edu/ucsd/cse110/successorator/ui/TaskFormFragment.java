@@ -19,10 +19,11 @@ import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
+/*
+This class was adapted from the CardListFragment provided in CSE 110 Lab 5.
+https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
+ */
 public class TaskFormFragment extends DialogFragment {
-
-    private MainViewModel activityModel;
-    private FragmentTaskListBinding view;
 
     public TaskFormFragment() {
 
