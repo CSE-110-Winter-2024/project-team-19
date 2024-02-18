@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator.lib.util;
 
+
 import org.jetbrains.annotations.Nullable;
 
 /**
