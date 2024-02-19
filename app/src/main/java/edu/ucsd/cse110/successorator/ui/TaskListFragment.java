@@ -1,35 +1,61 @@
 package edu.ucsd.cse110.successorator.ui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import android.os.Looper;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+import android.os.Handler;
 import edu.ucsd.cse110.successorator.MainViewModel;
-import edu.ucsd.cse110.successorator.data.db.TaskEntity;
-import edu.ucsd.cse110.successorator.data.db.TasksDao;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
-import edu.ucsd.cse110.successorator.lib.domain.Task;
+import edu.ucsd.cse110.successorator.util.DateRolloverMock;
+
 
 /*
 This class was adapted from the CardListFragment class provided in CSE 110 Lab 5.
 https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
  */
 public class TaskListFragment extends Fragment {
+
+    private static final String PREF_TASK_DATE = "task_date";
+    private static final String PREF_TASK_TIME = "task_time";
     private MainViewModel activityModel;
     private FragmentTaskListBinding view;
+
+
+    private TextView DateDisplay;
+    private Handler handler;
+
+    private LocalDateTime lastTime;
+
+    private LocalDate lastDate;
+
+    private LocalTime rolloverTime;
+    private ListItemTaskBinding taskItem;
+
     private TaskListAdapter adapter;
+
+    private boolean deleteFlag = false;
+
+    private SharedPreferences sharedPreferences;
 
 
     public TaskListFragment() {
@@ -83,11 +109,93 @@ public class TaskListFragment extends Fragment {
         // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);
 
+        //Time functionality + mock
+        LocalDateTime myDateObj = LocalDateTime.now();
+        handler = new Handler(Looper.getMainLooper());
+
+
+        DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
+        lastTime = LocalDateTime.now();
+        lastDate = LocalDate.now();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+
+        String StringOfDate = myDateObj.format(myFormatObj).toString();
+
+        this.DateDisplay = this.view.dateContent;
+        view.dateContent.setText(StringOfDate);
+
+
+
         view.addTaskButton.setOnClickListener(v -> {
             var dialogFragment = TaskFormFragment.newInstance();
             dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
         });
 
+
+        //This is the runner that checks the time every second
+        Runnable updateTimeRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                updateCurrentDate();
+                handler.postDelayed(this, 1000);
+            }
+
+
+
+        };
+        handler.post(updateTimeRunnable);
+
+        view.mockButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //calling updateTime with mocked = true just moves date forward
+                updateCurrentTime();
+                //Call deleteCompletedTasks from the taskDao
+                activityModel.deleteCompletedTasks();
+
+            }
+        });
+
+
+
         return view.getRoot();
     }
-}
+
+
+    private void updateCurrentDate() {
+        LocalDateTime timeNow = LocalDateTime.now();
+        LocalDate dateNow = LocalDate.now();
+        LocalTime tNow = LocalTime.now();
+        if (dateNow.isAfter(lastDate) && tNow.isAfter(LocalTime.of(2, 0))) {
+            lastDate = dateNow;
+            activityModel.deleteCompletedTasks();
+        } else if (timeNow.isAfter(lastTime) )
+        {
+            lastTime = timeNow;
+            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+
+            String StringOfDate2 = lastTime.format(myFormatObj2).toString();
+            DateDisplay.setText(StringOfDate2);
+
+            //here we need to call some method to remove all tasks that are completed
+
+        }
+    }
+
+    private void updateCurrentTime() {
+        LocalDateTime timeNow = LocalDateTime.now();
+        lastTime = lastTime.plusDays(1);
+            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+
+            String StringOfDate2 = lastTime.format(myFormatObj2).toString();
+            DateDisplay.setText(StringOfDate2);
+
+            //here we need to call some method to remove all tasks that are completed
+
+        }
+
+
+
+
+    }

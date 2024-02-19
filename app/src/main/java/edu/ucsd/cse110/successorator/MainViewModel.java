@@ -8,6 +8,7 @@ import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLI
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import android.os.Handler;
 
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.lib.domain.TaskRepository;
@@ -63,6 +64,8 @@ public class MainViewModel extends ViewModel {
     public void removeTask(int id){
         taskRepository.remove(id);
     }
+
+    public void deleteCompletedTasks(){taskRepository.deleteCompletedTasks();}
 
     public Subject<List<Task>> getOrderedTasks() {
         return orderedTasks;
