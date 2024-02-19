@@ -65,6 +65,8 @@ public class MainViewModel extends ViewModel {
         taskRepository.remove(id);
     }
 
+    public void deleteCompletedTasks(){taskRepository.deleteCompletedTasks();}
+
     public Subject<List<Task>> getOrderedTasks() {
         return orderedTasks;
     }

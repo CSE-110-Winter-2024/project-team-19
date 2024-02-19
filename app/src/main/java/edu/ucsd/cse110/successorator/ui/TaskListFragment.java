@@ -154,7 +154,11 @@ public class TaskListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //calling updateTime with mocked = true just moves date forward
-                updateCurrentTime(true);}
+                updateCurrentTime(true);
+                //Call deleteCompletedTasks from the taskDao
+                activityModel.deleteCompletedTasks();
+
+            }
         });
 
 
