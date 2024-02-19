@@ -1,7 +1,9 @@
 package edu.ucsd.cse110.successorator.ui;
 
 import android.os.Bundle;
+
 import android.os.Looper;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,20 +30,23 @@ import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.util.DateRolloverMock;
 
+/*
+This class was adapted from the CardListFragment class provided in CSE 110 Lab 5.
+https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
+ */
 public class TaskListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentTaskListBinding view;
+
 
     private TextView DateDisplay;
     private Handler handler;
 
     private LocalDateTime lastDate;
     private ListItemTaskBinding taskItem;
+
     private TaskListAdapter adapter;
 
-    private TasksDao tasksDao;
-
-    private TaskEntity taskEntity;
 
     public TaskListFragment() {
         // Required empty public constructor
@@ -66,7 +71,16 @@ public class TaskListFragment extends Fragment {
 
         // Initialize the Adapter (with an empty list for now)
         this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
-            activityModel.completeTask(task);
+            if (task.complete()) {
+                Log.d("Debug", "Fragment called insertNewTask");
+                activityModel.insertNewTask(task.withComplete(false));
+                var id = task.id();
+                assert id != null;
+                activityModel.remove(id);
+            } else {
+                Log.d("Debug", "Fragment called completeTask");
+                activityModel.completeTask(task);
+            }
             adapter.notifyDataSetChanged();
         });
         activityModel.getOrderedTasks().observe(tasks -> {

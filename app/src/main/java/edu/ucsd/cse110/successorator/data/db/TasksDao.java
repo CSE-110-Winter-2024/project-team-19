@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.successorator.data.db;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -42,24 +44,31 @@ public interface TasksDao {
     @Query("SELECT MAX(sort_order) FROM tasks")
     int getMaxSortOrder();
 
+    @Query("SELECT MAX(sort_order) FROM tasks WHERE complete == 0")
+    int getMaxNotCompletedSortOrder();
+
     @Query("UPDATE tasks SET sort_order = sort_order + :by WHERE sort_order >= :from AND sort_order <= :to")
     void shiftSortOrders(int from, int to, int by);
 
     @Transaction
-    default int append(TaskEntity task){
-        var maxSortOrder = getMaxSortOrder();
+    default int insertNewTask(TaskEntity task){
+        Log.d("ugh", "TaskDao executed insertNewTask");
+        shiftSortOrders(getMaxNotCompletedSortOrder() + 1, getMaxSortOrder(),1);
+        var maxSortOrder = getMaxNotCompletedSortOrder();
         var newtask = new TaskEntity(
-                task.taskName, maxSortOrder + 1
+                task.taskName, maxSortOrder + 1, task.complete
         );
         return Math.toIntExact(insert(newtask));
     }
 
     @Transaction
-    default int prepend(TaskEntity task){
-        shiftSortOrders(getMinSortOrder(), getMaxSortOrder(), 1);
+    default int completeTask(TaskEntity task){
+        Log.d("ugh", "TaskDao executed completeTask");
+        shiftSortOrders(task.sortOrder, getMaxSortOrder(), 1);
+        delete(task.id);
         var maxSortOrder = getMaxSortOrder();
         var newtask = new TaskEntity(
-                task.taskName, maxSortOrder - 1
+                task.taskName, maxSortOrder + 1, true
         );
         return Math.toIntExact(insert(newtask));
     }

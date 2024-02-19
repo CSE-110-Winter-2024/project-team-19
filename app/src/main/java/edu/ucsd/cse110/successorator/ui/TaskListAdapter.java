@@ -18,8 +18,12 @@ import java.util.function.Consumer;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
+/*
+This class was adapted from the CardListAdapter class provided in CSE 110 Lab 5.
+https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
+ */
 public class TaskListAdapter extends ArrayAdapter<Task> {
-    Consumer<Task> onDeleteClick;
+    Consumer<Task> onCompleteClick;
 
 
     private SharedPreferences sharedPreferences;
@@ -34,7 +38,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         // Also note that ArrayAdapter NEEDS a mutable List (ArrayList),
         // or it will crash!
         super(context, 0, new ArrayList<>(flashcards));
-        this.onDeleteClick = onDeleteClick;
+        this.onCompleteClick = onDeleteClick;
         sharedPreferences = context.getSharedPreferences("task_prefs", Context.MODE_PRIVATE);
     }
 
@@ -66,7 +70,10 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         // Populate the view with the flashcard's data.
         binding.taskContent.setText(task.taskName());
 
-        final boolean isTaskCompleted = sharedPreferences.getBoolean("task_" + task.id(), false);
+        Typeface tf = Typeface.defaultFromStyle(Typeface.ITALIC);
+
+        final boolean isTaskCompleted = task.complete();
+//        Log.d("ugh", "task:" + task.taskName() + " complete: " + task.complete());
         if (isTaskCompleted) {
             binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             binding.taskDash.setText("+");
@@ -79,17 +86,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
 
 
         binding.taskDash.setOnClickListener(v -> {
-            if (!isTaskCompleted) {
-                // If task is not completed, mark it as completed
-                sharedPreferences.edit().putBoolean("task_" + task.id(), true).apply();
-            }
-            if (isTaskCompleted) {
-                // If task is not completed, mark it as completed
-                sharedPreferences.edit().putBoolean("task_" + task.id(), false).apply();
-            }
-            var id = task.id();
-            assert id != null;
-            onDeleteClick.accept(task);
+            onCompleteClick.accept(task);
         });
 
         return binding.getRoot();
