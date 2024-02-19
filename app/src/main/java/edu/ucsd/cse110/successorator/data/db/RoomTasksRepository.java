@@ -56,13 +56,6 @@ public class RoomTasksRepository implements TaskRepository {
         tasksDao.completeTask(TaskEntity.fromTask(task));
     }
 
-    @Override
-    public void remove(int id) {
-        tasksDao.delete(id);
-    }
-    @Override
-    public void deleteCompletedTasks(){
-            tasksDao.deleteCompletedTasks();
-    }
+    public void remove(int id) {tasksDao.delete(id);}
 }
 

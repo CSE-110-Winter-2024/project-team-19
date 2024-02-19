@@ -70,8 +70,6 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         // Populate the view with the flashcard's data.
         binding.taskContent.setText(task.taskName());
 
-        Typeface tf = Typeface.defaultFromStyle(Typeface.ITALIC);
-
         final boolean isTaskCompleted = task.complete();
 //        Log.d("ugh", "task:" + task.taskName() + " complete: " + task.complete());
         if (isTaskCompleted) {

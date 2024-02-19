@@ -61,7 +61,7 @@ public class MainViewModel extends ViewModel {
         taskRepository.complete(task);
     }
 
-    public void remove(int id) {
+    public void removeTask(int id){
         taskRepository.remove(id);
     }
 
