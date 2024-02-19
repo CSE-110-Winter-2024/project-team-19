@@ -23,18 +23,22 @@ public class TaskEntity {
     @ColumnInfo(name = "sort_order")
     public int sortOrder;
 
-    TaskEntity(String taskName, int sortOrder){
+    @ColumnInfo(name = "complete")
+    public boolean complete;
+
+    TaskEntity(String taskName, int sortOrder, boolean complete){
         this.taskName = taskName;
         this.sortOrder = sortOrder;
+        this.complete = complete;
     }
 
     public static TaskEntity fromTask(@NonNull Task task){
-        var taskEntity = new TaskEntity(task.taskName(), task.sortOrder());
+        var taskEntity = new TaskEntity(task.taskName(), task.sortOrder(), task.complete());
         taskEntity.id = task.id();
         return taskEntity;
     }
 
     public @NonNull Task toTask(){
-        return new Task(id, taskName, sortOrder);
+        return new Task(id, taskName, sortOrder, complete);
     }
 }

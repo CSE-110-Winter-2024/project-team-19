@@ -41,7 +41,7 @@ public class RoomTasksRepository implements TaskRepository {
 
     @Override
     public void save(Task task){
-        tasksDao.insert(TaskEntity.fromTask(task));
+        tasksDao.insertNewTask(TaskEntity.fromTask(task));
     }
 
     public void save(List<Task> flashcards) {
@@ -52,23 +52,10 @@ public class RoomTasksRepository implements TaskRepository {
     }
 
     @Override
-    public void insert(Task task){
-        // TODO: Insert new tasks at bottom of uncompleted tasks
-        tasksDao.append(TaskEntity.fromTask(task));
+    public void complete(Task task){
+        tasksDao.completeTask(TaskEntity.fromTask(task));
     }
 
-    @Override
-    public void remove(int id){
-        tasksDao.delete(id);
-    }
-
-    @Override
-    public void prepend(Task task){
-        //TODO
-    }
-    @Override
-    public void append(Task task) {
-        //TODO
-    }
+    public void remove(int id) {tasksDao.delete(id);}
 }
 

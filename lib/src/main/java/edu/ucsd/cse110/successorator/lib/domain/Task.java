@@ -15,10 +15,13 @@ public class Task implements Serializable {
     private final @NonNull String taskName;
     private final int sortOrder;
 
-    public Task(Integer id, String taskName, int sortOrder){
+    private final boolean complete;
+
+    public Task(Integer id, String taskName, int sortOrder, boolean complete){
         this.id = id;
         this.taskName = taskName;
         this.sortOrder = sortOrder;
+        this.complete = complete;
     }
 
     public @Nullable Integer id(){
@@ -33,8 +36,12 @@ public class Task implements Serializable {
         return sortOrder;
     }
 
+    public boolean complete(){
+        return complete;
+    }
+
     public Task withId(Integer id){
-        return new Task(id, this.taskName, this.sortOrder);
+        return new Task(id, this.taskName, this.sortOrder, this.complete);
     }
 
     @Override
@@ -42,17 +49,19 @@ public class Task implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return sortOrder == task.sortOrder && Objects.equals(id, task.id) && Objects.equals(taskName, task.taskName);
+        return sortOrder == task.sortOrder && complete == task.complete && Objects.equals(id, task.id) && Objects.equals(taskName, task.taskName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, taskName, sortOrder);
+        return Objects.hash(id, taskName, sortOrder, complete);
     }
 
     public Task withSortOrder(int sortOrder){
-        return new Task(this.id, this.taskName, sortOrder);
+        return new Task(this.id, this.taskName, sortOrder , this.complete);
     }
 
-
+    public Task withComplete(boolean complete){
+        return new Task(this.id, this.taskName, this.sortOrder, complete);
+    }
 }
