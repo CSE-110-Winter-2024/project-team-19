@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.successorator.ui;
 
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+import android.os.Handler;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.data.db.TaskEntity;
 import edu.ucsd.cse110.successorator.data.db.TasksDao;
@@ -32,6 +33,9 @@ public class TaskListFragment extends Fragment {
     private FragmentTaskListBinding view;
 
     private TextView DateDisplay;
+    private Handler handler;
+
+    private LocalDateTime lastDate;
     private ListItemTaskBinding taskItem;
     private TaskListAdapter adapter;
 
@@ -83,9 +87,12 @@ public class TaskListFragment extends Fragment {
 
         //Time functionality + mock
         LocalDateTime myDateObj = LocalDateTime.now();
+        handler = new Handler(Looper.getMainLooper());
 
 
         DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
+        lastDate = LocalDateTime.now();
+
         //To start the mock uncomment line below
         myDateObj = mockTime.getFakeTime();
 
@@ -113,23 +120,27 @@ public class TaskListFragment extends Fragment {
         });
 
 
+        //This is the runner that checks the time every second
+        Runnable updateTimeRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                updateCurrentTime(false);
+                handler.postDelayed(this, 1000);
+            }
+
+
+
+        };
+        handler.post(updateTimeRunnable);
 
 
 
         view.mockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Move up Mock Date by 1
-                mockTime.addDay();
-                String mockString = mockTime.getDateAsStringMock();
-
-                //make DateTime equal to that new date
-                DateDisplay.setText(mockString);
-
-
-            }
-
-
+                //calling updateTime with mocked = true just moves date forward
+                updateCurrentTime(true);}
         });
 
 
@@ -138,6 +149,24 @@ public class TaskListFragment extends Fragment {
     }
 
 
+    private void updateCurrentTime(boolean mocked) {
+        LocalDateTime timeNow = LocalDateTime.now();
+
+        //check if the timeNow is a day ahead of lastDate OR myDateObj is a day ahead
+        if (timeNow.isAfter(lastDate) || mocked == true)
+        {
+            if (mocked == false){lastDate = timeNow;}
+            else {lastDate = lastDate.plusDays(1);}
 
 
-}
+            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+
+            String StringOfDate2 = lastDate.format(myFormatObj2).toString();
+            DateDisplay.setText(StringOfDate2);
+
+            //here we need to call some method to remove all tasks that are completed
+
+        }
+
+
+}}
