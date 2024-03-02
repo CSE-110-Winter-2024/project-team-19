@@ -124,7 +124,7 @@ public class TaskListFragment extends Fragment {
         DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
         lastTime = LocalDateTime.now();
         lastDate = LocalDate.now();
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E MM/dd");
 
         String StringOfDate = myDateObj.format(myFormatObj).toString();
         String StringOfNextDate = myNextDateObj.format(myFormatObj).toString();
@@ -147,7 +147,7 @@ public class TaskListFragment extends Fragment {
 //        spinnerViewTitles.setAdapter(adapterViewTitles); // LINE WITH ISSUE; INVOKING ON NULL
         // TODO: Do implementation below; will help with str substitution
         Spinner viewTitleDropdown = view.viewTitle;
-        String[] items = new String[]{StringOfDate, StringOfNextDate, "Recurring", "Pending"};
+        String[] items = new String[]{"Today, " + StringOfDate, "Tomorrow, " + StringOfNextDate, "Recurring", "Pending"};
         ArrayAdapter<String> viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
 
