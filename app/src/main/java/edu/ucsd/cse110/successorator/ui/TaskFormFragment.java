@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Calendar;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
@@ -47,6 +49,8 @@ public class TaskFormFragment extends DialogFragment {
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
         var activityModel = modelProvider.get(MainViewModel.class);
 
+        Calendar calendar = Calendar.getInstance();
+
         Button btnClose = view.findViewById(R.id.close_button);
         btnClose.setOnClickListener(v -> {
             dismiss(); // Close the popup when the close button is clicked
@@ -61,8 +65,40 @@ public class TaskFormFragment extends DialogFragment {
             dismiss();
         });
 
+        RadioButton weeklyButton = view.findViewById(R.id.weekly_button);
+
+        String dayOfWeek = getDayOfWeekString(calendar.get(Calendar.DAY_OF_WEEK));
+        weeklyButton.setText("Weekly on " + dayOfWeek);
+
+        RadioButton monthlyButton = view.findViewById(R.id.monthly_button);
+
+        int weekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
+        String weekOfMonthTense = getTense(weekOfMonth);
+        monthlyButton.setText("Monthly on " + weekOfMonthTense + " " + dayOfWeek);
+
+        RadioButton yearlyButton = view.findViewById(R.id.yearly_button);
+
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        yearlyButton.setText("Yearly on " + formatDate(month, day));
+
         return view;
 
+    }
+
+    private String formatDate(int month, int day) {
+        return String.format("%02d/%02d", month, day);
+    }
+
+    private static String getTense(int weekOfMonth) {
+        String[] days = {"", "1st", "2nd", "3rd", "4th", "5th"};
+        return days[weekOfMonth];
+    }
+
+    private static String getDayOfWeekString(int dayOfWeek) {
+        String[] days = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        return days[dayOfWeek];
     }
 
 }
