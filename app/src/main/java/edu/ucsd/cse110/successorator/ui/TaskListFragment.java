@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.successorator.ui;
 
 import android.content.SharedPreferences;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.os.Looper;
@@ -10,6 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import android.os.Handler;
 import edu.ucsd.cse110.successorator.MainViewModel;
+import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.successorator.util.DateRolloverMock;
@@ -111,6 +117,7 @@ public class TaskListFragment extends Fragment {
 
         //Time functionality + mock
         LocalDateTime myDateObj = LocalDateTime.now();
+        LocalDateTime myNextDateObj = myDateObj.plusDays(1); // new
         handler = new Handler(Looper.getMainLooper());
 
 
@@ -120,6 +127,7 @@ public class TaskListFragment extends Fragment {
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
 
         String StringOfDate = myDateObj.format(myFormatObj).toString();
+        String StringOfNextDate = myNextDateObj.format(myFormatObj).toString();
 
         this.DateDisplay = this.view.dateContent;
         view.dateContent.setText(StringOfDate);
@@ -131,6 +139,17 @@ public class TaskListFragment extends Fragment {
             dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
         });
 
+        // Prepping dropdown
+        // TODO: Improve this note
+//        Spinner spinnerViewTitles = view.viewTitle;
+//        ArrayAdapter<CharSequence> adapterViewTitles = ArrayAdapter.createFromResource(this.getActivity(), R.array.view_titles, android.R.layout.simple_spinner_item);
+//        adapterViewTitles.setDropDownViewResource(android.R.layout.simple_spinner_item);
+//        spinnerViewTitles.setAdapter(adapterViewTitles); // LINE WITH ISSUE; INVOKING ON NULL
+        // TODO: Do implementation below; will help with str substitution
+        Spinner viewTitleDropdown = view.viewTitle;
+        String[] items = new String[]{StringOfDate, StringOfNextDate, "Recurring", "Pending"};
+        ArrayAdapter<String> viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
+        viewTitleDropdown.setAdapter(viewTitleAdapter);
 
         //This is the runner that checks the time every second
         Runnable updateTimeRunnable = new Runnable() {
