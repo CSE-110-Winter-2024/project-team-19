@@ -88,7 +88,7 @@ public class TaskFormFragment extends DialogFragment {
     }
 
     private String formatDate(int month, int day) {
-        return String.format("%02d/%02d", month, day);
+        return String.format(month + "/%02d", day);
     }
 
     private static String getTense(int weekOfMonth) {
