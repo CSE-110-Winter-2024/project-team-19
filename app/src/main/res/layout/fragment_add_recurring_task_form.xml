@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+<!--    <Button-->
+<!--        android:id="@+id/close_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:text="Cancel"-->
+<!--        tools:layout_editor_absoluteX="44dp"-->
+<!--        tools:layout_editor_absoluteY="591dp" />-->
+
+    <!--    <Button-->
+<!--        android:id="@+id/submit_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Submit"-->
+<!--        tools:layout_editor_absoluteX="245dp"-->
+<!--        tools:layout_editor_absoluteY="600dp" />-->
+
+    <EditText
+        android:id="@+id/task_text"
+        android:layout_width="247dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Enter a task..."
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/task_text">
+
+        <RadioButton
+            android:id="@+id/daily_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Daily..." />
+
+        <RadioButton
+            android:id="@+id/weekly_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Weekly..." />
+
+        <RadioButton
+            android:id="@+id/monthly_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Monthly..." />
+
+        <RadioButton
+            android:id="@+id/yearly_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Yearly..." />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/starting_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="24dp"
+        android:text="Starting..."
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/radioGroup"
+        app:layout_constraintTop_toBottomOf="@+id/task_text" />
+
+    <EditText
+        android:id="@+id/editTextDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:inputType="date"
+        app:layout_constraintStart_toEndOf="@+id/radioGroup"
+        app:layout_constraintTop_toBottomOf="@+id/starting_text" />
+</androidx.constraintlayout.widget.ConstraintLayout>

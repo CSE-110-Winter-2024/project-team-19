@@ -23,14 +23,14 @@ import edu.ucsd.cse110.successorator.lib.domain.Task;
 This class was adapted from the CardListFragment provided in CSE 110 Lab 5.
 https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
  */
-public class TaskFormFragment extends DialogFragment {
+public class RecurringFormFragment extends DialogFragment {
 
-    public TaskFormFragment() {
+    public RecurringFormFragment() {
 
     }
 
-    public static TaskFormFragment newInstance() {
-        var fragment = new TaskFormFragment();
+    public static RecurringFormFragment newInstance() {
+        var fragment = new RecurringFormFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -38,7 +38,7 @@ public class TaskFormFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_add_task_form, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_recurring_task_form, container, false);
 
         super.onCreate(savedInstanceState);
 
