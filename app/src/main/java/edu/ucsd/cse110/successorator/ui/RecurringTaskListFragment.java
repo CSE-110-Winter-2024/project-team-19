@@ -84,9 +84,11 @@ public class RecurringTaskListFragment extends Fragment {
 
 
         view.addTaskButton.setOnClickListener(v -> {
-//            var dialogFragment = TaskFormFragment.newInstance();
+
+
             var dialogFragment = RecurringFormFragment.newInstance();
-            dialogFragment.show(getParentFragmentManager(), "DatePicker");
+           dialogFragment.show(getParentFragmentManager(), "RecurringForm");
+
         });
 
         return view.getRoot();

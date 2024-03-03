@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,6 +47,16 @@ public class RecurringFormFragment extends DialogFragment {
         var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
         var activityModel = modelProvider.get(MainViewModel.class);
+
+        //open the calendar
+        ImageButton calButton = view.findViewById(R.id.openCalendarButton);
+        calButton.setOnClickListener(
+                v -> {
+                    var calDialog = TaskRecurringDatePickerFragment.newInstance();
+                    calDialog.show(getParentFragmentManager(),"calendar");
+                }
+        );
+
         /*
         Button btnClose = view.findViewById(R.id.close_button);
         btnClose.setOnClickListener(v -> {

@@ -46,7 +46,7 @@ public class TaskFormFragment extends DialogFragment {
         var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
         var activityModel = modelProvider.get(MainViewModel.class);
-        /*
+
         Button btnClose = view.findViewById(R.id.close_button);
         btnClose.setOnClickListener(v -> {
             dismiss(); // Close the popup when the close button is clicked
@@ -60,7 +60,7 @@ public class TaskFormFragment extends DialogFragment {
             activityModel.insertNewTask(new Task(null, taskTextString, 2, false));
             dismiss();
         });
-        */
+
 
         return view;
 

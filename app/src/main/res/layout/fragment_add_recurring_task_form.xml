@@ -81,14 +81,16 @@
         app:layout_constraintStart_toEndOf="@+id/radioGroup"
         app:layout_constraintTop_toBottomOf="@+id/task_text" />
 
-    <EditText
-        android:id="@+id/editTextDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:inputType="date"
+    <ImageButton
+        android:id="@+id/openCalendarButton"
+        android:layout_width="110dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="28dp"
+        android:src="@android:drawable/ic_menu_my_calendar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.068"
         app:layout_constraintStart_toEndOf="@+id/radioGroup"
         app:layout_constraintTop_toBottomOf="@+id/starting_text" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
