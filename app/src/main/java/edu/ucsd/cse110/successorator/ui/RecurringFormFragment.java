@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,13 +59,25 @@ public class RecurringFormFragment extends DialogFragment {
                 }
         );
 
-        /*
-        Button btnClose = view.findViewById(R.id.close_button);
+
+        Button btnClose = view.findViewById(R.id.recurringCancelButton);
         btnClose.setOnClickListener(v -> {
             dismiss(); // Close the popup when the close button is clicked
         });
 
-        Button btnSubmit = view.findViewById(R.id.submit_button);
+        Button btnSubmit = view.findViewById(R.id.recurringSubmitButton);
+
+        //TODO - get the value of the date picker and radio buttons
+        //save them as variables and log them
+        RadioGroup radioGroup = view.findViewById(R.id.recurring_radio_group);
+        RadioButton dailyRadio = view.findViewById(R.id.daily_button);
+        RadioButton weeklyRadio = view.findViewById(R.id.weekly_button);
+        RadioButton monthlyRadio = view.findViewById(R.id.monthly_button);
+        RadioButton yearlyRadio = view.findViewById(R.id.yearly_button);
+
+        //set daily button as default
+        dailyRadio.setChecked(true);
+
 
         btnSubmit.setOnClickListener(v -> {
             EditText taskText = view.findViewById(R.id.task_text);
@@ -71,7 +85,7 @@ public class RecurringFormFragment extends DialogFragment {
             activityModel.insertNewTask(new Task(null, taskTextString, 2, false));
             dismiss();
         });
-        */
+
 
         return view;
 
