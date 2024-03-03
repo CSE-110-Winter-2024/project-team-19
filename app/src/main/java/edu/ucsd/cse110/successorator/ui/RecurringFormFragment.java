@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator.ui;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,6 +81,10 @@ public class RecurringFormFragment extends DialogFragment {
 
 
         btnSubmit.setOnClickListener(v -> {
+
+            int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+            RadioButton selectedRadioButton = view.findViewById(selectedRadioButtonId);
+            Log.d("selected button","" + selectedRadioButton.getText().toString());
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
             activityModel.insertNewTask(new Task(null, taskTextString, 2, false));
