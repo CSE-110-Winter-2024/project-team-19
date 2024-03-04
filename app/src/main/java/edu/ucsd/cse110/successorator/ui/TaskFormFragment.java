@@ -6,13 +6,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
@@ -60,15 +63,6 @@ public class TaskFormFragment extends DialogFragment {
 
         Button btnSubmit = view.findViewById(R.id.submit_button);
 
-        btnSubmit.setOnClickListener(v -> {
-            EditText taskText = view.findViewById(R.id.task_text);
-            String taskTextString = taskText.getText().toString();
-            activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                    false, LocalDate.now(), Frequency.ONE_TIME,
-                    LocalDate.now().getDayOfWeek(), 1));
-            dismiss();
-        });
-
         RadioButton weeklyButton = view.findViewById(R.id.weekly_button);
 
         String dayOfWeek = getDayOfWeekString(calendar.get(Calendar.DAY_OF_WEEK));
@@ -76,8 +70,11 @@ public class TaskFormFragment extends DialogFragment {
 
         RadioButton monthlyButton = view.findViewById(R.id.monthly_button);
 
-        int weekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
-        String weekOfMonthTense = getTense(weekOfMonth);
+        LocalDate currentDate = LocalDate.now();
+        Month currentMonth = currentDate.getMonth();
+        DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
+        int occurrence = getDayOccurrenceInMonth(currentDate.getYear(), currentMonth, currentDayOfWeek);
+        String weekOfMonthTense = getTense(occurrence);
         monthlyButton.setText("Monthly on " + weekOfMonthTense + " " + dayOfWeek);
 
         RadioButton yearlyButton = view.findViewById(R.id.yearly_button);
@@ -86,6 +83,45 @@ public class TaskFormFragment extends DialogFragment {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         yearlyButton.setText("Yearly on " + formatDate(month, day));
+
+        btnSubmit.setOnClickListener(v -> {
+            EditText taskText = view.findViewById(R.id.task_text);
+            String taskTextString = taskText.getText().toString();
+
+            RadioGroup radioGroup = view.findViewById(R.id.radio_group);
+            int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+            if (selectedRadioButtonId != -1) {
+                if (selectedRadioButtonId == R.id.onetime_button) {
+                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                            false, LocalDate.now(), Frequency.ONE_TIME,
+                            LocalDate.now().getDayOfWeek(), occurrence));
+                    dismiss();
+                }
+                else if (selectedRadioButtonId == R.id.daily_button) {
+                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                            false, LocalDate.now(), Frequency.DAILY,
+                            LocalDate.now().getDayOfWeek(), occurrence));
+                    dismiss();
+                }
+                else if (selectedRadioButtonId == R.id.weekly_button) {
+                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                            false, LocalDate.now(), Frequency.WEEKLY,
+                            LocalDate.now().getDayOfWeek(), occurrence));
+                    dismiss();
+                }
+                else if (selectedRadioButtonId == R.id.monthly_button) {
+                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                            false, LocalDate.now(), Frequency.MONTHLY,
+                            LocalDate.now().getDayOfWeek(), occurrence));
+                    dismiss();
+                } else if (selectedRadioButtonId == R.id.yearly_button) {
+                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                            false, LocalDate.now(), Frequency.YEARLY,
+                            LocalDate.now().getDayOfWeek(), occurrence));
+                    dismiss();
+                }
+            }
+        });
 
         return view;
 
@@ -103,6 +139,25 @@ public class TaskFormFragment extends DialogFragment {
     private static String getDayOfWeekString(int dayOfWeek) {
         String[] days = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         return days[dayOfWeek];
+    }
+
+    private static int getDayOccurrenceInMonth(int year, Month month, DayOfWeek dayOfWeek) {
+        int occurrence = 1;
+        LocalDate date = LocalDate.of(year, month, 1);
+
+        while (!date.getDayOfWeek().equals(dayOfWeek)) {
+            date = date.plusDays(1);
+        }
+
+        while (date.getMonth() == month) {
+            if (date.getDayOfWeek().equals(dayOfWeek)) {
+                return occurrence;
+            }
+            date = date.plusDays(7);
+            occurrence++;
+        }
+
+        return -1;
     }
 
 }
