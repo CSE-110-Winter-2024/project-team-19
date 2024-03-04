@@ -14,7 +14,7 @@ public interface TaskRepository {
     void save(Task task);
     void save(List<Task> tasks);
     void complete(Task task);
-    void uncomplete(Task task);
-    void remove(Task task);
+    void remove(int id);
+
     void deleteCompletedTasks();
 }

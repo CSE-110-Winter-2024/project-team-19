@@ -6,8 +6,6 @@ import androidx.room.Room;
 
 import edu.ucsd.cse110.successorator.data.db.RoomTasksRepository;
 import edu.ucsd.cse110.successorator.data.db.TasksDatabase;
-import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
-import edu.ucsd.cse110.successorator.lib.domain.SimpleTaskRepository;
 import edu.ucsd.cse110.successorator.lib.domain.TaskRepository;
 
 public class SuccessoratorApplication extends Application {
@@ -26,7 +24,6 @@ public class SuccessoratorApplication extends Application {
                 .build();
 
         this.taskRepository = new RoomTasksRepository(database.tasksDao());
-//        this.taskRepository = new SimpleTaskRepository(new InMemoryDataSource());
 
         // Idk if this is needed?
         var sharedPreferences = getSharedPreferences("successorator", MODE_PRIVATE);

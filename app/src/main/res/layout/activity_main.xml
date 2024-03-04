@@ -17,5 +17,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout="@layout/fragment_task_list" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

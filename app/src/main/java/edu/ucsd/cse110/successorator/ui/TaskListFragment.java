@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,8 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.time.LocalDate;
@@ -92,8 +88,11 @@ public class TaskListFragment extends Fragment {
         // Initialize the Adapter (with an empty list for now)
         this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
             if (task.complete()) {
-                Log.d("Debug", "Fragment called uncompleteTask");
-                activityModel.uncompleteTask(task);
+                Log.d("Debug", "Fragment called insertNewTask");
+                var id = task.id();
+                assert id != null;
+                activityModel.removeTask(id);
+                activityModel.insertNewTask(task.withComplete(false));
             } else {
                 Log.d("Debug", "Fragment called completeTask");
                 activityModel.completeTask(task);
@@ -134,25 +133,10 @@ public class TaskListFragment extends Fragment {
         view.dateContent.setText(StringOfDate);
 
 
-        //this is the button responsible for switching to the recurring task fragment
-        ImageButton switchButton = view.switchtorecurringbutton;
-        switchButton.setOnClickListener(
-                v -> {
-                    RecurringTaskListFragment recur = new RecurringTaskListFragment();
-
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, recur);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                }
-        );
 
         view.addTaskButton.setOnClickListener(v -> {
             var dialogFragment = TaskFormFragment.newInstance();
-            //var dialogFragment = TaskRecurringDatePickerFragment.newInstance();
-            dialogFragment.show(getParentFragmentManager(), "DatePicker");
+            dialogFragment.show(getParentFragmentManager(), "CreateCardDialogFragment");
         });
 
         // Prepping dropdown

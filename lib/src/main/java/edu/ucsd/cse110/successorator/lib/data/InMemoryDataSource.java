@@ -37,16 +37,16 @@ public class InMemoryDataSource {
     public InMemoryDataSource() {
     }
 
-//    public final static List<Task> DEFAULT_TASKS = List.of(
-//            new Task(null, "Get groceries", 0,  false),
-//            new Task(null, "Find cookie recipe", 1, false),
-//            new Task(null, "Study", 2, true),
-//            new Task(null, "Sleep", 3, true)
-//    );
+    public final static List<Task> DEFAULT_TASKS = List.of(
+            new Task(null, "Get groceries", 0,  false),
+            new Task(null, "Find cookie recipe", 1, false),
+            new Task(null, "Study", 2, true),
+            new Task(null, "Sleep", 3, true)
+    );
 
     public static InMemoryDataSource fromDefault() {
         var data = new InMemoryDataSource();
-//        data.putTasks(DEFAULT_TASKS);
+        data.putTasks(DEFAULT_TASKS);
         return data;
     }
 
@@ -120,7 +120,7 @@ public class InMemoryDataSource {
         tasks.remove(id);
         shiftSortOrders(sortOrder, maxSortOrder, -1);
 
-        if(taskSubjects.containsKey(id)){
+        if (taskSubjects.containsKey(id)) {
             taskSubjects.get(id).setValue(null);
         }
         allTasksSubject.setValue(getTasks());
@@ -134,16 +134,11 @@ public class InMemoryDataSource {
         shiftSortOrders(sortOrder, maxSortOrder, -1);
 
         putTask(task.withComplete(true).withSortOrder(getMaxSortOrder() + 1));
-    }
 
-    public void uncompleteTask(int id){
-        var task = tasks.get(id);
-        var sortOrder = task.sortOrder();
-
-        tasks.remove(id);
-        shiftSortOrders(minCompletedSortOrder, task.sortOrder(), 1);
-
-        putTask(task.withComplete(false).withSortOrder(minCompletedSortOrder));
+        if(taskSubjects.containsKey(id)){
+            taskSubjects.get(id).setValue(null);
+        }
+        allTasksSubject.setValue(getTasks());
     }
 
     public void shiftSortOrders(int from, int to, int by) {
