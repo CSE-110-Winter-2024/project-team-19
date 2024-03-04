@@ -167,32 +167,6 @@ public class TaskListFragment extends Fragment {
         ArrayAdapter<String> viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
 
-        // below done in chatgpt lmfao
-        // TODO: change this note it sucks
-        viewTitleDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // Handle item selection and switch fragments here
-                switch (position) {
-                    case 0:
-                        loadFragment(new TaskListFragment());
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        loadFragment(new RecurringTaskListFragment());
-                        break;
-                    case 3:
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Do nothing here
-            }
-        });
-
         //This is the runner that checks the time every second
         Runnable updateTimeRunnable = new Runnable() {
 
@@ -254,21 +228,9 @@ public class TaskListFragment extends Fragment {
 
             //here we need to call some method to remove all tasks that are completed
 
+        }
+
+
+
+
     }
-
-    private void loadFragment(Fragment fragment) {
-        //RecurringTaskListFragment recur = new RecurringTaskListFragment();
-
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-
-
-
-}
-
-
