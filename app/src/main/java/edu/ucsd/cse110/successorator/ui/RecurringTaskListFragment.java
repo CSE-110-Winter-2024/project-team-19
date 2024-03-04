@@ -18,6 +18,8 @@ import java.util.List;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentRecurringTasksBinding;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
+import edu.ucsd.cse110.successorator.lib.domain.Frequency;
+import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 public class RecurringTaskListFragment extends Fragment {
     private MainViewModel activityModel;
@@ -68,7 +70,13 @@ public class RecurringTaskListFragment extends Fragment {
         activityModel.getOrderedTasks().observe(tasks -> {
             if (tasks == null) return;
             adapter.clear();
-            adapter.addAll(new ArrayList<>(tasks)); // remember the mutable copy here!
+            List<Task> recurringTasks = new ArrayList<Task>();
+            for (Task i: tasks)
+            {if (!i.frequency().equals(Frequency.ONE_TIME) && !i.frequency()
+                    .equals(Frequency.PENDING))
+            {recurringTasks.add(i);}
+            }
+            adapter.addAll(new ArrayList<>(recurringTasks)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
     }
@@ -80,7 +88,11 @@ public class RecurringTaskListFragment extends Fragment {
         // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);
 
-        //no time functionality for this view
+        //no time functionality for this view yet, id like to move to main activity
+
+        //When a task is long-pressed, open a menu with the option to remove it.
+        //if they press remove at that point, it's deleted from the database.
+
 
 
         view.addTaskButton.setOnClickListener(v -> {
