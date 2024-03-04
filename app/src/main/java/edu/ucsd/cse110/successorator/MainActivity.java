@@ -35,23 +35,5 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, TaskListFragment.newInstance())
                 .commit();
-
-
-
-
-//<<<<<<< HEAD
-//=======
-//                FragmentManager fragmentManager = getSupportFragmentManager();
-//                TaskFormFragment taskFormFragment = new TaskFormFragment();
-//                taskFormFragment.show(fragmentManager,"TaskFormFragment");
-//                we can probably delete all this ^ss
-//            }
-//        });
-//>>>>>>> us8-task-priority-with-completed-tasks
-
-
-
-
-
     }
 }
