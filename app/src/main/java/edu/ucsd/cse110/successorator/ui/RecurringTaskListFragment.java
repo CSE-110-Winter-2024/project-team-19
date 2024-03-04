@@ -57,7 +57,7 @@ public class RecurringTaskListFragment extends Fragment {
                 Log.d("Debug", "Fragment called insertNewTask");
                 var id = task.id();
                 assert id != null;
-                activityModel.removeTask(id);
+                activityModel.removeTask(task);
                 activityModel.insertNewTask(task.withComplete(false));
             } else {
                 Log.d("Debug", "Fragment called completeTask");

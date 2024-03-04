@@ -65,8 +65,8 @@ public class MainViewModel extends ViewModel {
         taskRepository.uncomplete(task);
     }
 
-    public void removeTask(int id){
-        taskRepository.remove(id);
+    public void removeTask(Task task){
+        taskRepository.remove(task);
     }
 
     public void deleteCompletedTasks(){taskRepository.deleteCompletedTasks();}

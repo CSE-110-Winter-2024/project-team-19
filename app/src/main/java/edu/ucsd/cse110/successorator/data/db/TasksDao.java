@@ -38,60 +38,6 @@ public interface TasksDao {
     @Query("SELECT COUNT(*) FROM tasks")
     int count();
 
-    @Query("SELECT MIN(sort_order) FROM tasks")
-    int getMinSortOrder();
-
-    @Query("SELECT MAX(sort_order) FROM tasks")
-    int getMaxSortOrder();
-
-    @Query("SELECT MAX(sort_order) FROM tasks WHERE complete == 0")
-    int getMaxNotCompletedSortOrder();
-
-    @Query("UPDATE tasks SET sort_order = sort_order + :by WHERE sort_order >= :from AND sort_order <= :to")
-    void shiftSortOrders(int from, int to, int by);
-
-    @Transaction
-    default int insertNewTask(TaskEntity task){
-        Log.d("ugh", "TaskDao executed insertNewTask");
-        shiftSortOrders(getMaxNotCompletedSortOrder() + 1, getMaxSortOrder(),1);
-        var maxSortOrder = getMaxNotCompletedSortOrder();
-        var newtask = new TaskEntity(
-                task.taskName, maxSortOrder + 1, task.complete, task.activeDate,
-                task.frequency, task.dayOfWeek, task.dayOccurrence
-        );
-        return Math.toIntExact(insert(newtask));
-    }
-
-    @Transaction
-    default int completeTask(TaskEntity task){
-        Log.d("ugh", "TaskDao executed completeTask");
-        shiftSortOrders(task.sortOrder, getMaxSortOrder(), -1);
-        delete(task.id);
-        var maxSortOrder = getMaxSortOrder();
-        var newtask = new TaskEntity(
-                task.taskName, maxSortOrder + 1, true, task.activeDate,
-                task.frequency, task.dayOfWeek, task.dayOccurrence
-        );
-        return Math.toIntExact(insert(newtask));
-    }
-
-    @Transaction
-    default int uncompleteTask(TaskEntity task){
-        shiftSortOrders(getMaxNotCompletedSortOrder() + 1, task.sortOrder, 1);
-        delete(task.id);
-        var maxSortOrder = getMaxNotCompletedSortOrder();
-        var newtask = new TaskEntity(task.taskName, maxSortOrder + 1, false, task.activeDate,
-                task.frequency, task.dayOfWeek, task.dayOccurrence
-        );
-        return Math.toIntExact(insert(newtask));
-    }
-
-    @Transaction
-    default void removeTask(TaskEntity task){
-        shiftSortOrders(task.sortOrder, getMaxSortOrder(), -1);
-        delete(task.id);
-    }
-
     @Query("DELETE FROM tasks where id = :id")
     void delete(int id);
 

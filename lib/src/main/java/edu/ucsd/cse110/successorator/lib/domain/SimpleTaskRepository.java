@@ -48,8 +48,8 @@ public class SimpleTaskRepository implements TaskRepository{
     }
 
     @Override
-    public void remove(int id) {
-        dataSource.removeTask(id);
+    public void remove(Task task) {
+        dataSource.removeTask(task.id());
     }
 
     public void deleteCompletedTasks(){};
