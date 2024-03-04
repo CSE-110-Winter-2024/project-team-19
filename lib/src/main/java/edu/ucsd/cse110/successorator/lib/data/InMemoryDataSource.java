@@ -120,7 +120,7 @@ public class InMemoryDataSource {
         tasks.remove(id);
         shiftSortOrders(sortOrder, maxSortOrder, -1);
 
-        if (taskSubjects.containsKey(id)) {
+        if(taskSubjects.containsKey(id)){
             taskSubjects.get(id).setValue(null);
         }
         allTasksSubject.setValue(getTasks());
@@ -134,11 +134,16 @@ public class InMemoryDataSource {
         shiftSortOrders(sortOrder, maxSortOrder, -1);
 
         putTask(task.withComplete(true).withSortOrder(getMaxSortOrder() + 1));
+    }
 
-        if(taskSubjects.containsKey(id)){
-            taskSubjects.get(id).setValue(null);
-        }
-        allTasksSubject.setValue(getTasks());
+    public void uncompleteTask(int id){
+        var task = tasks.get(id);
+        var sortOrder = task.sortOrder();
+
+        tasks.remove(id);
+        shiftSortOrders(minCompletedSortOrder, task.sortOrder(), 1);
+
+        putTask(task.withComplete(false).withSortOrder(minCompletedSortOrder));
     }
 
     public void shiftSortOrders(int from, int to, int by) {

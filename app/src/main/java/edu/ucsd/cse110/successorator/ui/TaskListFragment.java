@@ -87,11 +87,8 @@ public class TaskListFragment extends Fragment {
         // Initialize the Adapter (with an empty list for now)
         this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
             if (task.complete()) {
-                Log.d("Debug", "Fragment called insertNewTask");
-                var id = task.id();
-                assert id != null;
-                activityModel.removeTask(id);
-                activityModel.insertNewTask(task.withComplete(false));
+                Log.d("Debug", "Fragment called uncompleteTask");
+                activityModel.uncompleteTask(task);
             } else {
                 Log.d("Debug", "Fragment called completeTask");
                 activityModel.completeTask(task);

@@ -64,13 +64,28 @@ public interface TasksDao {
     @Transaction
     default int completeTask(TaskEntity task){
         Log.d("ugh", "TaskDao executed completeTask");
-        shiftSortOrders(task.sortOrder, getMaxSortOrder(), 1);
+        shiftSortOrders(task.sortOrder, getMaxSortOrder(), -1);
         delete(task.id);
         var maxSortOrder = getMaxSortOrder();
         var newtask = new TaskEntity(
                 task.taskName, maxSortOrder + 1, true
         );
         return Math.toIntExact(insert(newtask));
+    }
+
+    @Transaction
+    default int uncompleteTask(TaskEntity task){
+        shiftSortOrders(getMaxNotCompletedSortOrder() + 1, task.sortOrder, 1);
+        delete(task.id);
+        var maxSortOrder = getMaxNotCompletedSortOrder();
+        var newtask = new TaskEntity(task.taskName, maxSortOrder + 1, false);
+        return Math.toIntExact(insert(newtask));
+    }
+
+    @Transaction
+    default void removeTask(TaskEntity task){
+        shiftSortOrders(task.sortOrder, getMaxSortOrder(), -1);
+        delete(task.id);
     }
 
     @Query("DELETE FROM tasks where id = :id")
