@@ -72,7 +72,7 @@ public class RecurringTaskListFragment extends Fragment {
             adapter.clear();
             List<Task> recurringTasks = new ArrayList<>();
             for (Task i : tasks) {
-                if (!i.frequency().equals(Frequency.ONE_TIME)) {
+                if (!i.frequency().equals(Frequency.ONE_TIME) && !i.frequency().equals(Frequency.PENDING)) {
                     recurringTasks.add(i);
                 }
             }
