@@ -18,6 +18,8 @@ import java.util.List;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentRecurringTasksBinding;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
+import edu.ucsd.cse110.successorator.lib.domain.Frequency;
+import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 public class RecurringTaskListFragment extends Fragment {
     private MainViewModel activityModel;
@@ -68,7 +70,13 @@ public class RecurringTaskListFragment extends Fragment {
         activityModel.getOrderedTasks().observe(tasks -> {
             if (tasks == null) return;
             adapter.clear();
-            adapter.addAll(new ArrayList<>(tasks)); // remember the mutable copy here!
+            List<Task> recurringTasks = new ArrayList<>();
+            for (Task i : tasks) {
+                if (!i.frequency().equals(Frequency.ONE_TIME)) {
+                    recurringTasks.add(i);
+                }
+            }
+            adapter.addAll(new ArrayList<>(recurringTasks));
             adapter.notifyDataSetChanged();
         });
     }

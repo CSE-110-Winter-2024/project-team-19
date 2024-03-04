@@ -121,6 +121,12 @@ public class TaskFormFragment extends DialogFragment {
                     dismiss();
                 }
             }
+            else {
+                activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                        false, LocalDate.now(), Frequency.ONE_TIME,
+                        LocalDate.now().getDayOfWeek(), occurrence));
+                dismiss();
+            }
         });
 
         return view;
