@@ -43,6 +43,11 @@ public class SimpleTaskRepository implements TaskRepository{
     }
 
     @Override
+    public void uncomplete(Task task){
+        dataSource.uncompleteTask(task.id());
+    }
+
+    @Override
     public void remove(int id) {
         dataSource.removeTask(id);
     }

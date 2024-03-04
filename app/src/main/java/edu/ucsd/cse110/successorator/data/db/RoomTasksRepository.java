@@ -57,6 +57,11 @@ public class RoomTasksRepository implements TaskRepository {
     }
 
     @Override
+    public void uncomplete(Task task){
+        tasksDao.uncompleteTask(TaskEntity.fromTask(task));
+    }
+
+    @Override
     public void remove(int id) {
         tasksDao.delete(id);
     }
