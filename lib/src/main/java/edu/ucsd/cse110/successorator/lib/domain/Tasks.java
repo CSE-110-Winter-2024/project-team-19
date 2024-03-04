@@ -14,22 +14,22 @@ public class Tasks {
     }
 
     public static List<Task> removeTask(List<Task> tasks, Task task){
-        tasks = shiftSortOrders(tasks, task.sortOrder(), getMaxSortOrder(tasks), -1);
         tasks.remove(task);
+        tasks = shiftSortOrders(tasks, task.sortOrder(), getMaxSortOrder(tasks), -1);
         return tasks;
     }
 
     public static List<Task> completeTask(List<Task> tasks, Task task){
-        tasks = shiftSortOrders(tasks, task.sortOrder(), getMaxSortOrder(tasks), 1);
         tasks.remove(task);
+        tasks = shiftSortOrders(tasks, task.sortOrder(), getMaxSortOrder(tasks), -1);
         tasks.add(task.withSortOrder(getMaxSortOrder(tasks) + 1).withComplete(true));
         return tasks;
     }
 
     public static List<Task> uncompleteTask(List<Task> tasks, Task task){
+        tasks.remove(task);
         tasks = shiftSortOrders(tasks, getMaxUncompletedSortOrder(tasks) + 1,
                 task.sortOrder(), 1);
-        tasks.remove(task);
         tasks.add(task.withSortOrder(getMaxUncompletedSortOrder(tasks) + 1).withComplete(false));
         return tasks;
     }
