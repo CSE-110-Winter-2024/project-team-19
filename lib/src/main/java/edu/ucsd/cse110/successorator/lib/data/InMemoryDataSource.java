@@ -37,16 +37,16 @@ public class InMemoryDataSource {
     public InMemoryDataSource() {
     }
 
-    public final static List<Task> DEFAULT_TASKS = List.of(
-            new Task(null, "Get groceries", 0,  false),
-            new Task(null, "Find cookie recipe", 1, false),
-            new Task(null, "Study", 2, true),
-            new Task(null, "Sleep", 3, true)
-    );
+//    public final static List<Task> DEFAULT_TASKS = List.of(
+//            new Task(null, "Get groceries", 0,  false),
+//            new Task(null, "Find cookie recipe", 1, false),
+//            new Task(null, "Study", 2, true),
+//            new Task(null, "Sleep", 3, true)
+//    );
 
     public static InMemoryDataSource fromDefault() {
         var data = new InMemoryDataSource();
-        data.putTasks(DEFAULT_TASKS);
+//        data.putTasks(DEFAULT_TASKS);
         return data;
     }
 

@@ -11,12 +11,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.R;
+import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 /*
@@ -57,7 +59,9 @@ public class TaskFormFragment extends DialogFragment {
         btnSubmit.setOnClickListener(v -> {
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
-            activityModel.insertNewTask(new Task(null, taskTextString, 2, false));
+            activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                    false, LocalDate.now(), Frequency.ONE_TIME,
+                    LocalDate.now().getDayOfWeek(), 1));
             dismiss();
         });
 

@@ -35,14 +35,5 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, TaskListFragment.newInstance())
                 .commit();
-
-
-
-
-
-
-
-
-
     }
 }
