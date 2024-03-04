@@ -69,7 +69,6 @@ public class TaskFormFragment extends DialogFragment {
             dismiss();
         });
 
-<<<<<<< HEAD
         RadioButton weeklyButton = view.findViewById(R.id.weekly_button);
 
         String dayOfWeek = getDayOfWeekString(calendar.get(Calendar.DAY_OF_WEEK));
@@ -87,8 +86,6 @@ public class TaskFormFragment extends DialogFragment {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         yearlyButton.setText("Yearly on " + formatDate(month, day));
-=======
->>>>>>> ms2-us13-recurring-tasks
 
         return view;
 
