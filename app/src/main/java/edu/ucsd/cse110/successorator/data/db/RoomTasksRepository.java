@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.successorator.data.db;
 
+import android.util.Log;
+
 import androidx.lifecycle.Transformations;
 
 import java.util.List;
@@ -87,7 +89,7 @@ public class RoomTasksRepository implements TaskRepository {
 
     @Override
     public void remove(Task task) {
-//        tasksDao.delete(id);
+       tasksDao.delete(task.id());
         var tasks = tasksDao.findAll().stream()
                 .map(TaskEntity::toTask)
                 .collect(Collectors.toList());

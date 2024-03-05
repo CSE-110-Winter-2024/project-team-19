@@ -71,7 +71,9 @@ public class RecurringTaskListFragment extends Fragment {
                 activityModel.completeTask(task);
             }
             adapter.notifyDataSetChanged();
-        });
+        }
+
+        );
         activityModel.getOrderedTasks().observe(tasks -> {
             if (tasks == null) return;
             adapter.clear();
@@ -131,11 +133,22 @@ public class RecurringTaskListFragment extends Fragment {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int position = info.position;
+        Log.d("adpater info is", ""+ info);
+
 
         if (item.getItemId() == R.id.menu_delete_recurring) {
-            // Log the deletion
-            Log.d("when delete pressed", "Delete recurring task selected for item at position: " + position);
+
             //deletion logic here
+
+            Task tobeDeleted = adapter.getItem(position);
+
+
+            activityModel.removeTask(tobeDeleted);
+
+
+            adapter.notifyDataSetChanged();
+
+
 
             return true;
         } else {

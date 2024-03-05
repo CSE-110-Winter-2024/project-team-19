@@ -112,6 +112,8 @@ public class RecurringListAdapter extends ArrayAdapter<Task> {
     // But get in the habit of defining them because they never hurt
     // (as long as you have IDs for each item) and sometimes you need them.
 
+
+
     @Override
     public boolean hasStableIds() {
         return true;
