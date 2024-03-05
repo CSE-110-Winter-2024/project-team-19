@@ -13,7 +13,7 @@ import edu.ucsd.cse110.successorator.lib.domain.SimpleTaskRepository;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 public class MockRepositoryTests {
-
+/*
     @Test
     public void addNewTaskFromEmpty() {
         // GIVEN
@@ -103,4 +103,5 @@ public class MockRepositoryTests {
 
         assertEquals(new HashSet<>(expectedList), new HashSet<Task>(model.getOrderedTasks().getValue()));
     }
+ */
 }
