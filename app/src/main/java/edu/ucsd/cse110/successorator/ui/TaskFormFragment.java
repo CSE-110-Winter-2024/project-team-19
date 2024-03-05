@@ -63,6 +63,8 @@ public class TaskFormFragment extends DialogFragment {
 
         Button btnSubmit = view.findViewById(R.id.submit_button);
 
+        // Set radio button text to dynamic text matching current date + frequency
+
         RadioButton weeklyButton = view.findViewById(R.id.weekly_button);
 
         String dayOfWeek = getDayOfWeekString(calendar.get(Calendar.DAY_OF_WEEK));
@@ -88,6 +90,7 @@ public class TaskFormFragment extends DialogFragment {
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
 
+            // Add respective task with selected frequency to DB based on radio button selection
             RadioGroup radioGroup = view.findViewById(R.id.radio_group);
             int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             if (selectedRadioButtonId != -1) {

@@ -70,6 +70,7 @@ public class RecurringTaskListFragment extends Fragment {
         activityModel.getOrderedTasks().observe(tasks -> {
             if (tasks == null) return;
             adapter.clear();
+            // Filters task to only recurring tasks by removing one time and pending tasks
             List<Task> recurringTasks = new ArrayList<>();
             for (Task i : tasks) {
                 if (!i.frequency().equals(Frequency.ONE_TIME) && !i.frequency().equals(Frequency.PENDING)) {
