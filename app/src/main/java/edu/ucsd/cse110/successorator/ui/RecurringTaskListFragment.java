@@ -3,9 +3,13 @@ package edu.ucsd.cse110.successorator.ui;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
+import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentRecurringTasksBinding;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
@@ -25,7 +30,7 @@ public class RecurringTaskListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentRecurringTasksBinding view;
 
-    private TaskListAdapter adapter;
+    private RecurringListAdapter adapter;
 
     private boolean deleteFlag = false;
 
@@ -54,7 +59,7 @@ public class RecurringTaskListFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
+        this.adapter = new RecurringListAdapter(requireContext(), List.of(), task -> {
             if (task.complete()) {
                 Log.d("Debug", "Fragment called insertNewTask");
                 var id = task.id();
@@ -72,10 +77,14 @@ public class RecurringTaskListFragment extends Fragment {
             adapter.clear();
             List<Task> recurringTasks = new ArrayList<Task>();
             for (Task i: tasks)
-            {if (!i.frequency().equals(Frequency.ONE_TIME) && !i.frequency()
-                    .equals(Frequency.PENDING))
-            {recurringTasks.add(i);}
+            {
+
+                if (!i.frequency().equals(Frequency.ONE_TIME) && !i.frequency().equals(Frequency.PENDING)) {
+                    recurringTasks.add(i);
+
+                }
             }
+
             adapter.addAll(new ArrayList<>(recurringTasks)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
@@ -93,6 +102,9 @@ public class RecurringTaskListFragment extends Fragment {
         //When a task is long-pressed, open a menu with the option to remove it.
         //if they press remove at that point, it's deleted from the database.
 
+        //this allows all recurring tasks to have menus when long-pressed
+        registerForContextMenu(view.taskList);
+
 
 
         view.addTaskButton.setOnClickListener(v -> {
@@ -106,5 +118,30 @@ public class RecurringTaskListFragment extends Fragment {
         return view.getRoot();
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        if (v.getId() == R.id.task_list) {
+            //menu.setHeaderTitle("Options");
+            menu.add(Menu.NONE, R.id.menu_delete_recurring, Menu.NONE, "Delete");
+        }
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int position = info.position;
+
+        if (item.getItemId() == R.id.menu_delete_recurring) {
+            // Log the deletion
+            Log.d("when delete pressed", "Delete recurring task selected for item at position: " + position);
+            //deletion logic here
+
+            return true;
+        } else {
+            return super.onContextItemSelected(item);
+        }
+
+    }
 
 }
