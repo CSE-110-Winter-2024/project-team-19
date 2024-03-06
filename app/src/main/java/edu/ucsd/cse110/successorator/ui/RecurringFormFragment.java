@@ -15,7 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,12 +85,46 @@ public class RecurringFormFragment extends DialogFragment {
 
 
         btnSubmit.setOnClickListener(v -> {
-
+            LocalDate currentDate = LocalDate.now();
+            Month currentMonth = currentDate.getMonth();
+            DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
             int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             RadioButton selectedRadioButton = view.findViewById(selectedRadioButtonId);
             Log.d("selected button","" + selectedRadioButton.getText().toString());
+            int occurrence = getDayOccurrenceInMonth(currentDate.getYear(), currentMonth, currentDayOfWeek);
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
+            if (selectedRadioButtonId != -1) {
+                if (selectedRadioButtonId == R.id.onetime_button) {
+                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                            false, LocalDate.now(), Frequency.ONE_TIME,
+                            LocalDate.now().getDayOfWeek(), occurrence));
+                    dismiss();
+                }
+                else if (selectedRadioButtonId == R.id.daily_button) {
+                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                            false, LocalDate.now(), Frequency.DAILY,
+                            LocalDate.now().getDayOfWeek(), occurrence));
+                    dismiss();
+                }
+                else if (selectedRadioButtonId == R.id.weekly_button) {
+                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                            false, LocalDate.now(), Frequency.WEEKLY,
+                            LocalDate.now().getDayOfWeek(), occurrence));
+                    dismiss();
+                }
+                else if (selectedRadioButtonId == R.id.monthly_button) {
+                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                            false, LocalDate.now(), Frequency.MONTHLY,
+                            LocalDate.now().getDayOfWeek(), occurrence));
+                    dismiss();
+                } else if (selectedRadioButtonId == R.id.yearly_button) {
+                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                            false, LocalDate.now(), Frequency.YEARLY,
+                            LocalDate.now().getDayOfWeek(), occurrence));
+                    dismiss();
+                }
+            }
             activityModel.insertNewTask(new Task(null, taskTextString, 2, false,
                     LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1));
             dismiss();
@@ -97,6 +133,25 @@ public class RecurringFormFragment extends DialogFragment {
 
         return view;
 
+    }
+
+    private static int getDayOccurrenceInMonth(int year, Month month, DayOfWeek dayOfWeek) {
+        int occurrence = 1;
+        LocalDate date = LocalDate.of(year, month, 1);
+
+        while (!date.getDayOfWeek().equals(dayOfWeek)) {
+            date = date.plusDays(1);
+        }
+
+        while (date.getMonth() == month) {
+            if (date.getDayOfWeek().equals(dayOfWeek)) {
+                return occurrence;
+            }
+            date = date.plusDays(7);
+            occurrence++;
+        }
+
+        return -1;
     }
 
 }
