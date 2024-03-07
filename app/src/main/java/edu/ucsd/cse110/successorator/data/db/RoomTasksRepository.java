@@ -89,7 +89,7 @@ public class RoomTasksRepository implements TaskRepository {
 
     @Override
     public void remove(Task task) {
-       tasksDao.delete(task.id());
+        tasksDao.delete(task.id());
         var tasks = tasksDao.findAll().stream()
                 .map(TaskEntity::toTask)
                 .collect(Collectors.toList());
@@ -102,6 +102,16 @@ public class RoomTasksRepository implements TaskRepository {
 
     @Override
     public void deleteCompletedTasks(){
-        tasksDao.deleteCompletedTasks();
+//        tasksDao.deleteCompletedTasks();
+        var tasks = tasksDao.findAll().stream()
+                .map(TaskEntity::toTask)
+                .collect(Collectors.toList());
+        tasks = Tasks.updateTasks(tasks);
+        var tasksEntities = tasks.stream()
+                .map(TaskEntity::fromTask)
+                .collect(Collectors.toList());
+        tasksDao.clear();
+        tasksDao.insert(tasksEntities);
+
     }
 }
