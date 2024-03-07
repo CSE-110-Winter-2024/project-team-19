@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import edu.ucsd.cse110.successorator.databinding.ListItemNotTaskBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
@@ -32,7 +34,7 @@ public class RecurringListAdapter extends ArrayAdapter<Task> {
 
     private TextView taskText;
 
-    public RecurringListAdapter(Context context, List<Task> flashcards, Consumer<Task> onDeleteClick) {
+    public RecurringListAdapter(Context context, List<Task> tasks, Consumer<Task> onDeleteClick) {
         //the difference between this and the normal adapter is that there
         //is an onlickListener for long presses that allows you to delete
 
@@ -41,7 +43,7 @@ public class RecurringListAdapter extends ArrayAdapter<Task> {
         //
         // Also note that ArrayAdapter NEEDS a mutable List (ArrayList),
         // or it will crash!
-        super(context, 0, new ArrayList<>(flashcards));
+        super(context, 0, new ArrayList<>(tasks));
         this.onCompleteClick = onDeleteClick;
         sharedPreferences = context.getSharedPreferences("task_prefs", Context.MODE_PRIVATE);
     }
@@ -60,37 +62,19 @@ public class RecurringListAdapter extends ArrayAdapter<Task> {
         assert task != null;
 
         // Check if a view is being reused...
-        ListItemTaskBinding binding;
+        ListItemNotTaskBinding binding;
         if (convertView != null) {
             // if so, bind to it
-            binding = ListItemTaskBinding.bind(convertView);
+            binding = ListItemNotTaskBinding.bind(convertView);
         } else {
             // otherwise inflate a new view from our layout XML.
             var layoutInflater = LayoutInflater.from(getContext());
-            binding = ListItemTaskBinding.inflate(layoutInflater, parent, false);
+            binding = ListItemNotTaskBinding.inflate(layoutInflater, parent, false);
         }
 
 
         // Populate the view with the flashcard's data.
         binding.taskContent.setText(task.taskName());
-
-        final boolean isTaskCompleted = task.complete();
-//        Log.d("ugh", "task:" + task.taskName() + " complete: " + task.complete());
-        if (isTaskCompleted) {
-            binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            binding.taskDash.setText("+");
-            binding.taskDash.setTextColor(Color.LTGRAY);
-        } else {
-            binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            binding.taskDash.setText("−");
-            binding.taskDash.setTextColor(Color.RED);
-        }
-
-
-
-        binding.taskDash.setOnClickListener(v -> {
-            onCompleteClick.accept(task);
-        });
 
 
         binding.getRoot().setOnLongClickListener(new View.OnLongClickListener() {

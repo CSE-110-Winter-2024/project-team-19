@@ -91,5 +91,5 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-        tools:listitem="@layout/list_item_task" />
+        tools:listitem="@layout/list_item_not_task" />
 </androidx.constraintlayout.widget.ConstraintLayout>
