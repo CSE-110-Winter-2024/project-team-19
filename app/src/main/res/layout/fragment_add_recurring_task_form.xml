@@ -8,15 +8,17 @@
 
     <EditText
         android:id="@+id/task_text"
-        android:layout_width="247dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
         android:ems="10"
         android:hint="Enter a task..."
         android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/recurring_radio_group"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintHorizontal_bias="0.542"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,77 +26,99 @@
         android:id="@+id/recurring_radio_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task_text">
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/onetime_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="One-time" />
 
         <RadioButton
             android:id="@+id/daily_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Daily..." />
+            android:text="Daily" />
 
         <RadioButton
             android:id="@+id/weekly_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Weekly..." />
+            android:text="Weekly" />
 
         <RadioButton
             android:id="@+id/monthly_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Monthly..." />
+            android:text="Monthly" />
 
         <RadioButton
             android:id="@+id/yearly_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Yearly..." />
-    </RadioGroup>
+            android:text="Yearly" />
 
-    <TextView
-        android:id="@+id/starting_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="24dp"
-        android:text="Starting..."
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/recurring_radio_group"
-        app:layout_constraintTop_toBottomOf="@+id/task_text" />
+    </RadioGroup>
 
     <ImageButton
         android:id="@+id/openCalendarButton"
-        android:layout_width="110dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="104dp"
+        style="@android:style/Widget.Holo.Light.ImageButton"
+        android:layout_width="48dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="128dp"
+        android:backgroundTint="#A350B2"
         android:src="@android:drawable/ic_menu_my_calendar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.068"
-        app:layout_constraintStart_toEndOf="@+id/recurring_radio_group"
-        app:layout_constraintTop_toBottomOf="@+id/starting_text" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/recurring_radio_group"
+        tools:src="@android:drawable/ic_menu_my_calendar" />
 
-    <Button
-        android:id="@+id/recurringCancelButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="60dp"
-        android:text="Cancel"
-        app:layout_constraintEnd_toStartOf="@+id/recurringSubmitButton"
-        app:layout_constraintTop_toBottomOf="@+id/openCalendarButton" />
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="126dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="20dp"
+        android:text="Starting from"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/recurringCancelButton"
+        app:layout_constraintEnd_toStartOf="@+id/openCalendarButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recurring_radio_group" />
 
     <Button
         android:id="@+id/recurringSubmitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="48dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#977CC8"
         android:text="Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/recurringCancelButton"
         app:layout_constraintTop_toBottomOf="@+id/openCalendarButton" />
 
+    <Button
+        android:id="@+id/recurringCancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="30dp"
+        android:text="Cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/recurringSubmitButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 </androidx.constraintlayout.widget.ConstraintLayout>
