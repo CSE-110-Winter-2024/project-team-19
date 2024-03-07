@@ -1,5 +1,8 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,5 +61,31 @@ public class Tasks {
                 .map(Task::sortOrder)
                 .max(Integer::compareTo)
                 .orElse(0);
+    }
+
+    public static Integer calculateOccurrence(LocalDate date){
+        int toReturn = 1;
+        Month originalMonth = date.getMonth();
+        date = date.minusDays(7);
+        while(date.getMonth() == originalMonth){
+            toReturn++;
+            date = date.minusDays(7);
+        }
+        return toReturn;
+    }
+
+    public static Frequency convertString(String string){
+        switch (string){
+            case "Daily...":
+                return Frequency.DAILY;
+            case "Monthly...":
+                return Frequency.MONTHLY;
+            case "Weekly...":
+                return Frequency.WEEKLY;
+            case "Yearly...":
+                return Frequency.YEARLY;
+            default:
+                return Frequency.ONE_TIME;
+        }
     }
 }

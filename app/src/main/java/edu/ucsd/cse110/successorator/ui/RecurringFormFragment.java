@@ -24,6 +24,7 @@ import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
+import edu.ucsd.cse110.successorator.lib.domain.Tasks;
 
 /*
 This class was adapted from the CardListFragment provided in CSE 110 Lab 5.
@@ -53,11 +54,12 @@ public class RecurringFormFragment extends DialogFragment {
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
         var activityModel = modelProvider.get(MainViewModel.class);
 
+        var calDialog = TaskRecurringDatePickerFragment.newInstance();
+
         //open the calendar
         ImageButton calButton = view.findViewById(R.id.openCalendarButton);
         calButton.setOnClickListener(
                 v -> {
-                    var calDialog = TaskRecurringDatePickerFragment.newInstance();
                     calDialog.show(getParentFragmentManager(),"calendar");
                 }
         );
@@ -83,14 +85,17 @@ public class RecurringFormFragment extends DialogFragment {
 
 
         btnSubmit.setOnClickListener(v -> {
-
             int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             RadioButton selectedRadioButton = view.findViewById(selectedRadioButtonId);
-            Log.d("selected button","" + selectedRadioButton.getText().toString());
+            String frequencyString = selectedRadioButton.getText().toString();
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
-            activityModel.insertNewTask(new Task(null, taskTextString, 2, false,
-                    LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1));
+            Task toInsert = new Task(null, taskTextString, 2, false,
+                    calDialog.getPickedDate(), Tasks.convertString(frequencyString),
+                    calDialog.getPickedDate().getDayOfWeek(),
+                    Tasks.calculateOccurrence(calDialog.getPickedDate()));
+            activityModel.insertNewTask(toInsert);
+            Log.d("ReccurringFormFragment", toInsert.toString());
             dismiss();
         });
 
@@ -98,7 +103,6 @@ public class RecurringFormFragment extends DialogFragment {
         return view;
 
     }
-
 }
 
 

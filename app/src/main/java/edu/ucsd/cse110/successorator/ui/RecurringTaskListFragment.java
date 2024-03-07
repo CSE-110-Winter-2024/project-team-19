@@ -80,13 +80,10 @@ public class RecurringTaskListFragment extends Fragment {
             List<Task> recurringTasks = new ArrayList<Task>();
             for (Task i: tasks)
             {
-
                 if (!i.frequency().equals(Frequency.ONE_TIME) && !i.frequency().equals(Frequency.PENDING)) {
                     recurringTasks.add(i);
-
                 }
             }
-
             adapter.addAll(new ArrayList<>(recurringTasks)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
@@ -110,8 +107,6 @@ public class RecurringTaskListFragment extends Fragment {
 
 
         view.addTaskButton.setOnClickListener(v -> {
-
-
             var dialogFragment = RecurringFormFragment.newInstance();
            dialogFragment.show(getParentFragmentManager(), "RecurringForm");
 
