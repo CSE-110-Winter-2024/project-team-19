@@ -134,8 +134,8 @@ public class TaskListFragment extends Fragment {
         String StringOfDate = myDateObj.format(myFormatObj).toString();
         String StringOfNextDate = myNextDateObj.format(myFormatObj).toString();
 
-        this.DateDisplay = this.view.dateContent;
-        view.dateContent.setText(StringOfDate);
+        //this.DateDisplay = this.view.dateContent;
+        //view.dateContent.setText(StringOfDate);
 
 
         //this is the button responsible for switching to the recurring task fragment
@@ -220,7 +220,7 @@ public class TaskListFragment extends Fragment {
             //declaring strings to put into the spinner dropdown
             String StringOfNewNowDate = lastTime.format(myFormatObj2).toString();
             String StringOfNewTmrwDate = lastTime.format(myFormatObj2).toString();
-            DateDisplay.setText(StringOfNewNowDate);
+            //DateDisplay.setText(StringOfNewNowDate);
 
             //here we need to call some method to remove all tasks that are completed
 
@@ -234,7 +234,7 @@ public class TaskListFragment extends Fragment {
 
         String StringOfNewNowDate = lastTime.format(myFormatObj2).toString();
         String StringOfNewTmrwDate = lastTime.plusDays(1).format(myFormatObj2).toString();
-        DateDisplay.setText(StringOfNewNowDate);
+        //DateDisplay.setText(StringOfNewNowDate);
 
         //updating dates on dropdown spinner item viewTitleDropdown
         spinnerItems = new String[]{
