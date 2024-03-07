@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -172,6 +173,40 @@ public class TaskListFragment extends Fragment {
         viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
 
+        /*
+         * adding cases to tell the spinner what to do when switching to Today (TaskListFragment),
+         * Tomorrow (TmrwTaskListFragment), Recurring (RecurringTaskListFragment), and
+         * Pending (PendingTaskListFragment)
+         */
+        viewTitleDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Handle item selection and switch fragments here
+
+                /*
+                switch (position) {
+                    case 0:
+                        //loadFragment(new TaskListFragment());
+                        break;
+
+                    case 1:
+                        //loadFragment(new );
+                        break;
+                    case 2:
+                        loadFragment(new RecurringTaskListFragment());
+                    case 3:
+                        break;
+                }
+
+                 */
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing here
+            }
+        });
 
         //This is the runner that checks the time every second
         Runnable updateTimeRunnable = new Runnable() {
@@ -251,7 +286,13 @@ public class TaskListFragment extends Fragment {
 
     }
 
-
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 
 
     }
