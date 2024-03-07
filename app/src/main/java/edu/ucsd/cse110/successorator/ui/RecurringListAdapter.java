@@ -1,9 +1,10 @@
 package edu.ucsd.cse110.successorator.ui;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +17,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import edu.ucsd.cse110.successorator.databinding.ListItemNotTaskBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
-public class RecurringTaskListAdapter extends ArrayAdapter<Task> {
+/*
+This class was adapted from the CardListAdapter class provided in CSE 110 Lab 5.
+https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
+ */
+public class RecurringListAdapter extends ArrayAdapter<Task> {
     Consumer<Task> onCompleteClick;
+
 
     private SharedPreferences sharedPreferences;
 
+
     private TextView taskText;
 
-    public RecurringTaskListAdapter(Context context, List<Task> tasks, Consumer<Task> onDeleteClick) {
+    public RecurringListAdapter(Context context, List<Task> tasks, Consumer<Task> onDeleteClick) {
+        //the difference between this and the normal adapter is that there
+        //is an onlickListener for long presses that allows you to delete
+
         // This sets a bunch of stuff internally, which we can access
         // with getContext() and getItem() for example.
         //
@@ -46,36 +57,32 @@ public class RecurringTaskListAdapter extends ArrayAdapter<Task> {
         assert task != null;
 
         // Check if a view is being reused...
-        ListItemTaskBinding binding;
+        ListItemNotTaskBinding binding;
         if (convertView != null) {
             // if so, bind to it
-            binding = ListItemTaskBinding.bind(convertView);
+            binding = ListItemNotTaskBinding.bind(convertView);
         } else {
             // otherwise inflate a new view from our layout XML.
             var layoutInflater = LayoutInflater.from(getContext());
-            binding = ListItemTaskBinding.inflate(layoutInflater, parent, false);
+            binding = ListItemNotTaskBinding.inflate(layoutInflater, parent, false);
         }
 
 
         // Populate the view with the flashcard's data.
         binding.taskContent.setText(task.taskName());
 
-        final boolean isTaskCompleted = task.complete();
-//        Log.d("ugh", "task:" + task.taskName() + " complete: " + task.complete());
-        if (isTaskCompleted) {
-            binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            binding.taskDash.setText("+");
-            binding.taskDash.setTextColor(Color.LTGRAY);
-        } else {
-            binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            binding.taskDash.setText("−");
-            binding.taskDash.setTextColor(Color.RED);
-        }
 
-
-        binding.taskDash.setOnClickListener(v -> {
-            onCompleteClick.accept(task);
+        binding.getRoot().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // Show the context menu for long-press action
+                v.showContextMenu();
+                return true;
+            }
         });
+
+
+
 
         return binding.getRoot();
     }
@@ -83,6 +90,8 @@ public class RecurringTaskListAdapter extends ArrayAdapter<Task> {
     // The below methods aren't strictly necessary, usually.
     // But get in the habit of defining them because they never hurt
     // (as long as you have IDs for each item) and sometimes you need them.
+
+
 
     @Override
     public boolean hasStableIds() {

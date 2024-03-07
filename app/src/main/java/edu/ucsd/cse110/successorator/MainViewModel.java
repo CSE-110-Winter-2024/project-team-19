@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import android.os.Handler;
+import android.util.Log;
 
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.lib.domain.TaskRepository;
@@ -65,8 +66,8 @@ public class MainViewModel extends ViewModel {
         taskRepository.uncomplete(task);
     }
 
-    public void removeTask(int id){
-        taskRepository.remove(id);
+    public void removeTask(Task task){
+        taskRepository.remove(task);
     }
 
     public void deleteCompletedTasks(){taskRepository.deleteCompletedTasks();}
@@ -74,4 +75,5 @@ public class MainViewModel extends ViewModel {
     public Subject<List<Task>> getOrderedTasks() {
         return orderedTasks;
     }
+
 }

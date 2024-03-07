@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.successorator.data.db;
 
+import android.util.Log;
+
 import androidx.lifecycle.Transformations;
 
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.lib.domain.TaskRepository;
+import edu.ucsd.cse110.successorator.lib.domain.Tasks;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 import edu.ucsd.cse110.successorator.util.LiveDataSubjectAdapter;
 
@@ -41,7 +44,14 @@ public class RoomTasksRepository implements TaskRepository {
 
     @Override
     public void save(Task task){
-        tasksDao.insertNewTask(TaskEntity.fromTask(task));
+        var tasks = tasksDao.findAll().stream()
+                                .map(TaskEntity::toTask)
+                                .collect(Collectors.toList());
+        tasks = Tasks.insertTask(tasks, task);
+        var tasksEntities = tasks.stream()
+                                .map(TaskEntity::fromTask)
+                                .collect(Collectors.toList());
+        tasksDao.insert(tasksEntities);
     }
 
     public void save(List<Task> flashcards) {
@@ -53,20 +63,55 @@ public class RoomTasksRepository implements TaskRepository {
 
     @Override
     public void complete(Task task){
-        tasksDao.completeTask(TaskEntity.fromTask(task));
+//        tasksDao.completeTask(TaskEntity.fromTask(task));
+        var tasks = tasksDao.findAll().stream()
+                .map(TaskEntity::toTask)
+                .collect(Collectors.toList());
+        tasks = Tasks.completeTask(tasks, task);
+        var tasksEntities = tasks.stream()
+                .map(TaskEntity::fromTask)
+                .collect(Collectors.toList());
+        tasksDao.insert(tasksEntities);
     }
 
     @Override
     public void uncomplete(Task task){
-        tasksDao.uncompleteTask(TaskEntity.fromTask(task));
+//        tasksDao.uncompleteTask(TaskEntity.fromTask(task));
+        var tasks = tasksDao.findAll().stream()
+                .map(TaskEntity::toTask)
+                .collect(Collectors.toList());
+        tasks = Tasks.uncompleteTask(tasks, task);
+        var tasksEntities = tasks.stream()
+                .map(TaskEntity::fromTask)
+                .collect(Collectors.toList());
+        tasksDao.insert(tasksEntities);
     }
 
     @Override
-    public void remove(int id) {
-        tasksDao.delete(id);
+    public void remove(Task task) {
+        tasksDao.delete(task.id());
+        var tasks = tasksDao.findAll().stream()
+                .map(TaskEntity::toTask)
+                .collect(Collectors.toList());
+        tasks = Tasks.removeTask(tasks, task);
+        var tasksEntities = tasks.stream()
+                .map(TaskEntity::fromTask)
+                .collect(Collectors.toList());
+        tasksDao.insert(tasksEntities);
     }
+
     @Override
     public void deleteCompletedTasks(){
-        tasksDao.deleteCompletedTasks();
+//        tasksDao.deleteCompletedTasks();
+        var tasks = tasksDao.findAll().stream()
+                .map(TaskEntity::toTask)
+                .collect(Collectors.toList());
+        tasks = Tasks.updateTasks(tasks);
+        var tasksEntities = tasks.stream()
+                .map(TaskEntity::fromTask)
+                .collect(Collectors.toList());
+        tasksDao.clear();
+        tasksDao.insert(tasksEntities);
+
     }
 }

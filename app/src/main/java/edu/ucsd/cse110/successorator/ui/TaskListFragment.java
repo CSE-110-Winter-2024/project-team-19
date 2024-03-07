@@ -26,6 +26,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import android.os.Handler;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
@@ -98,7 +100,9 @@ public class TaskListFragment extends Fragment {
         activityModel.getOrderedTasks().observe(tasks -> {
             if (tasks == null) return;
             adapter.clear();
-            adapter.addAll(new ArrayList<>(tasks)); // remember the mutable copy here!
+            adapter.addAll(new ArrayList<>(tasks).stream()
+                                .filter(task -> task.activeDate().isBefore(LocalDate.now().plusDays(1)))
+                                .collect(Collectors.toList())); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
     }
@@ -116,7 +120,7 @@ public class TaskListFragment extends Fragment {
         handler = new Handler(Looper.getMainLooper());
 
 
-        DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
+//        DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
         lastTime = LocalDateTime.now();
         lastDate = LocalDate.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
