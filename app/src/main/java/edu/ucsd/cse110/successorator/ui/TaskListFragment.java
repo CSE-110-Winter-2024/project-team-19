@@ -183,7 +183,6 @@ public class TaskListFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // Handle item selection and switch fragments here
 
-                /*
                 switch (position) {
                     case 0:
                         //loadFragment(new TaskListFragment());
@@ -197,8 +196,6 @@ public class TaskListFragment extends Fragment {
                     case 3:
                         break;
                 }
-
-                 */
 
             }
 
@@ -238,6 +235,7 @@ public class TaskListFragment extends Fragment {
         return view.getRoot();
     }
 
+    // TODO: keeping updateDropdown in this function crashes the app. need fix.
     //dynamically updating spinner time using this StackOverflow post: https://stackoverflow.com/questions/3283337/how-to-update-a-spinner-dynamically
     private void updateCurrentDate() {
         LocalDateTime timeNow = LocalDateTime.now();
@@ -257,6 +255,8 @@ public class TaskListFragment extends Fragment {
             String StringOfNewTmrwDate = lastTime.format(myFormatObj2).toString();
             //DateDisplay.setText(StringOfNewNowDate);
 
+            //updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
+
             //here we need to call some method to remove all tasks that are completed
 
         }
@@ -271,16 +271,7 @@ public class TaskListFragment extends Fragment {
         String StringOfNewTmrwDate = lastTime.plusDays(1).format(myFormatObj2).toString();
         //DateDisplay.setText(StringOfNewNowDate);
 
-        //updating dates on dropdown spinner item viewTitleDropdown
-        spinnerItems = new String[]{
-                "Today, " + StringOfNewNowDate,
-                "Tomorrow, " + StringOfNewTmrwDate,
-                "Recurring",
-                "Pending"
-        };
-        //viewTitleAdapter.notifyDataSetChanged();
-        viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
-        viewTitleDropdown.setAdapter(viewTitleAdapter);
+        updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
 
         //here we need to call some method to remove all tasks that are completed
 
@@ -294,5 +285,17 @@ public class TaskListFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
+    private void updateDropdown(String newDate, String newTmrwDate) {
+        //updating dates on dropdown spinner item viewTitleDropdown
+        spinnerItems = new String[]{
+                "Today, " + newDate,
+                "Tomorrow, " + newTmrwDate,
+                "Recurring",
+                "Pending"
+        };
+        //viewTitleAdapter.notifyDataSetChanged();
+        viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        viewTitleDropdown.setAdapter(viewTitleAdapter);
+    }
 
     }
