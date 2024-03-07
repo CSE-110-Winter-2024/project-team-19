@@ -6,16 +6,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
+import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentRecurringTasksBinding;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
@@ -90,6 +94,20 @@ public class RecurringTaskListFragment extends Fragment {
         view.taskList.setAdapter(adapter);
 
         //no time functionality for this view
+
+        ImageButton switchButton = view.switchtoregularbutton;
+        switchButton.setOnClickListener(
+                v -> {
+                    TaskListFragment reg = new TaskListFragment();
+
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment_container, reg);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
+        );
 
 
         view.addTaskButton.setOnClickListener(v -> {
