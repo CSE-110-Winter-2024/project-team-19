@@ -120,7 +120,7 @@ public class TaskListFragment extends Fragment {
         handler = new Handler(Looper.getMainLooper());
 
 
-        DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
+//        DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
         lastTime = LocalDateTime.now();
         lastDate = LocalDate.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");

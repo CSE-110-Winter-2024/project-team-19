@@ -3,6 +3,8 @@ package edu.ucsd.cse110.successorator.lib.domain;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +39,19 @@ public class Tasks {
         return tasks;
     }
 
+    public static List<Task> updateTasks(List<Task> tasks){
+        List<Task> newTasks = new ArrayList<Task>();
+        for(Task task : tasks){
+            if(task.complete()){
+                if(task.frequency() != Frequency.ONE_TIME && task.frequency() != Frequency.PENDING)
+                    newTasks = Tasks.insertTask(newTasks, Tasks.nextRecurrence(task).withComplete(false));
+            }else{
+                newTasks = Tasks.insertTask(newTasks, task);
+            }
+        }
+        return newTasks;
+    }
+
     private static List<Task> shiftSortOrders(List<Task> tasks, int from, int to, int by){
         return tasks.stream()
                 .map(task -> {
@@ -61,6 +76,32 @@ public class Tasks {
                 .map(Task::sortOrder)
                 .max(Integer::compareTo)
                 .orElse(0);
+    }
+
+    private static Task nextRecurrence(Task task){
+        switch(task.frequency()){
+            case DAILY:
+                return task.withActiveDate(task.activeDate().plusDays(1));
+            case WEEKLY:
+                return task.withActiveDate(task.activeDate().plusWeeks(1));
+            case YEARLY:
+                return task.withActiveDate(task.activeDate().plusYears(1));
+            case MONTHLY:
+                if(calculateOccurrence(task.activeDate()) == task.dayOccurrence()) {
+                    Month month = task.activeDate().getMonth();
+                    while (task.activeDate().getMonth() == month) {
+                        task = task.withActiveDate(task.activeDate().plusWeeks(1));
+                    }
+                }
+                int ctr = 1;
+                while(ctr < task.dayOccurrence()){
+                    task = task.withActiveDate(task.activeDate().plusWeeks(1));
+                    ctr++;
+                }
+                return task;
+            default:
+                return null;
+        }
     }
 
     public static Integer calculateOccurrence(LocalDate date){
