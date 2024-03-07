@@ -48,11 +48,6 @@ public class RecurringListAdapter extends ArrayAdapter<Task> {
         sharedPreferences = context.getSharedPreferences("task_prefs", Context.MODE_PRIVATE);
     }
 
-    public boolean isComplete(Task task) {
-        return sharedPreferences.getBoolean("task_" + task.id(), false);
-    }
-
-
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
