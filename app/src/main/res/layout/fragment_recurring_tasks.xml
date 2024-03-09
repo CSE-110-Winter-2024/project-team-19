@@ -91,7 +91,6 @@
             android:id="@+id/recurring_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recurring"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/view"
             app:layout_constraintEnd_toStartOf="@+id/add_task_button"

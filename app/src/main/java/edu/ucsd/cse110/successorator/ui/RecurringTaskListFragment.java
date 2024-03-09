@@ -44,6 +44,8 @@ public class RecurringTaskListFragment extends Fragment {
 
     private SharedPreferences sharedPreferences;
 
+    private LocalDateTime lastTime;
+
     //initializing Spinner variables
     Spinner viewTitleDropdown;
     ArrayAdapter<String> viewTitleAdapter;
@@ -109,6 +111,8 @@ public class RecurringTaskListFragment extends Fragment {
         // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);
 
+        lastTime = LocalDateTime.now();
+
         //no time functionality for this view yet, id like to move to main activity
 
         //When a task is long-pressed, open a menu with the option to remove it.
@@ -152,7 +156,6 @@ public class RecurringTaskListFragment extends Fragment {
         viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
 
-        // TODO: Put the functionality here
         /*
          * adding cases to tell the spinner what to do when switching to Today (TaskListFragment),
          * Tomorrow (TmrwTaskListFragment), Recurring (RecurringTaskListFragment), and
@@ -184,6 +187,17 @@ public class RecurringTaskListFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 // Do nothing here
+            }
+        });
+
+        view.mockButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //calling updateTime with mocked = true just moves date forward
+                updateCurrentTime();
+                //Call deleteCompletedTasks from the taskDao
+                activityModel.deleteCompletedTasks();
+
             }
         });
 
@@ -233,6 +247,34 @@ public class RecurringTaskListFragment extends Fragment {
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    private void updateCurrentTime() {
+        LocalDateTime timeNow = LocalDateTime.now();
+        lastTime = lastTime.plusDays(1);
+        DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+
+        String StringOfNewNowDate = lastTime.format(myFormatObj2).toString();
+        String StringOfNewTmrwDate = lastTime.plusDays(1).format(myFormatObj2).toString();
+        //DateDisplay.setText(StringOfNewNowDate);
+
+        updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
+
+        //here we need to call some method to remove all tasks that are completed
+
+    }
+
+    private void updateDropdown(String newDate, String newTmrwDate) {
+        //updating dates on dropdown spinner item viewTitleDropdown
+        spinnerItems = new String[]{
+                "Recurring",
+                "Today, " + newDate,
+                "Tomorrow, " + newTmrwDate,
+                "Pending"
+        };
+        //viewTitleAdapter.notifyDataSetChanged();
+        viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        viewTitleDropdown.setAdapter(viewTitleAdapter);
     }
 
 }
