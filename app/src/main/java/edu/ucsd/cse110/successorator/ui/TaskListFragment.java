@@ -131,7 +131,7 @@ public class TaskListFragment extends Fragment {
         handler = new Handler(Looper.getMainLooper());
 
 
-//        DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
+        //DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
         lastTime = LocalDateTime.now();
         lastDate = LocalDate.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
@@ -166,11 +166,6 @@ public class TaskListFragment extends Fragment {
 
         // Prepping dropdown
         // TODO: Improve this note
-//        Spinner spinnerViewTitles = view.viewTitle;
-//        ArrayAdapter<CharSequence> adapterViewTitles = ArrayAdapter.createFromResource(this.getActivity(), R.array.view_titles, android.R.layout.simple_spinner_item);
-//        adapterViewTitles.setDropDownViewResource(android.R.layout.simple_spinner_item);
-//        spinnerViewTitles.setAdapter(adapterViewTitles); // LINE WITH ISSUE; INVOKING ON NULL
-        // TODO: Do implementation below; will help with str substitution
         //viewTitleDropdown is a Spinner, viewTitleAdapter is the Spinner Adapter, spinnerItems is list of strings
         viewTitleDropdown = view.viewTitle;
         spinnerItems = new String[]{"Today, " + StringOfDate, "Tomorrow, " + StringOfNextDate, "Recurring", "Pending"};
@@ -189,15 +184,17 @@ public class TaskListFragment extends Fragment {
 
                 switch (position) {
                     case 0:
+                        // WARNING: uncommenting the below will disable the dropdown
                         //loadFragment(new TaskListFragment());
                         break;
 
                     case 1:
-                        //loadFragment(new );
+                        // loadFragment(new TmrwTaskListFragment());
                         break;
                     case 2:
                         loadFragment(new RecurringTaskListFragment());
                     case 3:
+                        // loadFragment(new PendingTaskListFragment());
                         break;
                 }
 

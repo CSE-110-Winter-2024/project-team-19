@@ -10,7 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +40,11 @@ public class RecurringTaskListFragment extends Fragment {
     private boolean deleteFlag = false;
 
     private SharedPreferences sharedPreferences;
+
+    //initializing Spinner variables
+    Spinner viewTitleDropdown;
+    ArrayAdapter<String> viewTitleAdapter;
+    String[] spinnerItems;
 
 
     public RecurringTaskListFragment() {
@@ -126,6 +133,13 @@ public class RecurringTaskListFragment extends Fragment {
            dialogFragment.show(getParentFragmentManager(), "RecurringForm");
 
         });
+
+        // Assign values to task view by date dropdown in header
+        //viewTitleDropdown is a Spinner, viewTitleAdapter is the Spinner Adapter, spinnerItems is list of strings
+        viewTitleDropdown = view.viewTitle;
+        spinnerItems = new String[]{"Today, " /*+ StringOfDate*/, "Tomorrow, " /*+ StringOfNextDate*/, "Recurring", "Pending"};
+        viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        viewTitleDropdown.setAdapter(viewTitleAdapter);
 
         return view.getRoot();
     }
