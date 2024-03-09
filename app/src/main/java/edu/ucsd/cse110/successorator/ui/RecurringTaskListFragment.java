@@ -21,6 +21,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,12 +137,55 @@ public class RecurringTaskListFragment extends Fragment {
 
         });
 
+        // Create dates for date dropdown
+        LocalDateTime myDateObj = LocalDateTime.now();
+        LocalDateTime myNextDateObj = myDateObj.plusDays(1);
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+
+        String StringOfDate = myDateObj.format(myFormatObj).toString();
+        String StringOfNextDate = myNextDateObj.format(myFormatObj).toString();
+
         // Assign values to task view by date dropdown in header
         //viewTitleDropdown is a Spinner, viewTitleAdapter is the Spinner Adapter, spinnerItems is list of strings
         viewTitleDropdown = view.viewTitle;
-        spinnerItems = new String[]{"Today, " /*+ StringOfDate*/, "Tomorrow, " /*+ StringOfNextDate*/, "Recurring", "Pending"};
+        spinnerItems = new String[]{ "Recurring", "Today, " + StringOfDate, "Tomorrow, " + StringOfNextDate, "Pending"};
         viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
+
+        // TODO: Put the functionality here
+        /*
+         * adding cases to tell the spinner what to do when switching to Today (TaskListFragment),
+         * Tomorrow (TmrwTaskListFragment), Recurring (RecurringTaskListFragment), and
+         * Pending (PendingTaskListFragment)
+         */
+        viewTitleDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Handle item selection and switch fragments here
+
+                switch (position) {
+                    case 0:
+                        // WARNING: uncommenting the below will disable the dropdown
+                        //loadFragment(new RecurringTaskListFragment());
+                        break;
+
+                    case 1:
+                        loadFragment(new TaskListFragment());
+                        break;
+                    case 2:
+                        // loadFragment(new TmrwTaskListFragment());
+                    case 3:
+                        // loadFragment(new PendingTaskListFragment());
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing here
+            }
+        });
 
         return view.getRoot();
     }
@@ -179,6 +225,14 @@ public class RecurringTaskListFragment extends Fragment {
             return super.onContextItemSelected(item);
         }
 
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 }
