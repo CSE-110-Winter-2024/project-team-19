@@ -115,4 +115,14 @@ public class Task implements Serializable {
         return new Task(this.id, this.taskName, this.sortOrder, this.complete, this.activeDate,
                 this.frequency, this.dayOfWeek, dayOccurrence);
     }
+
+    @Override
+    public String toString(){
+        return "TaskName: " + taskName +
+                "\nComplete: " + complete +
+                "\nActive Date: " + activeDate.toString() +
+                "\nFrequency: " + frequency +
+                "\nDayOfWeek: " + dayOfWeek +
+                "\nOccurrence: " + dayOccurrence;
+    }
 }
