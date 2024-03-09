@@ -6,6 +6,60 @@
     android:layout_height="match_parent">
 
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/task_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/home_context_btn"
+            android:layout_width="100px"
+            android:layout_height="100px"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/round_buttons"
+            android:backgroundTint="#FBE67A"
+            android:text="H"
+            app:layout_constraintEnd_toStartOf="@+id/work_context_btn"
+            tools:layout_editor_absoluteY="61dp" />
+
+        <Button
+            android:id="@+id/work_context_btn"
+            android:layout_width="100px"
+            android:layout_height="100px"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/round_buttons"
+            android:backgroundTint="#5FEAEF"
+            android:text="W"
+            app:layout_constraintEnd_toStartOf="@+id/school_context_btn"
+            tools:layout_editor_absoluteY="61dp" />
+
+        <Button
+            android:id="@+id/school_context_btn"
+            android:layout_width="100px"
+            android:layout_height="100px"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/round_buttons"
+            android:backgroundTint="#DDB3FB"
+            android:text="S"
+            app:layout_constraintEnd_toStartOf="@+id/errand_context_btn"
+            tools:layout_editor_absoluteY="61dp" />
+
+        <Button
+            android:id="@+id/errand_context_btn"
+            android:layout_width="100px"
+            android:layout_height="100px"
+            android:background="@drawable/round_buttons"
+            android:backgroundTint="#BFF4B1"
+            android:text="E"
+            tools:layout_editor_absoluteX="260dp"
+            tools:layout_editor_absoluteY="61dp" />
+    </LinearLayout>
+
     <EditText
         android:id="@+id/task_text"
         android:layout_width="wrap_content"
