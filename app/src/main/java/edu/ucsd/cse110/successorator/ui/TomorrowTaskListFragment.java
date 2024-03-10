@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,7 @@ public class TomorrowTaskListFragment extends Fragment {
     //initializing Spinner variables
     Spinner viewTitleDropdown;
     ArrayAdapter<String> viewTitleAdapter;
-    String[] spinnerItems;
+    ArrayList<String> spinnerItems;
 
     public TomorrowTaskListFragment() {
         // Required empty public constructor
@@ -129,7 +130,7 @@ public class TomorrowTaskListFragment extends Fragment {
         // Assign values to task view by date dropdown in header
         //viewTitleDropdown is a Spinner, viewTitleAdapter is the Spinner Adapter, spinnerItems is list of strings
         viewTitleDropdown = view.viewTitle;
-        spinnerItems = new String[]{ "Tomorrow, " + StringOfDate, "Today, " + StringOfNextDate, "Recurring", "Pending"};
+        spinnerItems = new ArrayList<String>(Arrays.asList( "Tomorrow, " + StringOfDate, "Today, " + StringOfNextDate, "Recurring", "Pending"));
         viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
 
@@ -217,7 +218,7 @@ public class TomorrowTaskListFragment extends Fragment {
             String StringOfNewTmrwDate = lastTime.format(myFormatObj2).toString();
             //DateDisplay.setText(StringOfNewNowDate);
 
-            //updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
+            updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
 
             //here we need to call some method to remove all tasks that are completed
 
@@ -249,12 +250,12 @@ public class TomorrowTaskListFragment extends Fragment {
 
     private void updateDropdown(String newDate, String newTmrwDate) {
         //updating dates on dropdown spinner item viewTitleDropdown
-        spinnerItems = new String[]{
+        spinnerItems = new ArrayList<String>(Arrays.asList(
                 "Today, " + newDate,
                 "Tomorrow, " + newTmrwDate,
                 "Recurring",
                 "Pending"
-        };
+                    ));
         //viewTitleAdapter.notifyDataSetChanged();
         viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);

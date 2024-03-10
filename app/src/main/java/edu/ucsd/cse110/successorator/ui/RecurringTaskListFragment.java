@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
@@ -49,7 +50,7 @@ public class RecurringTaskListFragment extends Fragment {
     //initializing Spinner variables
     Spinner viewTitleDropdown;
     ArrayAdapter<String> viewTitleAdapter;
-    String[] spinnerItems;
+    ArrayList<String> spinnerItems;
 
 
     public RecurringTaskListFragment() {
@@ -152,7 +153,7 @@ public class RecurringTaskListFragment extends Fragment {
         // Assign values to task view by date dropdown in header
         //viewTitleDropdown is a Spinner, viewTitleAdapter is the Spinner Adapter, spinnerItems is list of strings
         viewTitleDropdown = view.viewTitle;
-        spinnerItems = new String[]{ "Recurring", "Today, " + StringOfDate, "Tomorrow, " + StringOfNextDate, "Pending"};
+        spinnerItems = new ArrayList<String>(Arrays.asList( "Recurring", "Today, " + StringOfDate, "Tomorrow, " + StringOfNextDate, "Pending"));
         viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
 
@@ -266,12 +267,12 @@ public class RecurringTaskListFragment extends Fragment {
 
     private void updateDropdown(String newDate, String newTmrwDate) {
         //updating dates on dropdown spinner item viewTitleDropdown
-        spinnerItems = new String[]{
+        spinnerItems = new ArrayList<String>(Arrays.asList(
                 "Recurring",
                 "Today, " + newDate,
                 "Tomorrow, " + newTmrwDate,
                 "Pending"
-        };
+        ));
         //viewTitleAdapter.notifyDataSetChanged();
         viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
