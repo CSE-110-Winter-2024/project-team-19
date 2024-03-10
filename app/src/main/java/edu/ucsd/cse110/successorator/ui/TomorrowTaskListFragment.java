@@ -203,8 +203,7 @@ public class TomorrowTaskListFragment extends Fragment {
         return view.getRoot();
     }
 
-    // TODO: keeping updateDropdown in this function crashes the app. need fix.
-    //dynamically updating spinner time using this StackOverflow post: https://stackoverflow.com/questions/3283337/how-to-update-a-spinner-dynamically
+
     private void updateCurrentDate() {
         LocalDateTime timeNow = LocalDateTime.now().plusDays(1);
         LocalDateTime timeTmrw = timeNow.minusDays(1); //remember here its switched for tomorrow view
