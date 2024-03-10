@@ -176,7 +176,7 @@ public class RecurringTaskListFragment extends Fragment {
                         loadFragment(new TaskListFragment());
                         break;
                     case 2:
-                        // loadFragment(new TmrwTaskListFragment());
+                        loadFragment(new TomorrowTaskListFragment());
                     case 3:
                         // loadFragment(new PendingTaskListFragment());
                         break;
