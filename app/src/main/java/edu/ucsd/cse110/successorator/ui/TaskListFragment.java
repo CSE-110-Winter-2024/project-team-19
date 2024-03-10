@@ -256,7 +256,7 @@ public class TaskListFragment extends Fragment {
 
             //declaring strings to put into the spinner dropdown
             String StringOfNewNowDate = lastTime.format(myFormatObj2).toString();
-            String StringOfNewTmrwDate = lastTime.format(myFormatObj2).toString();
+            String StringOfNewTmrwDate = lastTime.plusDays(1).format(myFormatObj2).toString();
             //DateDisplay.setText(StringOfNewNowDate);
 
             updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
