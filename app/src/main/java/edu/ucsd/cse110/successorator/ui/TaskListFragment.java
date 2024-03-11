@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -33,7 +32,7 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
-import edu.ucsd.cse110.successorator.util.DateRolloverMock;
+import edu.ucsd.cse110.successorator.util.MockDateTime;
 
 
 /*
@@ -101,7 +100,7 @@ public class TaskListFragment extends Fragment {
             if (tasks == null) return;
             adapter.clear();
             adapter.addAll(new ArrayList<>(tasks).stream()
-                                .filter(task -> task.activeDate().isBefore(LocalDate.now().plusDays(1)))
+                                .filter(task -> task.activeDate().isBefore(MockDateTime.now().plusDays(1)))
                                 .collect(Collectors.toList())); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
@@ -122,7 +121,7 @@ public class TaskListFragment extends Fragment {
 
 //        DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
         lastTime = LocalDateTime.now();
-        lastDate = LocalDate.now();
+        lastDate = MockDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
 
         String StringOfDate = myDateObj.format(myFormatObj).toString();
@@ -171,10 +170,10 @@ public class TaskListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //calling updateTime with mocked = true just moves date forward
-                updateCurrentTime();
+                MockDateTime.advanceDate();
+//                updateCurrentTime();
                 //Call deleteCompletedTasks from the taskDao
                 activityModel.deleteCompletedTasks();
-
             }
         });
 

@@ -4,11 +4,14 @@ import android.app.Application;
 
 import androidx.room.Room;
 
+import java.time.LocalDate;
+
 import edu.ucsd.cse110.successorator.data.db.RoomTasksRepository;
 import edu.ucsd.cse110.successorator.data.db.TasksDatabase;
 import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
 import edu.ucsd.cse110.successorator.lib.domain.SimpleTaskRepository;
 import edu.ucsd.cse110.successorator.lib.domain.TaskRepository;
+import edu.ucsd.cse110.successorator.util.MockDateTime;
 
 public class SuccessoratorApplication extends Application {
     private TaskRepository taskRepository;
@@ -36,6 +39,8 @@ public class SuccessoratorApplication extends Application {
                     .putBoolean("isFirstRun", false)
                     .apply();
         }
+
+        MockDateTime.setDate(LocalDate.now());
     }
 
     public TaskRepository getTaskRepository(){
