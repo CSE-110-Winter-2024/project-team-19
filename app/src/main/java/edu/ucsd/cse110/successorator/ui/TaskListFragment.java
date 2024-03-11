@@ -44,11 +44,15 @@ public class TaskListFragment extends Fragment {
 
     private static final String PREF_TASK_DATE = "task_date";
     private static final String PREF_TASK_TIME = "task_time";
+    //for when there are no tasks in the view
+    private static final String DEFAULT_TEXT = "No goals for the Day.  Click the + at the upper right to enter your Most Important Thing.";
     private MainViewModel activityModel;
     private FragmentTaskListBinding view;
 
 
     private TextView DateDisplay;
+    //display for the default text when there are no tasks in the view
+    private TextView DefaultTextDisplay;
     private Handler handler;
 
     private LocalDateTime lastTime;
@@ -119,8 +123,7 @@ public class TaskListFragment extends Fragment {
         LocalDateTime myDateObj = LocalDateTime.now();
         handler = new Handler(Looper.getMainLooper());
 
-
-//        DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
+        //DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
         lastTime = LocalDateTime.now();
         lastDate = LocalDate.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
@@ -178,7 +181,10 @@ public class TaskListFragment extends Fragment {
             }
         });
 
-
+        activityModel.getOrderedTasks().observe(tasks -> {
+            if(tasks == null) return;
+            updateDefaultText();
+        });
 
         return view.getRoot();
     }
@@ -214,9 +220,22 @@ public class TaskListFragment extends Fragment {
 
             //here we need to call some method to remove all tasks that are completed
 
-        }
-
-
-
-
     }
+
+    public void updateDefaultText() {
+        //check if there are no tasks available. if so, set default text. otherwise, set to empty
+        this.DefaultTextDisplay = this.view.defaultText;
+
+        if(activityModel.getOrderedTasks().getValue() == null) {
+            DefaultTextDisplay.setText(DEFAULT_TEXT);
+        }
+        else if(activityModel.getOrderedTasks().getValue() != null && activityModel.getOrderedTasks().getValue().size()== 0) {
+            DefaultTextDisplay.setText(DEFAULT_TEXT);
+        }
+        else {
+            DefaultTextDisplay.setText("");
+        }
+    }
+
+
+}

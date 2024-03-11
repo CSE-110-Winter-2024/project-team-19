@@ -89,24 +89,4 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
 
         return binding.getRoot();
     }
-
-    // The below methods aren't strictly necessary, usually.
-    // But get in the habit of defining them because they never hurt
-    // (as long as you have IDs for each item) and sometimes you need them.
-
-    @Override
-    public boolean hasStableIds() {
-        return true;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        var flashcard = getItem(position);
-        assert flashcard != null;
-
-        var id = flashcard.id();
-        assert id != null;
-
-        return id;
-    }
 }
