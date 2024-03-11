@@ -18,7 +18,7 @@ import edu.ucsd.cse110.successorator.databinding.ListItemNotTaskBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 public class PendingTaskListAdapter extends ArrayAdapter<Task> {
-    public PendingTaskListAdapter(Context context, List<Task> tasks, Consumer<Task> onDeleteClick) {
+    public PendingTaskListAdapter(Context context, List<Task> tasks) {
         //the difference between this and the normal adapter is that there
         //is an onlickListener for long presses that allows you to delete
 

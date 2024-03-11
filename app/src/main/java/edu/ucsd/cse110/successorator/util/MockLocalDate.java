@@ -2,7 +2,7 @@ package edu.ucsd.cse110.successorator.util;
 
 import java.time.LocalDate;
 
-public class MockDateTime {
+public class MockLocalDate {
 
     private static LocalDate date;
 

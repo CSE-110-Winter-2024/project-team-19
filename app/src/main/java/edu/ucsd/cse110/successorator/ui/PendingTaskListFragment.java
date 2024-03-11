@@ -1,8 +1,6 @@
 package edu.ucsd.cse110.successorator.ui;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,14 +22,15 @@ import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
-import edu.ucsd.cse110.successorator.databinding.FragmentRecurringTasksBinding;
+import edu.ucsd.cse110.successorator.databinding.FragmentPendingTasksBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
+import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 public class PendingTaskListFragment extends Fragment {
     private MainViewModel activityModel;
-    private FragmentRecurringTasksBinding view;
-    private RecurringListAdapter adapter;
+    private FragmentPendingTasksBinding view;
+    private PendingTaskListAdapter adapter;
 
 
     public PendingTaskListFragment() {
@@ -56,39 +55,25 @@ public class PendingTaskListFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new RecurringListAdapter(requireContext(), List.of(), task -> {
-            if (task.complete()) {
-                Log.d("Debug", "Fragment called insertNewTask");
-                var id = task.id();
-                assert id != null;
-                activityModel.removeTask(task);
-                activityModel.insertNewTask(task.withComplete(false));
-            } else {
-                Log.d("Debug", "Fragment called completeTask");
-                activityModel.completeTask(task);
-            }
-            adapter.notifyDataSetChanged();
-        }
-
-        );
+        this.adapter = new PendingTaskListAdapter(requireContext(), List.of());
         activityModel.getOrderedTasks().observe(tasks -> {
             if (tasks == null) return;
             adapter.clear();
-            List<Task> recurringTasks = new ArrayList<Task>();
+            List<Task> pendingTasks = new ArrayList<Task>();
             for (Task i: tasks)
             {
-                if (!i.frequency().equals(Frequency.ONE_TIME) && !i.frequency().equals(Frequency.PENDING)) {
-                    recurringTasks.add(i);
+                if (i.frequency().equals(Frequency.PENDING)) {
+                    pendingTasks.add(i);
                 }
             }
-            adapter.addAll(new ArrayList<>(recurringTasks)); // remember the mutable copy here!
+            adapter.addAll(new ArrayList<>(pendingTasks)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
     }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        this.view = FragmentRecurringTasksBinding.inflate(inflater, container, false);
+        this.view = FragmentPendingTasksBinding.inflate(inflater, container, false);
 
         // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);
@@ -116,7 +101,7 @@ public class PendingTaskListFragment extends Fragment {
         );
 
         view.addTaskButton.setOnClickListener(v -> {
-            var dialogFragment = RecurringFormFragment.newInstance();
+            var dialogFragment = PendingFormFragment.newInstance();
             dialogFragment.show(getParentFragmentManager(), "RecurringForm");
 
         });
@@ -130,35 +115,46 @@ public class PendingTaskListFragment extends Fragment {
 
         if (v.getId() == R.id.task_list) {
             //menu.setHeaderTitle("Options");
-            menu.add(Menu.NONE, R.id.menu_delete_recurring, Menu.NONE, "Delete");
+            menu.add(Menu.NONE, R.id.pending_move_today, Menu.NONE, "Move to Today");
+            menu.add(Menu.NONE, R.id.pending_move_tomorrow, Menu.NONE, "Move to Tomorrow");
+            menu.add(Menu.NONE, R.id.pending_finish, Menu.NONE, "Finish");
+            menu.add(Menu.NONE, R.id.pending_delete, Menu.NONE, "Delete");
         }
     }
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         int position = info.position;
-        Log.d("adpater info is", ""+ info);
 
+        var itemId = item.getItemId();
 
-        if (item.getItemId() == R.id.menu_delete_recurring) {
-
-            //deletion logic here
-
-            Task tobeDeleted = adapter.getItem(position);
-
-
-            activityModel.removeTask(tobeDeleted);
-
-
+        if (itemId == R.id.pending_delete) {
+            Task toDelete = adapter.getItem(position);
+            activityModel.removeTask(toDelete);
             adapter.notifyDataSetChanged();
-
-
-
             return true;
-        } else {
+        }else if (itemId == R.id.pending_finish) {
+            Task toComplete = adapter.getItem(position);
+            activityModel.completeTask(toComplete.withFrequency(Frequency.ONE_TIME)
+                    .withActiveDate(MockLocalDate.now()));
+            adapter.notifyDataSetChanged();
+            return true;
+        }else if (itemId == R.id.pending_move_today) {
+            Task toInsert = adapter.getItem(position);
+            activityModel.removeTask(toInsert);
+            activityModel.insertNewTask(toInsert.withFrequency(Frequency.ONE_TIME)
+                    .withActiveDate(MockLocalDate.now()));
+            adapter.notifyDataSetChanged();
+            return true;
+        }else if (itemId == R.id.pending_move_tomorrow){
+            Task toInsert = adapter.getItem(position);
+            activityModel.removeTask(toInsert);
+            activityModel.insertNewTask(toInsert.withFrequency(Frequency.ONE_TIME)
+                    .withActiveDate(MockLocalDate.now().plusDays(1)));
+            adapter.notifyDataSetChanged();
+            return true;
+        }else{
             return super.onContextItemSelected(item);
         }
-
     }
-
 }
