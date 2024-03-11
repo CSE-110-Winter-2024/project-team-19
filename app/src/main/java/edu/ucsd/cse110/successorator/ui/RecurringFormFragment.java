@@ -23,6 +23,7 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
+import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.lib.domain.Tasks;
 
@@ -93,7 +94,7 @@ public class RecurringFormFragment extends DialogFragment {
             Task toInsert = new Task(null, taskTextString, 2, false,
                     calDialog.getPickedDate(), Tasks.convertString(frequencyString),
                     calDialog.getPickedDate().getDayOfWeek(),
-                    Tasks.calculateOccurrence(calDialog.getPickedDate()));
+                    Tasks.calculateOccurrence(calDialog.getPickedDate()), Context.NONE);
             activityModel.insertNewTask(toInsert);
             Log.d("ReccurringFormFragment", toInsert.toString());
             dismiss();

@@ -23,6 +23,7 @@ import java.util.Calendar;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.R;
+import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
@@ -89,47 +90,50 @@ public class TaskFormFragment extends DialogFragment {
         btnSubmit.setOnClickListener(v -> {
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
+            Context taskContext = Context.NONE;
 
+            RadioGroup contextGroup = view.findViewById(R.id.context_group);
+            int selectedContextButtonId = contextGroup.getCheckedRadioButtonId();
+            if (selectedContextButtonId != -1) {
+                if (selectedContextButtonId == R.id.home_context_btn) {
+                    taskContext = Context.HOME;
+                }
+                else if (selectedContextButtonId == R.id.work_context_btn) {
+                    taskContext = Context.WORK;
+                }
+                else if (selectedContextButtonId == R.id.school_context_btn) {
+                    taskContext = Context.SCHOOL;
+                }
+                else if (selectedContextButtonId == R.id.errand_context_btn) {
+                    taskContext = Context.ERRAND;
+                }
+            } else {
+                taskContext = Context.NONE;
+            }
+
+            Frequency taskFreq = Frequency.ONE_TIME;
             // Add respective task with selected frequency to DB based on radio button selection
             RadioGroup radioGroup = view.findViewById(R.id.radio_group);
             int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             if (selectedRadioButtonId != -1) {
                 if (selectedRadioButtonId == R.id.onetime_button) {
-                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, LocalDate.now(), Frequency.ONE_TIME,
-                            LocalDate.now().getDayOfWeek(), occurrence));
-                    dismiss();
-                }
-                else if (selectedRadioButtonId == R.id.daily_button) {
-                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, LocalDate.now(), Frequency.DAILY,
-                            LocalDate.now().getDayOfWeek(), occurrence));
-                    dismiss();
-                }
-                else if (selectedRadioButtonId == R.id.weekly_button) {
-                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, LocalDate.now(), Frequency.WEEKLY,
-                            LocalDate.now().getDayOfWeek(), occurrence));
-                    dismiss();
-                }
-                else if (selectedRadioButtonId == R.id.monthly_button) {
-                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, LocalDate.now(), Frequency.MONTHLY,
-                            LocalDate.now().getDayOfWeek(), occurrence));
-                    dismiss();
+
+                } else if (selectedRadioButtonId == R.id.daily_button) {
+                    taskFreq = Frequency.DAILY;
+                } else if (selectedRadioButtonId == R.id.weekly_button) {
+                    taskFreq = Frequency.WEEKLY;
+                } else if (selectedRadioButtonId == R.id.monthly_button) {
+                    taskFreq = Frequency.MONTHLY;
                 } else if (selectedRadioButtonId == R.id.yearly_button) {
-                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, LocalDate.now(), Frequency.YEARLY,
-                            LocalDate.now().getDayOfWeek(), occurrence));
-                    dismiss();
+                    taskFreq = Frequency.YEARLY;
                 }
             }
-            else {
-                activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                        false, LocalDate.now(), Frequency.ONE_TIME,
-                        LocalDate.now().getDayOfWeek(), occurrence));
-                dismiss();
-            }
+
+
+            activityModel.insertNewTask(new Task(null, taskTextString, 2,
+                    false, LocalDate.now(), taskFreq,
+                    LocalDate.now().getDayOfWeek(), occurrence, taskContext));
+            dismiss();
         });
 
         return view;
