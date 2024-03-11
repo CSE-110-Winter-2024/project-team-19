@@ -99,7 +99,7 @@ public class TomorrowTaskListFragment extends Fragment {
             if (tasks == null) return;
             adapter.clear();
             adapter.addAll(new ArrayList<>(tasks).stream()
-                    .filter(task -> task.activeDate().isBefore(LocalDate.now().plusDays(1)))
+                    .filter(task -> task.activeDate().isAfter(LocalDate.now()) && task.activeDate().isBefore(LocalDate.now().plusDays(2)))
                     .collect(Collectors.toList())); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
