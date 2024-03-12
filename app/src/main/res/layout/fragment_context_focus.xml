@@ -15,46 +15,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/date_content"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:textAlignment="center"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-
-            app:layout_constraintEnd_toStartOf="@+id/add_task_button"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <ImageButton
-            android:id="@+id/mockButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/mock_icon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/switchtoregularbutton"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.518" />
-
-        <ImageButton
-            android:id="@+id/add_task_button"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="48dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/add_task_icon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="?android:attr/textColorSecondary" />
-
         <ImageButton
             android:id="@+id/switchtoregularbutton"
             android:layout_width="wrap_content"
@@ -76,15 +36,17 @@
             app:layout_constraintTop_toBottomOf="parent" />
 
         <TextView
-            android:id="@+id/recurring_text"
+            android:id="@+id/context_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Context Focus"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/view"
-            app:layout_constraintEnd_toStartOf="@+id/add_task_button"
-            app:layout_constraintStart_toEndOf="@+id/mockButton"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.405"
+            app:layout_constraintStart_toEndOf="@+id/switchtoregularbutton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.513" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

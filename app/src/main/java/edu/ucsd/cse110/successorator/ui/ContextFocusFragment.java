@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +29,7 @@ import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 public class ContextFocusFragment extends Fragment {
     private MainViewModel activityModel;
+
     private @NonNull FragmentContextFocusBinding view;
 
     private ContextFocusAdapter adapter;
@@ -76,6 +78,7 @@ public class ContextFocusFragment extends Fragment {
 
         Bundle args = getArguments();
         Context focusMode = args.getSerializable("focusMode", Context.class);
+
         activityModel.getOrderedTasks().observe(tasks -> {
             if (tasks == null) return;
             adapter.clear();
@@ -106,6 +109,13 @@ public class ContextFocusFragment extends Fragment {
         //this allows all recurring tasks to have menus when long-pressed
         registerForContextMenu(view.taskList);
 
+
+        Bundle args = getArguments();
+        Context focusMode = args.getSerializable("focusMode", Context.class);
+
+        TextView title = (TextView) view.contextText;
+        title.setText(focusMode.toString());
+
         ImageButton switchButton = view.switchtoregularbutton;
         switchButton.setOnClickListener(
                 v -> {
@@ -120,11 +130,6 @@ public class ContextFocusFragment extends Fragment {
                 }
         );
 
-        view.addTaskButton.setOnClickListener(v -> {
-            var dialogFragment = RecurringFormFragment.newInstance();
-            dialogFragment.show(getParentFragmentManager(), "RecurringForm");
-
-        });
 
         return view.getRoot();
     }
