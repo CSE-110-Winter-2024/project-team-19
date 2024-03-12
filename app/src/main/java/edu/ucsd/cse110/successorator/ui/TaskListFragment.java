@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -33,7 +32,8 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
-import edu.ucsd.cse110.successorator.util.DateRolloverMock;
+import edu.ucsd.cse110.successorator.lib.domain.Frequency;
+import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 
 /*
@@ -101,8 +101,9 @@ public class TaskListFragment extends Fragment {
             if (tasks == null) return;
             adapter.clear();
             adapter.addAll(new ArrayList<>(tasks).stream()
-                                .filter(task -> task.activeDate().isBefore(LocalDate.now().plusDays(1)))
-                                .collect(Collectors.toList())); // remember the mutable copy here!
+                    .filter(task -> task.activeDate().isBefore(MockLocalDate.now().plusDays(1)))
+                    .filter(task -> task.frequency() != Frequency.PENDING)
+                    .collect(Collectors.toList())); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
     }
@@ -116,16 +117,16 @@ public class TaskListFragment extends Fragment {
         view.taskList.setAdapter(adapter);
 
         //Time functionality + mock
-        LocalDateTime myDateObj = LocalDateTime.now();
+        LocalDate myDateObj = MockLocalDate.now();
         handler = new Handler(Looper.getMainLooper());
 
 
 //        DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
         lastTime = LocalDateTime.now();
-        lastDate = LocalDate.now();
+        lastDate = MockLocalDate.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
 
-        String StringOfDate = myDateObj.format(myFormatObj).toString();
+        String StringOfDate = myDateObj.format(myFormatObj);
 
         this.DateDisplay = this.view.dateContent;
         view.dateContent.setText(StringOfDate);
@@ -135,7 +136,8 @@ public class TaskListFragment extends Fragment {
         ImageButton switchButton = view.switchtorecurringbutton;
         switchButton.setOnClickListener(
                 v -> {
-                    RecurringTaskListFragment recur = new RecurringTaskListFragment();
+//                    RecurringTaskListFragment recur = new RecurringTaskListFragment();
+                    PendingTaskListFragment recur = new PendingTaskListFragment();
 
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
@@ -163,7 +165,6 @@ public class TaskListFragment extends Fragment {
             }
 
 
-
         };
         handler.post(updateTimeRunnable);
 
@@ -171,52 +172,28 @@ public class TaskListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //calling updateTime with mocked = true just moves date forward
-                updateCurrentTime();
+                MockLocalDate.advanceDate();
+                updateCurrentDate();
                 //Call deleteCompletedTasks from the taskDao
-                activityModel.deleteCompletedTasks();
-
+//                activityModel.deleteCompletedTasks();
             }
         });
-
-
-
         return view.getRoot();
     }
 
 
     private void updateCurrentDate() {
-        LocalDateTime timeNow = LocalDateTime.now();
-        LocalDate dateNow = LocalDate.now();
+        if(LocalDate.now().isAfter(MockLocalDate.now())){
+            MockLocalDate.setDate(LocalDate.now());
+        }
+        LocalDate dateNow = MockLocalDate.now();
         LocalTime tNow = LocalTime.now();
         if (dateNow.isAfter(lastDate) && tNow.isAfter(LocalTime.of(2, 0))) {
             lastDate = dateNow;
+            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+            String StringOfDate2 = dateNow.format(myFormatObj2);
+            DateDisplay.setText(StringOfDate2);
             activityModel.deleteCompletedTasks();
-        } else if (timeNow.isAfter(lastTime) )
-        {
-            lastTime = timeNow;
-            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
-
-            String StringOfDate2 = lastTime.format(myFormatObj2).toString();
-            DateDisplay.setText(StringOfDate2);
-
-            //here we need to call some method to remove all tasks that are completed
-
         }
     }
-
-    private void updateCurrentTime() {
-        LocalDateTime timeNow = LocalDateTime.now();
-        lastTime = lastTime.plusDays(1);
-            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
-
-            String StringOfDate2 = lastTime.format(myFormatObj2).toString();
-            DateDisplay.setText(StringOfDate2);
-
-            //here we need to call some method to remove all tasks that are completed
-
-        }
-
-
-
-
-    }
+}
