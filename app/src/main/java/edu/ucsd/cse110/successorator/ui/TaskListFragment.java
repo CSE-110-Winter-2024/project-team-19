@@ -35,6 +35,7 @@ import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Context;
+import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 
 /*
@@ -152,6 +153,7 @@ public class TaskListFragment extends Fragment {
         );
 
         ImageButton hamburgerButton = view.hamburgerButton;
+
         hamburgerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -164,35 +166,52 @@ public class TaskListFragment extends Fragment {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         // Toast message on menu item clicked
-                        ContextFocusFragment focus = new ContextFocusFragment();
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                        Context focusMode;
 
                         Bundle args = new Bundle();
                         String selectedItem = menuItem.getTitle().toString();
                         if(selectedItem.equals("Home")) {
-                            args.putSerializable("focusMode", Context.HOME);
+                            focusMode = Context.HOME;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_yellow));
                         }
                         else if(selectedItem.equals("Work")) {
-                            args.putSerializable("focusMode", Context.WORK);
+                            focusMode = Context.WORK;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_blue));
                         }
                         else if(selectedItem.equals("School")) {
-                            args.putSerializable("focusMode", Context.SCHOOL);
+                            focusMode = Context.SCHOOL;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_pink));
                         }
                         else if(selectedItem.equals("Errand")) {
-                            args.putSerializable("focusMode", Context.ERRAND);
+                            focusMode = Context.ERRAND;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_green));
                         }
                         else {
-                            args.putSerializable("focusMode", Context.NONE);
+                            focusMode = Context.NONE;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_transparent));
                         }
 
 
-                        focus.setArguments(args);
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.fragment_container, focus);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                        activityModel.getOrderedTasks().observe(tasks -> {
+                            if (tasks == null) return;
+                            adapter.clear();
+                            List<Task> focusTasks = new ArrayList<Task>();
+                            if (focusMode == Context.NONE) {
+                                focusTasks.addAll(tasks);
+                            }
+                            for (Task i: tasks)
+                            {
+                                if (i.context() == focusMode) {
+                                    focusTasks.add(i);
+                                }
+                            }
+                            adapter.addAll(new ArrayList<>(focusTasks)); // remember the mutable copy here!
+                            adapter.notifyDataSetChanged();
+                        });
                         return true;
                     }
+
                 });
                 // Showing the popup menu
                 popupMenu.show();

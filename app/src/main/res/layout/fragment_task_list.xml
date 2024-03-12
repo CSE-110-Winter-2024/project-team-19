@@ -42,7 +42,7 @@
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:src="@drawable/hamburger_icon"
-            android:background="@android:color/transparent"
+            android:background="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/switchtorecurringbutton"
             app:layout_constraintStart_toStartOf="parent"
