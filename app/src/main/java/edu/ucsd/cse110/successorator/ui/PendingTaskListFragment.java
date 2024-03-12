@@ -75,13 +75,10 @@ public class PendingTaskListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.view = FragmentPendingTasksBinding.inflate(inflater, container, false);
 
-        // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);
 
-        //no time functionality for this view yet, id like to move to main activity
-
-        //When a task is long-pressed, open a menu with the option to remove it.
-        //if they press remove at that point, it's deleted from the database.
+        // When a task is long-pressed, open a menu with the option to remove it, complete it,
+        // move it to today, or move it to tomorrow.
 
         //this allows all recurring tasks to have menus when long-pressed
         registerForContextMenu(view.taskList);
