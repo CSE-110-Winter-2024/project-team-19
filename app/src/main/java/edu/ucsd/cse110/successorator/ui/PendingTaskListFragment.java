@@ -125,18 +125,24 @@ public class PendingTaskListFragment extends Fragment {
 
         var itemId = item.getItemId();
 
+        // This section checks the itemId that was selected and determines which button was pressed
+        // either delete, finish, move to today, or move to tommorow.
         if (itemId == R.id.pending_delete) {
+            // If delete, remove the task immediately from the database.
             Task toDelete = adapter.getItem(position);
             activityModel.removeTask(toDelete);
             adapter.notifyDataSetChanged();
             return true;
         }else if (itemId == R.id.pending_finish) {
+            // If finish, complete the task and add it with a ONE_TIME frequency and an active date
+            // of today.
             Task toComplete = adapter.getItem(position);
             activityModel.completeTask(toComplete.withFrequency(Frequency.ONE_TIME)
                     .withActiveDate(MockLocalDate.now()));
             adapter.notifyDataSetChanged();
             return true;
         }else if (itemId == R.id.pending_move_today) {
+            // If move to today, add the task with a ONE_TIME frequency and active date of today.
             Task toInsert = adapter.getItem(position);
             activityModel.removeTask(toInsert);
             activityModel.insertNewTask(toInsert.withFrequency(Frequency.ONE_TIME)
@@ -144,6 +150,7 @@ public class PendingTaskListFragment extends Fragment {
             adapter.notifyDataSetChanged();
             return true;
         }else if (itemId == R.id.pending_move_tomorrow){
+            // If move to tomorrow, add the task with a ONE_TIME frequency and a active date of tomorrow.
             Task toInsert = adapter.getItem(position);
             activityModel.removeTask(toInsert);
             activityModel.insertNewTask(toInsert.withFrequency(Frequency.ONE_TIME)
