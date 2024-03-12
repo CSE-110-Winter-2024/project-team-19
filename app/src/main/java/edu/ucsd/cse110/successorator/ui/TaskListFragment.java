@@ -7,10 +7,11 @@ import android.os.Looper;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,7 +34,7 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
-import edu.ucsd.cse110.successorator.util.DateRolloverMock;
+import edu.ucsd.cse110.successorator.lib.domain.Context;
 
 
 /*
@@ -111,6 +112,7 @@ public class TaskListFragment extends Fragment {
         });
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -148,6 +150,55 @@ public class TaskListFragment extends Fragment {
                     fragmentTransaction.commit();
                 }
         );
+
+        ImageButton hamburgerButton = view.hamburgerButton;
+        hamburgerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Initializing the popup menu and giving the reference as current context
+                PopupMenu popupMenu = new PopupMenu(requireContext(), hamburgerButton);
+
+                // Inflating popup menu from popup_menu.xml file
+                popupMenu.getMenuInflater().inflate(R.menu.context_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        // Toast message on menu item clicked
+                        ContextFocusFragment focus = new ContextFocusFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                        Bundle args = new Bundle();
+                        String selectedItem = menuItem.getTitle().toString();
+                        if(selectedItem.equals("Home")) {
+                            args.putSerializable("focusMode", Context.HOME);
+                        }
+                        else if(selectedItem.equals("Work")) {
+                            args.putSerializable("focusMode", Context.WORK);
+                        }
+                        else if(selectedItem.equals("School")) {
+                            args.putSerializable("focusMode", Context.SCHOOL);
+                        }
+                        else if(selectedItem.equals("Errand")) {
+                            args.putSerializable("focusMode", Context.ERRAND);
+                        }
+                        else {
+                            args.putSerializable("focusMode", Context.NONE);
+                        }
+
+
+                        focus.setArguments(args);
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, focus);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                        return true;
+                    }
+                });
+                // Showing the popup menu
+                popupMenu.show();
+            }
+        });
+
 
         view.addTaskButton.setOnClickListener(v -> {
             var dialogFragment = TaskFormFragment.newInstance();

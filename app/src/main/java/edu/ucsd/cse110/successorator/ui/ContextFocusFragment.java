@@ -3,13 +3,9 @@ package edu.ucsd.cse110.successorator.ui;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -24,27 +20,27 @@ import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
+import edu.ucsd.cse110.successorator.databinding.FragmentContextFocusBinding;
 import edu.ucsd.cse110.successorator.databinding.FragmentRecurringTasksBinding;
+import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
-public class RecurringTaskListFragment extends Fragment {
+public class ContextFocusFragment extends Fragment {
     private MainViewModel activityModel;
-    private FragmentRecurringTasksBinding view;
+    private @NonNull FragmentContextFocusBinding view;
 
-    private RecurringListAdapter adapter;
-
-    private boolean deleteFlag = false;
+    private ContextFocusAdapter adapter;
 
     private SharedPreferences sharedPreferences;
 
 
-    public RecurringTaskListFragment() {
+    public ContextFocusFragment() {
         // Required empty public constructor
     }
 
-    public static RecurringTaskListFragment newInstance() {
-        RecurringTaskListFragment fragment = new RecurringTaskListFragment();
+    public static ContextFocusFragment newInstance() {
+        ContextFocusFragment fragment = new ContextFocusFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -61,7 +57,7 @@ public class RecurringTaskListFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new RecurringListAdapter(requireContext(), List.of(), task -> {
+        this.adapter = new ContextFocusAdapter(requireContext(), List.of(), task -> {
             if (task.complete()) {
                 Log.d("Debug", "Fragment called insertNewTask");
                 var id = task.id();
@@ -75,25 +71,29 @@ public class RecurringTaskListFragment extends Fragment {
             adapter.notifyDataSetChanged();
         }
 
+
         );
+
+        Bundle args = getArguments();
+        Context focusMode = args.getSerializable("focusMode", Context.class);
         activityModel.getOrderedTasks().observe(tasks -> {
             if (tasks == null) return;
             adapter.clear();
-            List<Task> recurringTasks = new ArrayList<Task>();
+            List<Task> focusTasks = new ArrayList<Task>();
             for (Task i: tasks)
             {
-                if (!i.frequency().equals(Frequency.ONE_TIME) && !i.frequency().equals(Frequency.PENDING)) {
-                    recurringTasks.add(i);
+                if (i.context() == focusMode) {
+                    focusTasks.add(i);
                 }
             }
-            adapter.addAll(new ArrayList<>(recurringTasks)); // remember the mutable copy here!
+            adapter.addAll(new ArrayList<>(focusTasks)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
     }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        this.view = FragmentRecurringTasksBinding.inflate(inflater, container, false);
+        this.view = FragmentContextFocusBinding.inflate(inflater, container, false);
 
         // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);
@@ -122,48 +122,10 @@ public class RecurringTaskListFragment extends Fragment {
 
         view.addTaskButton.setOnClickListener(v -> {
             var dialogFragment = RecurringFormFragment.newInstance();
-           dialogFragment.show(getParentFragmentManager(), "RecurringForm");
+            dialogFragment.show(getParentFragmentManager(), "RecurringForm");
 
         });
 
         return view.getRoot();
     }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-
-        if (v.getId() == R.id.task_list) {
-            //menu.setHeaderTitle("Options");
-            menu.add(Menu.NONE, R.id.menu_delete_recurring, Menu.NONE, "Delete");
-        }
-    }
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int position = info.position;
-        Log.d("adpater info is", ""+ info);
-
-
-        if (item.getItemId() == R.id.menu_delete_recurring) {
-
-            //deletion logic here
-
-            Task tobeDeleted = adapter.getItem(position);
-
-
-            activityModel.removeTask(tobeDeleted);
-
-
-            adapter.notifyDataSetChanged();
-
-
-
-            return true;
-        } else {
-            return super.onContextItemSelected(item);
-        }
-
-    }
-
 }
