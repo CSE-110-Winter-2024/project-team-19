@@ -39,7 +39,8 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
-import edu.ucsd.cse110.successorator.util.DateRolloverMock;
+import edu.ucsd.cse110.successorator.lib.domain.Frequency;
+import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 
 /*
@@ -111,8 +112,9 @@ public class TaskListFragment extends Fragment {
             if (tasks == null) return;
             adapter.clear();
             adapter.addAll(new ArrayList<>(tasks).stream()
-                                .filter(task -> task.activeDate().isBefore(LocalDate.now().plusDays(1)))
-                                .collect(Collectors.toList())); // remember the mutable copy here!
+                    .filter(task -> task.activeDate().isBefore(MockLocalDate.now().plusDays(1)))
+                    .filter(task -> task.frequency() != Frequency.PENDING)
+                    .collect(Collectors.toList())); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
     }
@@ -126,28 +128,27 @@ public class TaskListFragment extends Fragment {
         view.taskList.setAdapter(adapter);
 
         //Time functionality + mock
-        LocalDateTime myDateObj = LocalDateTime.now();
-        LocalDateTime myNextDateObj = myDateObj.plusDays(1);
+        LocalDate myDateObj = MockLocalDate.now();
         handler = new Handler(Looper.getMainLooper());
 
 
         //DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
         lastTime = LocalDateTime.now();
-        lastDate = LocalDate.now();
+        lastDate = MockLocalDate.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
 
-        String StringOfDate = myDateObj.format(myFormatObj).toString();
-        String StringOfNextDate = myNextDateObj.format(myFormatObj).toString();
+        String StringOfDate = myDateObj.format(myFormatObj);
 
-        //this.DateDisplay = this.view.dateContent;
-        //view.dateContent.setText(StringOfDate);
+        this.DateDisplay = this.view.dateContent;
+        view.dateContent.setText(StringOfDate);
 
 
         //this is the button responsible for switching to the recurring task fragment
         ImageButton switchButton = view.switchtorecurringbutton;
         switchButton.setOnClickListener(
                 v -> {
-                    RecurringTaskListFragment recur = new RecurringTaskListFragment();
+//                    RecurringTaskListFragment recur = new RecurringTaskListFragment();
+                    PendingTaskListFragment recur = new PendingTaskListFragment();
 
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
@@ -227,10 +228,10 @@ public class TaskListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //calling updateTime with mocked = true just moves date forward
-                updateCurrentTime();
+                MockLocalDate.advanceDate();
+                updateCurrentDate();
                 //Call deleteCompletedTasks from the taskDao
-                activityModel.deleteCompletedTasks();
-
+//                activityModel.deleteCompletedTasks();
             }
         });
 
@@ -242,17 +243,17 @@ public class TaskListFragment extends Fragment {
     // TODO: keeping updateDropdown in this function crashes the app. need fix.
     //dynamically updating spinner time using this StackOverflow post: https://stackoverflow.com/questions/3283337/how-to-update-a-spinner-dynamically
     private void updateCurrentDate() {
-        LocalDateTime timeNow = LocalDateTime.now();
-        LocalDateTime timeTmrw = timeNow.plusDays(1);
-        LocalDate dateNow = LocalDate.now();
+        if(LocalDate.now().isAfter(MockLocalDate.now())){
+            MockLocalDate.setDate(LocalDate.now());
+        }
+        LocalDate dateNow = MockLocalDate.now();
         LocalTime tNow = LocalTime.now();
         if (dateNow.isAfter(lastDate) && tNow.isAfter(LocalTime.of(2, 0))) {
             lastDate = dateNow;
-            activityModel.deleteCompletedTasks();
-        } else if (timeNow.isAfter(lastTime) )
-        {
-            lastTime = timeNow;
             DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+            String StringOfDate2 = dateNow.format(myFormatObj2);
+            DateDisplay.setText(StringOfDate2);
+            activityModel.deleteCompletedTasks();
 
             //declaring strings to put into the spinner dropdown
             String StringOfNewNowDate = lastTime.format(myFormatObj2).toString();
