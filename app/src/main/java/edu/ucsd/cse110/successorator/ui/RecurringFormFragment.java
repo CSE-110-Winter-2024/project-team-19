@@ -83,6 +83,29 @@ public class RecurringFormFragment extends DialogFragment {
 
 
         btnSubmit.setOnClickListener(v -> {
+            //determine context
+            Context taskContext = Context.NONE;
+
+            RadioGroup contextGroup = view.findViewById(R.id.context_group);
+            int selectedContextButtonId = contextGroup.getCheckedRadioButtonId();
+            if (selectedContextButtonId != -1) {
+                if (selectedContextButtonId == R.id.home_context_btn) {
+                    taskContext = Context.HOME;
+                }
+                else if (selectedContextButtonId == R.id.work_context_btn) {
+                    taskContext = Context.WORK;
+                }
+                else if (selectedContextButtonId == R.id.school_context_btn) {
+                    taskContext = Context.SCHOOL;
+                }
+                else if (selectedContextButtonId == R.id.errand_context_btn) {
+                    taskContext = Context.ERRAND;
+                }
+            } else {
+                taskContext = Context.NONE;
+            }
+
+
             int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             RadioButton selectedRadioButton = view.findViewById(selectedRadioButtonId);
             String frequencyString = selectedRadioButton.getText().toString();
@@ -91,7 +114,7 @@ public class RecurringFormFragment extends DialogFragment {
             Task toInsert = new Task(null, taskTextString, 2, false,
                     calDialog.getPickedDate(), Tasks.convertString(frequencyString),
                     calDialog.getPickedDate().getDayOfWeek(),
-                    Tasks.calculateOccurrence(calDialog.getPickedDate()), Context.NONE);
+                    Tasks.calculateOccurrence(calDialog.getPickedDate()), taskContext);
             activityModel.insertNewTask(toInsert);
             Log.d("ReccurringFormFragment", toInsert.toString());
             dismiss();
