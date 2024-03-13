@@ -6,20 +6,20 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/task_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioGroup
             android:id="@+id/context_group"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,10 +30,10 @@
                 android:layout_width="100px"
                 android:layout_height="100px"
                 android:layout_marginEnd="15dp"
-                android:button="@android:color/transparent"
                 android:background="@drawable/round_buttons"
-                android:gravity="center"
                 android:backgroundTint="#FBE67A"
+                android:button="@android:color/transparent"
+                android:gravity="center"
                 android:text="H"
                 app:layout_constraintEnd_toStartOf="@+id/work_context_btn"
                 tools:layout_editor_absoluteY="61dp" />
@@ -43,10 +43,10 @@
                 android:layout_width="100px"
                 android:layout_height="100px"
                 android:layout_marginEnd="15dp"
-                android:button="@android:color/transparent"
                 android:background="@drawable/round_buttons"
-                android:gravity="center"
                 android:backgroundTint="#5FEAEF"
+                android:button="@android:color/transparent"
+                android:gravity="center"
                 android:text="W"
                 app:layout_constraintEnd_toStartOf="@+id/school_context_btn"
                 tools:layout_editor_absoluteY="61dp" />
@@ -56,10 +56,10 @@
                 android:layout_width="100px"
                 android:layout_height="100px"
                 android:layout_marginEnd="15dp"
-                android:button="@android:color/transparent"
                 android:background="@drawable/round_buttons"
-                android:gravity="center"
                 android:backgroundTint="#DDB3FB"
+                android:button="@android:color/transparent"
+                android:gravity="center"
                 android:text="S"
                 app:layout_constraintEnd_toStartOf="@+id/errand_context_btn"
                 tools:layout_editor_absoluteY="61dp" />
@@ -68,10 +68,10 @@
                 android:id="@+id/errand_context_btn"
                 android:layout_width="100px"
                 android:layout_height="100px"
-                android:button="@android:color/transparent"
                 android:background="@drawable/round_buttons"
-                android:gravity="center"
                 android:backgroundTint="#BFF4B1"
+                android:button="@android:color/transparent"
+                android:gravity="center"
                 android:text="E"
                 tools:layout_editor_absoluteX="260dp"
                 tools:layout_editor_absoluteY="61dp" />
@@ -81,26 +81,39 @@
 
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/openCalendarButton"
+        android:layout_width="110dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="104dp"
+        android:src="@android:drawable/ic_menu_my_calendar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/recurring_radio_group"
+        app:layout_constraintTop_toBottomOf="@+id/starting_text" />
+
     <EditText
         android:id="@+id/task_text"
         android:layout_width="247dp"
         android:layout_height="43dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="Enter a task..."
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     <RadioGroup
         android:id="@+id/recurring_radio_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/task_text">
 
@@ -108,25 +121,33 @@
             android:id="@+id/daily_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Daily..." />
+            android:text="Daily..."
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="123dp" />
 
         <RadioButton
             android:id="@+id/weekly_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Weekly..." />
+            android:text="Weekly..."
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="155dp" />
 
         <RadioButton
             android:id="@+id/monthly_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Monthly..." />
+            android:text="Monthly..."
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="187dp" />
 
         <RadioButton
             android:id="@+id/yearly_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Yearly..." />
+            android:text="Yearly..."
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="219dp" />
     </RadioGroup>
 
     <TextView
@@ -134,43 +155,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="88dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="28dp"
         android:text="Starting..."
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/recurring_radio_group"
         app:layout_constraintTop_toBottomOf="@+id/task_text" />
 
-    <ImageButton
-        android:id="@+id/openCalendarButton"
-        android:layout_width="110dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="104dp"
-        android:src="@android:drawable/ic_menu_my_calendar"
+    <Button
+        android:id="@+id/recurringSubmitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="64dp"
+        android:text="Submit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.068"
-        app:layout_constraintStart_toEndOf="@+id/recurring_radio_group"
-        app:layout_constraintTop_toBottomOf="@+id/starting_text" />
+        app:layout_constraintTop_toBottomOf="@+id/openCalendarButton" />
 
     <Button
         android:id="@+id/recurringCancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="Cancel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/openCalendarButton" />
-
-    <Button
-        android:id="@+id/recurringSubmitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="64dp"
-        android:text="Submit"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/openCalendarButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
