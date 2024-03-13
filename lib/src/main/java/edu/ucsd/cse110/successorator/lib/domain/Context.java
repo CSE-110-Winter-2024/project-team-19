@@ -6,4 +6,6 @@ public enum Context {
     WORK,
     SCHOOL,
     ERRAND
+
+
 }
