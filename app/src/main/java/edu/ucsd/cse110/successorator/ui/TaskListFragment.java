@@ -1,22 +1,15 @@
 package edu.ucsd.cse110.successorator.ui;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import android.os.Looper;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,21 +19,16 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import android.os.Handler;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
-import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
-import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 
 /*
@@ -84,10 +72,8 @@ public class TaskListFragment extends Fragment {
         // Initialize the Adapter (with an empty list for now)
         this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
             if (task.complete()) {
-                Log.d("Debug", "Fragment called uncompleteTask");
                 activityModel.uncompleteTask(task);
             } else {
-                Log.d("Debug", "Fragment called completeTask");
                 activityModel.completeTask(task);
             }
             adapter.notifyDataSetChanged();
@@ -96,7 +82,7 @@ public class TaskListFragment extends Fragment {
             if (tasks == null) return;
             adapter.clear();
             adapter.addAll(new ArrayList<>(tasks).stream()
-                    .filter(task -> task.activeDate().isBefore(MockLocalDate.now().plusDays(1)))
+                    .filter(task -> task.activeDate().isBefore(timeNow.plusDays(1)))
                     .filter(task -> task.frequency() != Frequency.PENDING)
                     .collect(Collectors.toList())); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
@@ -167,21 +153,16 @@ public class TaskListFragment extends Fragment {
                     case 0:
                         // WARNING: uncommenting the below will disable the dropdown
                         //loadFragment(new TaskListFragment());
-                        Log.d("spin", "spun to 0");
                         break;
-
                     case 1:
                         TomorrowTaskListFragment tmrw = new TomorrowTaskListFragment();
                         loadFragment(tmrw);
-                        Log.d("spin", "spun to 1");
                         break;
                     case 2:
                         loadFragment(new RecurringTaskListFragment());
-                        Log.d("spin", "spun to 2");
                         break;
                     case 3:
                         loadFragment(new PendingTaskListFragment());
-                        Log.d("spin", "spun to 3");
                         break;
                 }
 

@@ -5,6 +5,8 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
+import android.util.Log;
+
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -24,8 +26,8 @@ https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/
 public class MainViewModel extends ViewModel {
     private final TaskRepository taskRepository;
     private final MutableSubject<List<Task>> orderedTasks;
-    private MockLocalDate mockDate;
-    private MutableSubject<LocalDate> dateSubject;
+    private final MockLocalDate mockDate;
+    private final MutableSubject<LocalDate> dateSubject;
 
 
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -56,6 +58,10 @@ public class MainViewModel extends ViewModel {
 
         this.dateSubject = new SimpleSubject<>();
         dateSubject.setValue(mockDate.now());
+
+        dateSubject.observe(date ->{
+            updateTasks();
+        });
     }
 
     public void insertNewTask(Task task){
@@ -74,7 +80,9 @@ public class MainViewModel extends ViewModel {
         taskRepository.remove(task);
     }
 
-    public void deleteCompletedTasks(){taskRepository.deleteCompletedTasks();}
+    public void updateTasks(){
+        taskRepository.updateTasks();
+    }
 
     public Subject<List<Task>> getOrderedTasks() {
         return orderedTasks;
@@ -86,6 +94,10 @@ public class MainViewModel extends ViewModel {
 
     public void timeTravelForward(){
         mockDate.advanceDate();
-        dateSubject.setValue(mockDate.now());
+        updateDate(mockDate.now());
+    }
+
+    public void updateDate(LocalDate date){
+        dateSubject.setValue(date);
     }
 }

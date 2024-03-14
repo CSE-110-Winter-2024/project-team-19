@@ -41,9 +41,6 @@ public interface TasksDao {
     @Query("DELETE FROM tasks where id = :id")
     void delete(int id);
 
-    @Query("DELETE FROM tasks WHERE complete = 1")
-    void deleteCompletedTasks();
-
     @Query("DELETE FROM tasks")
     void clear();
 }

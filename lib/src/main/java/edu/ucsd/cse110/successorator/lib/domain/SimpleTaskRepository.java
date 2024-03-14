@@ -52,5 +52,5 @@ public class SimpleTaskRepository implements TaskRepository{
         dataSource.removeTask(task.id());
     }
 
-    public void deleteCompletedTasks(){};
+    public void updateTasks(){};
 }
