@@ -26,6 +26,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
@@ -97,7 +99,12 @@ public class RecurringTaskListFragment extends Fragment {
                     recurringTasks.add(i);
                 }
             }
-            adapter.addAll(new ArrayList<>(recurringTasks)); // remember the mutable copy here!
+            List<Task> orderedRecurringTasks = recurringTasks;
+            Collections.sort(orderedRecurringTasks, Comparator.comparing(Task::creationDate));
+
+            //do i have to manipulate sortOrder too hmmm
+
+            adapter.addAll(new ArrayList<>(orderedRecurringTasks)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
         activityModel.getLocalDate().observe(date ->{

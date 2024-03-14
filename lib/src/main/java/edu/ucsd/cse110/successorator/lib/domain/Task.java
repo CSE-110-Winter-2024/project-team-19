@@ -89,7 +89,7 @@ public class Task implements Serializable {
 
     public Task withId(Integer id){
         return new Task(id, this.taskName, this.sortOrder, this.complete, this.activeDate,
-                this.frequency, this.dayOfWeek, this.dayOccurrence);
+                this.frequency, this.dayOfWeek, this.dayOccurrence,this.creationDate);
     }
 
     @Override
@@ -112,27 +112,27 @@ public class Task implements Serializable {
 
     public Task withSortOrder(int sortOrder){
         return new Task(this.id, this.taskName, sortOrder, this.complete, this.activeDate,
-                this.frequency, this.dayOfWeek, this.dayOccurrence);
+                this.frequency, this.dayOfWeek, this.dayOccurrence,this.creationDate);
     }
 
     public Task withComplete(boolean complete){
         return new Task(this.id, this.taskName, this.sortOrder, complete, this.activeDate,
-                this.frequency, this.dayOfWeek, this.dayOccurrence);
+                this.frequency, this.dayOfWeek, this.dayOccurrence,this.creationDate);
     }
 
     public Task withActiveDate(LocalDate activeDate){
         return new Task(this.id, this.taskName, this.sortOrder, this.complete, activeDate,
-                this.frequency, this.dayOfWeek, this.dayOccurrence);
+                this.frequency, this.dayOfWeek, this.dayOccurrence,this.creationDate);
     }
 
     public Task withFrequency(Frequency frequency){
         return new Task(this.id, this.taskName, this.sortOrder, this.complete, this.activeDate,
-                frequency, this.dayOfWeek, this.dayOccurrence);
+                frequency, this.dayOfWeek, this.dayOccurrence,this.creationDate);
     }
 
     public Task withDayOccurrence(int dayOccurrence){
         return new Task(this.id, this.taskName, this.sortOrder, this.complete, this.activeDate,
-                this.frequency, this.dayOfWeek, dayOccurrence);
+                this.frequency, this.dayOfWeek, dayOccurrence,this.creationDate);
     }
 
 

@@ -68,7 +68,6 @@ public class TaskEntity {
 
     public @NonNull Task toTask(){
         return new Task(id, taskName, sortOrder, complete, activeDate, frequency, dayOfWeek,
-                dayOccurrence); //i dont think I need to specify here but im worried
-        //it will grab the time now and mess the ordering up.
+                dayOccurrence,LocalDateTime.parse(creationDate));
     }
 }
