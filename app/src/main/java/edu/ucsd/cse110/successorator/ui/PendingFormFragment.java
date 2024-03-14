@@ -54,13 +54,14 @@ public class PendingFormFragment extends DialogFragment {
 
         Button btnSubmit = view.findViewById(R.id.pendingSubmitButton);
 
+        var currentDate = activityModel.getLocalDate().getValue();
 
         btnSubmit.setOnClickListener(v -> {
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
             Task toInsert = new Task(null, taskTextString, 2, false,
-                    MockLocalDate.now(), Frequency.PENDING,
-                    MockLocalDate.now().getDayOfWeek(), 1);
+                    currentDate, Frequency.PENDING,
+                    currentDate.getDayOfWeek(), 1);
             activityModel.insertNewTask(toInsert);
             dismiss();
         });
