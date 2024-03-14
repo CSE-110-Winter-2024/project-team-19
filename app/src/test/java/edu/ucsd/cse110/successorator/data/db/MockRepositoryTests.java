@@ -102,7 +102,36 @@ public class MockRepositoryTests {
 
 
     }
+    @Test
+    public void US13BDDScenario(){
+        //Given Im in recurring view and I create a daily recurring task
+        var dataSource = new InMemoryDataSource();
+        var repo = new SimpleTaskRepository(dataSource);
+        MockLocalDate mockLocalDate = new MockLocalDate(LocalDate.now());
+        var model = new MainViewModel(repo,mockLocalDate);
 
+
+        Task recurDaily = new Task(20,"Get 2 Groceries",1, true,
+                mockLocalDate.now(), Frequency.DAILY, mockLocalDate.now().getDayOfWeek(), 1);
+
+
+
+        List<Task> myTasks = new ArrayList<>();
+        myTasks.add(recurDaily);
+
+        myTasks = Tasks.updateTasks(myTasks);
+        model.insertNewTask(myTasks.get(0));
+
+
+
+        //When I fast forward 1 day
+        mockLocalDate.advanceDate();
+
+        //The task should have its active date be today
+        LocalDate actual = model.getOrderedTasks().getValue().get(0).activeDate();
+        assertEquals(mockLocalDate.now(),actual);
+
+    }
     //MS1 Tests Below
 
         // WHEN
