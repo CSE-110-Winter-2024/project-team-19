@@ -3,6 +3,7 @@ package edu.ucsd.cse110.successorator.lib.data;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,6 +135,14 @@ public class InMemoryDataSource {
         allTasksSubject.setValue(getTasks());
     }
 
+    public void sendPendingtoToday(int id){
+        Task task = tasks.get(id);
+        tasks.remove(id);
+        List<Task> mytasks = new ArrayList<>();
+        mytasks.add(task.withActiveDate(LocalDate.now()).withComplete(true)
+                .withFrequency(Frequency.ONE_TIME));
+        putTasks(mytasks);
+    }
     public void completeTask(int id){
         Task task = tasks.get(id);
 
@@ -144,6 +153,7 @@ public class InMemoryDataSource {
 
         putTask(task.withComplete(true).withSortOrder(getMaxSortOrder() + 1));
     }
+
 
     public void clear(){tasks.clear();}
     public void uncompleteTask(int id){

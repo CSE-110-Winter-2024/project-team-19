@@ -132,6 +132,58 @@ public class MockRepositoryTests {
         assertEquals(mockLocalDate.now(),actual);
 
     }
+    @Test
+    public void US14BDDScenario(){
+        //Given I have a school task “study for midterm” in my Today list,
+
+        //When I create a one-time task with the work context, “Fire employees”,
+
+        //Then it should be in my list of tasks above the task “Study for midterm”.
+    }
+    @Test
+    public void US15BDDScenario(){
+//        Given I have no tasks in the “today” view,
+//                When I open the menu for selecting a context for focus mode,
+//        AND select the  context “work”,
+//        Then nothing should change in the UI,
+//                When I add a task called “Write email” with the work context,
+//        Then it should show up on the UI,
+//        When I add a task called “Study” with the school context,
+//        Then it should not visible,
+//                When I exit focus mode,
+//        Then both tasks, “Write email” and “Study” are now visible.
+
+    }
+    @Test
+    public void US16BDDScenario(){
+        //        Given Sara has the context menu open for the pending task “Walk the plant”
+        var dataSource = new InMemoryDataSource();
+        var repo = new SimpleTaskRepository(dataSource);
+        MockLocalDate mockLocalDate = new MockLocalDate(LocalDate.now());
+        var model = new MainViewModel(repo,mockLocalDate);
+
+
+        Task pending1 = new Task(20,"Get 2 Groceries",1, false,
+                mockLocalDate.now(), Frequency.PENDING, null ,1);
+
+        model.insertNewTask(pending1);
+
+
+
+//        When Sara longpresses the task, and selectes "finish" from the context menu
+//        Then “Walk the plant” is removed from Pending
+//        And “Walk the plant” appears as a slashed through item under today’s finished tasks
+
+
+            dataSource.sendPendingtoToday(pending1.id());
+
+
+        Task resultingTask = model.getOrderedTasks().getValue().get(0);
+        assertNotNull(resultingTask);
+        assertEquals(resultingTask.frequency() , Frequency.ONE_TIME);
+        assertEquals(resultingTask.activeDate() , mockLocalDate.now());
+
+    }
     //MS1 Tests Below
 
         // WHEN
