@@ -45,6 +45,8 @@ public class Tasks {
             if(task.complete()){
                 if(task.frequency() != Frequency.ONE_TIME && task.frequency() != Frequency.PENDING)
                     newTasks = Tasks.insertTask(newTasks, Tasks.nextRecurrence(task).withComplete(false));
+//            }else if(task){
+//
             }else{
                 newTasks = Tasks.insertTask(newTasks, task);
             }

@@ -5,21 +5,21 @@ import java.time.LocalDate;
 
 public class MockLocalDate implements Serializable {
 
-    private LocalDate date;
+    private static LocalDate date;
 
-    public MockLocalDate(LocalDate date) {
-        this.date = date;
-    }
+//    public static MockLocalDate(LocalDate date) {
+//        this.date = date;
+//    }
 
-    public LocalDate now(){
+    public static LocalDate now(){
         return date;
     }
 
-    public void setDate(LocalDate newDate){
+    public static void setDate(LocalDate newDate){
         date = newDate;
     }
 
-    public void advanceDate(){
+    public static void advanceDate(){
         date = date.plusDays(1);
     }
 }

@@ -22,7 +22,6 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
-import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 /*
 This class was adapted from the CardListFragment provided in CSE 110 Lab 5.

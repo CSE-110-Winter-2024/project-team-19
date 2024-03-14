@@ -93,8 +93,10 @@ public class MainViewModel extends ViewModel {
     }
 
     public void timeTravelForward(){
-        mockDate.advanceDate();
-        updateDate(mockDate.now());
+//        mockDate.advanceDate();
+//        updateDate(mockDate.now());
+        MockLocalDate.advanceDate();
+        updateDate(MockLocalDate.now());
     }
 
     public void updateDate(LocalDate date){

@@ -30,7 +30,6 @@ import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentPendingTasksBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
-import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 public class PendingTaskListFragment extends Fragment {
     private MainViewModel activityModel;

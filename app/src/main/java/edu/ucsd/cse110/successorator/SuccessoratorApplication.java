@@ -40,7 +40,8 @@ public class SuccessoratorApplication extends Application {
         }
 
         //MockLocalDate.setDate(LocalDate.now());
-        mockDate = new MockLocalDate(LocalDate.now());
+//        mockDate = new MockLocalDate(LocalDate.now());
+        MockLocalDate.setDate(LocalDate.now());
     }
 
     public TaskRepository getTaskRepository(){

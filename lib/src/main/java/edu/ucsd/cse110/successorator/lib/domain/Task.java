@@ -22,8 +22,8 @@ public class Task implements Serializable {
     private final Frequency frequency;
     private final @Nullable DayOfWeek dayOfWeek;
     private final @Nullable Integer dayOccurrence;
-
     private final @Nullable LocalDateTime creationDate;
+//    private final @Nullable LocalDate expirationDate;
 
     public Task(Integer id, String taskName, int sortOrder, boolean complete,
                 LocalDate activeDate, Frequency frequency, DayOfWeek dayOfWeek,
@@ -37,6 +37,7 @@ public class Task implements Serializable {
         this.dayOfWeek = dayOfWeek;
         this.dayOccurrence = dayOccurrence;
         this.creationDate = LocalDateTime.now();
+//        this.expirationDate = expirationDate;
     }
     //potential constructor with creationDate added since it should be optional
     public Task(Integer id, String taskName, int sortOrder, boolean complete,
@@ -85,11 +86,17 @@ public class Task implements Serializable {
         return dayOccurrence;
     }
 
-    public LocalDateTime creationDate(){return creationDate;}
+    public LocalDateTime creationDate(){
+        return creationDate;
+    }
+
+//    public LocalDate expirationDate(){
+//        return expirationDate;
+//    }
 
     public Task withId(Integer id){
         return new Task(id, this.taskName, this.sortOrder, this.complete, this.activeDate,
-                this.frequency, this.dayOfWeek, this.dayOccurrence,this.creationDate);
+                this.frequency, this.dayOfWeek, this.dayOccurrence, this.creationDate);
     }
 
     @Override
@@ -101,7 +108,9 @@ public class Task implements Serializable {
                 && Objects.equals(dayOccurrence, task.dayOccurrence) && Objects.equals(id, task.id)
                 && Objects.equals(taskName, task.taskName)
                 && Objects.equals(activeDate, task.activeDate)
-                && frequency == task.frequency && dayOfWeek == task.dayOfWeek;
+                && frequency == task.frequency && dayOfWeek == task.dayOfWeek
+//                && expirationDate == task.expirationDate
+                && creationDate == task.creationDate;
     }
 
     @Override
@@ -112,40 +121,32 @@ public class Task implements Serializable {
 
     public Task withSortOrder(int sortOrder){
         return new Task(this.id, this.taskName, sortOrder, this.complete, this.activeDate,
-                this.frequency, this.dayOfWeek, this.dayOccurrence,this.creationDate);
+                this.frequency, this.dayOfWeek, this.dayOccurrence, this.creationDate);
     }
 
     public Task withComplete(boolean complete){
         return new Task(this.id, this.taskName, this.sortOrder, complete, this.activeDate,
-                this.frequency, this.dayOfWeek, this.dayOccurrence,this.creationDate);
+                this.frequency, this.dayOfWeek, this.dayOccurrence, this.creationDate);
     }
 
     public Task withActiveDate(LocalDate activeDate){
         return new Task(this.id, this.taskName, this.sortOrder, this.complete, activeDate,
-                this.frequency, this.dayOfWeek, this.dayOccurrence,this.creationDate);
+                this.frequency, this.dayOfWeek, this.dayOccurrence, this.creationDate);
     }
 
     public Task withFrequency(Frequency frequency){
         return new Task(this.id, this.taskName, this.sortOrder, this.complete, this.activeDate,
-                frequency, this.dayOfWeek, this.dayOccurrence,this.creationDate);
+                frequency, this.dayOfWeek, this.dayOccurrence, this.creationDate);
     }
 
     public Task withDayOccurrence(int dayOccurrence){
         return new Task(this.id, this.taskName, this.sortOrder, this.complete, this.activeDate,
-                this.frequency, this.dayOfWeek, dayOccurrence,this.creationDate);
+                this.frequency, this.dayOfWeek, dayOccurrence, this.creationDate);
     }
 
-
-
-
-
-    @Override
-    public String toString(){
-        return "TaskName: " + taskName +
-                "\nComplete: " + complete +
-                "\nActive Date: " + activeDate.toString() +
-                "\nFrequency: " + frequency +
-                "\nDayOfWeek: " + dayOfWeek +
-                "\nOccurrence: " + dayOccurrence;
-    }
+//    public Task withExpirationDate(LocalDate expirationDate){
+//        return new Task(this.id, this.taskName, this.sortOrder, this.complete, this.activeDate,
+//                this.frequency, this.dayOfWeek, this.dayOccurrence, this.creationDate,
+//                expirationDate);
+//    }
 }
