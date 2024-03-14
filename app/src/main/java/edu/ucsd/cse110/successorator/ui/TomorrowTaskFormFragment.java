@@ -26,6 +26,8 @@ import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
+import edu.ucsd.cse110.successorator.lib.domain.TaskBuilder;
+import edu.ucsd.cse110.successorator.lib.domain.Tasks;
 
 /*
 This class was adapted from the CardListFragment provided in CSE 110 Lab 5.
@@ -101,39 +103,63 @@ public class TomorrowTaskFormFragment extends DialogFragment {
             int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             if (selectedRadioButtonId != -1) {
                 if (selectedRadioButtonId == R.id.onetime_button) {
-                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, currentDate, Frequency.ONE_TIME,
-                            currentDate.getDayOfWeek(), occurrence));
+//                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+//                            false, currentDate, Frequency.ONE_TIME,
+//                            currentDate.getDayOfWeek(), occurrence));
+                    activityModel.insertNewTask(new TaskBuilder()
+                            .withTaskName(taskTextString)
+                            .withFrequency(Frequency.ONE_TIME)
+                            .build());
                     dismiss();
                 }
                 else if (selectedRadioButtonId == R.id.daily_button) {
-                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, currentDate, Frequency.DAILY,
-                            currentDate.getDayOfWeek(), occurrence));
+//                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+//                            false, currentDate, Frequency.DAILY,
+//                            currentDate.getDayOfWeek(), occurrence));
+                    activityModel.insertNewTask(new TaskBuilder()
+                            .withTaskName(taskTextString)
+                            .withFrequency(Frequency.DAILY)
+                            .build());
                     dismiss();
                 }
                 else if (selectedRadioButtonId == R.id.weekly_button) {
-                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, currentDate, Frequency.WEEKLY,
-                            currentDate.getDayOfWeek(), occurrence));
+//                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+//                            false, currentDate, Frequency.WEEKLY,
+//                            currentDate.getDayOfWeek(), occurrence));
+                    activityModel.insertNewTask(new TaskBuilder()
+                            .withTaskName(taskTextString)
+                            .withFrequency(Frequency.WEEKLY)
+                            .build());
                     dismiss();
                 }
                 else if (selectedRadioButtonId == R.id.monthly_button) {
-                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, currentDate, Frequency.MONTHLY,
-                            currentDate.getDayOfWeek(), occurrence));
+//                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+//                            false, currentDate, Frequency.MONTHLY,
+//                            currentDate.getDayOfWeek(), occurrence));
+                    activityModel.insertNewTask(new TaskBuilder()
+                            .withTaskName(taskTextString)
+                            .withFrequency(Frequency.MONTHLY)
+                            .build());
                     dismiss();
                 } else if (selectedRadioButtonId == R.id.yearly_button) {
-                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, currentDate, Frequency.YEARLY,
-                            currentDate.getDayOfWeek(), occurrence));
+//                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
+//                            false, currentDate, Frequency.YEARLY,
+//                            currentDate.getDayOfWeek(), occurrence));
+                    activityModel.insertNewTask(new TaskBuilder()
+                            .withTaskName(taskTextString)
+                            .withFrequency(Frequency.YEARLY)
+                            .build());
                     dismiss();
                 }
             }
             else {
-                activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                        false, currentDate, Frequency.ONE_TIME,
-                        currentDate.getDayOfWeek(), occurrence));
+//                activityModel.insertNewTask(new Task(null, taskTextString, 2,
+//                        false, currentDate, Frequency.ONE_TIME,
+//                        currentDate.getDayOfWeek(), occurrence));
+                activityModel.insertNewTask(new TaskBuilder()
+                        .withTaskName(taskTextString)
+                        .withFrequency(Frequency.ONE_TIME)
+                        .build());
                 dismiss();
             }
         });

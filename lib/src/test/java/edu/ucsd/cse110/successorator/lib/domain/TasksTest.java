@@ -21,27 +21,27 @@ public class TasksTest {
 
     @Before
     public void setup(){
-        cookies = new Task(null, "Bake cookies", 1, false,
-                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1,
-                LocalDateTime.now(), LocalDate.now());
-        waterDog = new Task(null, "Water dog", 2, false,
-                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1);
-        getGroceries = new Task(null, "Get groceries", 3, false,
-                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1);
-        drinkMilk = new Task(null, "Drink milk", 4, true,
-                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1);
-        cutHair = new Task(null, "Cut hair", 5, true,
-                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1);
-        petGoldfish = new Task(null, "Pet goldfish", 6, false,
-                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1);
-        watchPaintDryDaily = new Task(null, "Watch paint dry", 6, true,
-                LocalDate.now(), Frequency.DAILY, LocalDate.now().getDayOfWeek(), 1);
-        watchPaintDryWeekly = new Task(null, "Watch paint dry", 6, true,
-                LocalDate.now(), Frequency.WEEKLY, LocalDate.now().getDayOfWeek(), 1);
-        watchPaintDryMonthly = new Task(null, "Watch paint dry", 6, true,
-                LocalDate.now(), Frequency.MONTHLY, LocalDate.now().getDayOfWeek(), 1);
-        watchPaintDryYearly = new Task(null, "Watch paint dry", 6, true,
-                LocalDate.now(), Frequency.YEARLY, LocalDate.now().getDayOfWeek(), 1);
+//        cookies = new Task(null, "Bake cookies", 1, false,
+//                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1,
+//                LocalDateTime.now(), LocalDate.now());
+//        waterDog = new Task(null, "Water dog", 2, false,
+//                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1);
+//        getGroceries = new Task(null, "Get groceries", 3, false,
+//                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1);
+//        drinkMilk = new Task(null, "Drink milk", 4, true,
+//                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1);
+//        cutHair = new Task(null, "Cut hair", 5, true,
+//                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1);
+//        petGoldfish = new Task(null, "Pet goldfish", 6, false,
+//                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1);
+//        watchPaintDryDaily = new Task(null, "Watch paint dry", 6, true,
+//                LocalDate.now(), Frequency.DAILY, LocalDate.now().getDayOfWeek(), 1);
+//        watchPaintDryWeekly = new Task(null, "Watch paint dry", 6, true,
+//                LocalDate.now(), Frequency.WEEKLY, LocalDate.now().getDayOfWeek(), 1);
+//        watchPaintDryMonthly = new Task(null, "Watch paint dry", 6, true,
+//                LocalDate.now(), Frequency.MONTHLY, LocalDate.now().getDayOfWeek(), 1);
+//        watchPaintDryYearly = new Task(null, "Watch paint dry", 6, true,
+//                LocalDate.now(), Frequency.YEARLY, LocalDate.now().getDayOfWeek(), 1);
 
 
         emptyTasks = List.of();

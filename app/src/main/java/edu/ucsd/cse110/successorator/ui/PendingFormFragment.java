@@ -15,6 +15,8 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
+import edu.ucsd.cse110.successorator.lib.domain.TaskBuilder;
+import edu.ucsd.cse110.successorator.lib.domain.Tasks;
 
 /*
 This class was adapted from the CardListFragment provided in CSE 110 Lab 5.
@@ -57,10 +59,14 @@ public class PendingFormFragment extends DialogFragment {
         btnSubmit.setOnClickListener(v -> {
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
-            Task toInsert = new Task(null, taskTextString, 2, false,
-                    currentDate, Frequency.PENDING,
-                    currentDate.getDayOfWeek(), 1);
-            activityModel.insertNewTask(toInsert);
+//            Task toInsert = new Task(null, taskTextString, 2, false,
+//                    currentDate, Frequency.PENDING,
+//                    currentDate.getDayOfWeek(), 1);
+//            activityModel.insertNewTask(toInsert);
+            activityModel.insertNewTask(new TaskBuilder()
+                    .withTaskName(taskTextString)
+                    .withFrequency(Frequency.PENDING)
+                    .build());
             dismiss();
         });
 

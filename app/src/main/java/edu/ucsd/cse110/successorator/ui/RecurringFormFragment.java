@@ -17,7 +17,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
+import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
+import edu.ucsd.cse110.successorator.lib.domain.TaskBuilder;
 import edu.ucsd.cse110.successorator.lib.domain.Tasks;
 
 /*
@@ -75,11 +77,15 @@ public class RecurringFormFragment extends DialogFragment {
             String frequencyString = selectedRadioButton.getText().toString();
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
-            Task toInsert = new Task(null, taskTextString, 2, false,
-                    calDialog.getPickedDate(), Tasks.convertString(frequencyString),
-                    calDialog.getPickedDate().getDayOfWeek(),
-                    Tasks.calculateOccurrence(calDialog.getPickedDate()));
-            activityModel.insertNewTask(toInsert);
+//            Task toInsert = new Task(null, taskTextString, 2, false,
+//                    calDialog.getPickedDate(), Tasks.convertString(frequencyString),
+//                    calDialog.getPickedDate().getDayOfWeek(),
+//                    Tasks.calculateOccurrence(calDialog.getPickedDate()));
+//            activityModel.insertNewTask(toInsert);
+            activityModel.insertNewTask(new TaskBuilder()
+                    .withTaskName(taskTextString)
+                    .withFrequency(Tasks.convertString(frequencyString))
+                    .build());
             dismiss();
         });
 

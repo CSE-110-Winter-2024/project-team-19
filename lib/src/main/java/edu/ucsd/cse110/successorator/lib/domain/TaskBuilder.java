@@ -29,7 +29,7 @@ public class TaskBuilder {
         frequency = Frequency.ONE_TIME;
         dayOfWeek = MockLocalDate.now().getDayOfWeek();
         dayOccurrence = Tasks.calculateOccurrence(MockLocalDate.now());
-        creationDate = LocalDateTime.of(MockLocalDate.now(), LocalTime.now());
+        creationDate = LocalDateTime.of(MockLocalDate.now(), LocalTime.now()).withNano(0);
         expirationDate = MockLocalDate.now().plusDays(1);
     }
 

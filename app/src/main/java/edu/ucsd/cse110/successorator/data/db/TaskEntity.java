@@ -44,11 +44,14 @@ public class TaskEntity {
     public Integer dayOccurrence;
 
     @ColumnInfo(name = "creation_date")
-    public String creationDate;
+    public LocalDateTime creationDate;
+
+    @ColumnInfo(name = "expiration_date")
+    public LocalDate expirationDate;
 
     TaskEntity(String taskName, int sortOrder, boolean complete,
                LocalDate activeDate, Frequency frequency, DayOfWeek dayOfWeek,
-               Integer dayOccurrence,String creationDate){
+               Integer dayOccurrence, LocalDateTime creationDate, LocalDate expirationDate){
         this.taskName = taskName;
         this.sortOrder = sortOrder;
         this.complete = complete;
@@ -57,17 +60,19 @@ public class TaskEntity {
         this.dayOfWeek = dayOfWeek;
         this.dayOccurrence = dayOccurrence;
         this.creationDate = creationDate;
+        this.expirationDate = expirationDate;
     }
 
     public static TaskEntity fromTask(@NonNull Task task){
         var taskEntity = new TaskEntity(task.taskName(), task.sortOrder(), task.complete(),
-                task.activeDate(), task.frequency(), task.dayOfWeek(), task.dayOccurrence(),task.creationDate().toString());
+                task.activeDate(), task.frequency(), task.dayOfWeek(), task.dayOccurrence(),
+                task.creationDate(), task.expirationDate());
         taskEntity.id = task.id();
         return taskEntity;
     }
 
     public @NonNull Task toTask(){
         return new Task(id, taskName, sortOrder, complete, activeDate, frequency, dayOfWeek,
-                dayOccurrence,LocalDateTime.parse(creationDate));
+                dayOccurrence, creationDate, expirationDate);
     }
 }
