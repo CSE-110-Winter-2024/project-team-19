@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +35,7 @@ import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentRecurringTasksBinding;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
+import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 public class TomorrowTaskListFragment extends Fragment {
@@ -78,7 +80,15 @@ public class TomorrowTaskListFragment extends Fragment {
                 activityModel.uncompleteTask(task);
             } else {
                 Log.d("Debug", "Fragment called completeTask");
-                activityModel.completeTask(task);
+                //since its tomorrow view, if it's a daily task, reject operation
+                //and show toast
+                if (task.frequency().equals(Frequency.DAILY))
+                {
+                    Toast.makeText(getContext(), "This goal is still active for Today." +
+                            "  If you've finished this goal for Today, mark it finished in that view.", Toast.LENGTH_SHORT).show();
+                }
+
+                else {activityModel.completeTask(task);}
             }
             adapter.notifyDataSetChanged();
         });
@@ -87,7 +97,8 @@ public class TomorrowTaskListFragment extends Fragment {
             adapter.clear();
             adapter.addAll(new ArrayList<>(tasks).stream()
                     .filter(task -> task.activeDate().isAfter(timeNow)
-                            && task.activeDate().isBefore(timeNow.plusDays(2)))
+                            && task.activeDate().isBefore(timeNow.plusDays(2))
+                    || task.frequency().equals(Frequency.DAILY))
                     .collect(Collectors.toList())); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
