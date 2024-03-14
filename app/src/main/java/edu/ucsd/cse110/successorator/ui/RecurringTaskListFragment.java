@@ -39,7 +39,7 @@ public class RecurringTaskListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentRecurringTasksBinding view;
 
-    private RecurringListAdapter adapter;
+    private RecurringTaskListAdapter adapter;
 
     private boolean deleteFlag = false;
 
@@ -75,7 +75,7 @@ public class RecurringTaskListFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new RecurringListAdapter(requireContext(), List.of(), task -> {
+        this.adapter = new RecurringTaskListAdapter(requireContext(), List.of(), task -> {
             if (task.complete()) {
                 Log.d("Debug", "Fragment called insertNewTask");
                 var id = task.id();
