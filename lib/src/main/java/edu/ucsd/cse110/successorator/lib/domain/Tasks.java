@@ -40,14 +40,17 @@ public class Tasks {
     }
 
     public static List<Task> updateTasks(List<Task> tasks){
+        List<Frequency> recurring = List.of(Frequency.DAILY, Frequency.WEEKLY,
+                Frequency.MONTHLY, Frequency.YEARLY);
         List<Task> newTasks = new ArrayList<Task>();
-        for(Task task : tasks){
-            if(task.complete()){
-                if(task.frequency() != Frequency.ONE_TIME && task.frequency() != Frequency.PENDING)
-                    newTasks = Tasks.insertTask(newTasks, Tasks.nextRecurrence(task).withComplete(false));
-//            }else if(task){
-//
-            }else{
+        for(Task task : tasks) {
+            if(recurring.contains(task.frequency())
+                    && (task.expirationDate().equals(MockLocalDate.now()) || task.complete())){
+                var toInsert = task.withActiveDate(task.expirationDate());
+                toInsert = toInsert.withExpirationDate(nextRecurrenceDate(toInsert))
+                        .withComplete(false);
+                newTasks = Tasks.insertTask(newTasks, toInsert);
+            }else if (!task.complete()) {
                 newTasks = Tasks.insertTask(newTasks, task);
             }
         }
@@ -101,6 +104,32 @@ public class Tasks {
                     ctr++;
                 }
                 return task;
+            default:
+                return null;
+        }
+    }
+
+    public static LocalDate nextRecurrenceDate(Task task){
+        switch(task.frequency()){
+            case DAILY:
+                return task.activeDate().plusDays(1);
+            case WEEKLY:
+                return task.activeDate().plusWeeks(1);
+            case YEARLY:
+                return task.activeDate().plusYears(1);
+            case MONTHLY:
+                if(calculateOccurrence(task.activeDate()) == task.dayOccurrence()) {
+                    Month month = task.activeDate().getMonth();
+                    while (task.activeDate().getMonth() == month) {
+                        task = task.withActiveDate(task.activeDate().plusWeeks(1));
+                    }
+                }
+                int ctr = 1;
+                while(ctr < task.dayOccurrence()){
+                    task = task.withActiveDate(task.activeDate().plusWeeks(1));
+                    ctr++;
+                }
+                return task.activeDate();
             default:
                 return null;
         }

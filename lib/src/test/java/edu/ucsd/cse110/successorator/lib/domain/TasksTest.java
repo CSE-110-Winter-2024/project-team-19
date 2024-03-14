@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -21,7 +22,8 @@ public class TasksTest {
     @Before
     public void setup(){
         cookies = new Task(null, "Bake cookies", 1, false,
-                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1);
+                LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1,
+                LocalDateTime.now(), LocalDate.now());
         waterDog = new Task(null, "Water dog", 2, false,
                 LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), 1);
         getGroceries = new Task(null, "Get groceries", 3, false,

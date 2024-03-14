@@ -6,29 +6,51 @@ import androidx.annotation.Nullable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class TaskBuilder {
-    private final @Nullable Integer id;
-    private final @NonNull String taskName;
-    private final int sortOrder;
-    private final boolean complete;
-    private final @Nullable LocalDate activeDate;
-    private final Frequency frequency;
-    private final @Nullable DayOfWeek dayOfWeek;
-    private final @Nullable Integer dayOccurrence;
-    private final @Nullable LocalDateTime creationDate;
-    private final @Nullable LocalDate expirationDate;
+    private Integer id;
+    private String taskName;
+    private int sortOrder;
+    private boolean complete;
+    private @Nullable LocalDate activeDate;
+    private Frequency frequency;
+    private @Nullable DayOfWeek dayOfWeek;
+    private @Nullable Integer dayOccurrence;
+    private @Nullable LocalDateTime creationDate;
+    private @Nullable LocalDate expirationDate;
 
     public TaskBuilder(){
         id = null;
         taskName = "";
         sortOrder = 0;
         complete = false;
-        activeDate = null;
+        activeDate = MockLocalDate.now();
         frequency = Frequency.ONE_TIME;
-        dayOfWeek = null;
-        dayOccurrence = null;
-        creationDate = null;
-        expirationDate = null;
+        dayOfWeek = MockLocalDate.now().getDayOfWeek();
+        dayOccurrence = Tasks.calculateOccurrence(MockLocalDate.now());
+        creationDate = LocalDateTime.of(MockLocalDate.now(), LocalTime.now());
+        expirationDate = MockLocalDate.now().plusDays(1);
+    }
+
+    public TaskBuilder withTaskName(String taskName){
+        this.taskName = taskName;
+        return this;
+    }
+
+    public TaskBuilder withFrequency(Frequency frequency){
+        this.frequency = frequency;
+        if(frequency != Frequency.ONE_TIME && frequency != Frequency.PENDING)
+            updateExpirationDate();
+        return this;
+    }
+
+    public Task build(){
+        return new Task(id, taskName, sortOrder, complete, activeDate, frequency, dayOfWeek, dayOccurrence, creationDate, expirationDate);
+    }
+
+    private void updateExpirationDate(){
+        var temp = build();
+        expirationDate = Tasks.nextRecurrenceDate(temp);
     }
 }
