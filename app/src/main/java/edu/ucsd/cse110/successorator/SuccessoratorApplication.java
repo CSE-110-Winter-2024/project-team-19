@@ -13,7 +13,6 @@ import edu.ucsd.cse110.successorator.lib.domain.TaskRepository;
 
 public class SuccessoratorApplication extends Application {
     private TaskRepository taskRepository;
-    private MockLocalDate mockDate;
 
     @Override
     public void onCreate(){
@@ -38,16 +37,10 @@ public class SuccessoratorApplication extends Application {
                     .putBoolean("isFirstRun", false)
                     .apply();
         }
-
-        //MockLocalDate.setDate(LocalDate.now());
-//        mockDate = new MockLocalDate(LocalDate.now());
         MockLocalDate.setDate(LocalDate.now());
     }
 
     public TaskRepository getTaskRepository(){
         return taskRepository;
-    }
-    public MockLocalDate getMockLocalDate(){
-        return mockDate;
     }
 }

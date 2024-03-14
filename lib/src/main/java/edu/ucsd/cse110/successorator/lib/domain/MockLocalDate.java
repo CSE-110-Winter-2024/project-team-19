@@ -7,10 +7,6 @@ public class MockLocalDate implements Serializable {
 
     private static LocalDate date;
 
-//    public static MockLocalDate(LocalDate date) {
-//        this.date = date;
-//    }
-
     public static LocalDate now(){
         return date;
     }

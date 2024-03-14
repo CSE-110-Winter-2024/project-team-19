@@ -26,7 +26,6 @@ https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/
 public class MainViewModel extends ViewModel {
     private final TaskRepository taskRepository;
     private final MutableSubject<List<Task>> orderedTasks;
-    private final MockLocalDate mockDate;
     private final MutableSubject<LocalDate> dateSubject;
 
 
@@ -36,13 +35,12 @@ public class MainViewModel extends ViewModel {
                     creationExtras -> {
                         var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
                         assert app != null;
-                        return new MainViewModel(app.getTaskRepository(), app.getMockLocalDate());
+                        return new MainViewModel(app.getTaskRepository());
                     }
             );
 
-    public MainViewModel(TaskRepository taskRepository, MockLocalDate mockDate){
+    public MainViewModel(TaskRepository taskRepository){
         this.taskRepository = taskRepository;
-        this.mockDate = mockDate;
 
         this.orderedTasks = new SimpleSubject<>();
 
@@ -57,7 +55,7 @@ public class MainViewModel extends ViewModel {
         });
 
         this.dateSubject = new SimpleSubject<>();
-        dateSubject.setValue(mockDate.now());
+        dateSubject.setValue(MockLocalDate.now());
 
         dateSubject.observe(date ->{
             updateTasks();
@@ -93,8 +91,6 @@ public class MainViewModel extends ViewModel {
     }
 
     public void timeTravelForward(){
-//        mockDate.advanceDate();
-//        updateDate(mockDate.now());
         MockLocalDate.advanceDate();
         updateDate(MockLocalDate.now());
     }
