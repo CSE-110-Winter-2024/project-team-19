@@ -8,7 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +19,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
@@ -32,6 +37,10 @@ public class PendingTaskListFragment extends Fragment {
     private FragmentPendingTasksBinding view;
     private PendingTaskListAdapter adapter;
 
+    //initializing Spinner variables
+    Spinner viewTitleDropdown;
+    ArrayAdapter<String> viewTitleAdapter;
+    ArrayList<String> spinnerItems;
 
     public PendingTaskListFragment() {
         // Required empty public constructor
@@ -103,6 +112,53 @@ public class PendingTaskListFragment extends Fragment {
 
         });
 
+        LocalDate timeNow = MockLocalDate.now();
+        DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+        String StringOfNewNowDate = timeNow.format(myFormatObj2).toString();
+        String StringOfNewTmrwDate = timeNow.plusDays(1).format(myFormatObj2).toString();
+
+        // Assign values to task view by date dropdown in header
+        //viewTitleDropdown is a Spinner, viewTitleAdapter is the Spinner Adapter, spinnerItems is list of strings
+        viewTitleDropdown = view.viewTitle;
+        spinnerItems = new ArrayList<String>(Arrays.asList("Pending", "Recurring", "Today, " + StringOfNewNowDate, "Tomorrow, " + StringOfNewTmrwDate));
+        viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        viewTitleDropdown.setAdapter(viewTitleAdapter);
+
+        /*
+         * adding cases to tell the spinner what to do when switching to Today (TaskListFragment),
+         * Tomorrow (TmrwTaskListFragment), Recurring (RecurringTaskListFragment), and
+         * Pending (PendingTaskListFragment)
+         */
+        viewTitleDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Handle item selection and switch fragments here
+
+                switch (position) {
+                    case 0:
+                        // WARNING: uncommenting the below will disable the dropdown
+                        //loadFragment(new PendingTaskListFragment());
+                        break;
+
+                    case 1:
+                        loadFragment(new RecurringTaskListFragment());
+                        break;
+                    case 2:
+                        loadFragment(new TaskListFragment());
+                        break;
+                    case 3:
+                        loadFragment(new TomorrowTaskListFragment());
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing here
+            }
+        });
+
         return view.getRoot();
     }
 
@@ -160,5 +216,26 @@ public class PendingTaskListFragment extends Fragment {
         }else{
             return super.onContextItemSelected(item);
         }
+    }
+
+    private void updateDropdown(String newDate, String newTmrwDate) {
+        //updating dates on dropdown spinner item viewTitleDropdown
+        spinnerItems = new ArrayList<String>(Arrays.asList(
+                "Recurring",
+                "Today, " + newDate,
+                "Tomorrow, " + newTmrwDate,
+                "Pending"
+        ));
+        //viewTitleAdapter.notifyDataSetChanged();
+        viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        viewTitleDropdown.setAdapter(viewTitleAdapter);
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

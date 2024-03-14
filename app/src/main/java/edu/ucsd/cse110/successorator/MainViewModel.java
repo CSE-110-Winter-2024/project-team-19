@@ -5,12 +5,12 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import android.os.Handler;
-import android.util.Log;
 
+import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.lib.domain.TaskRepository;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
@@ -24,6 +24,8 @@ https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/
 public class MainViewModel extends ViewModel {
     private final TaskRepository taskRepository;
     private final MutableSubject<List<Task>> orderedTasks;
+    private MockLocalDate mockDate;
+    private MutableSubject<LocalDate> dateSubject;
 
 
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -32,12 +34,13 @@ public class MainViewModel extends ViewModel {
                     creationExtras -> {
                         var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
                         assert app != null;
-                        return new MainViewModel(app.getTaskRepository());
+                        return new MainViewModel(app.getTaskRepository(), app.getMockLocalDate());
                     }
             );
 
-    public MainViewModel(TaskRepository taskRepository){
+    public MainViewModel(TaskRepository taskRepository, MockLocalDate mockDate){
         this.taskRepository = taskRepository;
+        this.mockDate = mockDate;
 
         this.orderedTasks = new SimpleSubject<>();
 
@@ -51,7 +54,8 @@ public class MainViewModel extends ViewModel {
             orderedTasks.setValue(newOrderedTasks);
         });
 
-
+        this.dateSubject = new SimpleSubject<>();
+        dateSubject.setValue(mockDate.now());
     }
 
     public void insertNewTask(Task task){
@@ -76,4 +80,7 @@ public class MainViewModel extends ViewModel {
         return orderedTasks;
     }
 
+    public Subject<LocalDate> getLocalDate() {
+        return dateSubject;
+    }
 }

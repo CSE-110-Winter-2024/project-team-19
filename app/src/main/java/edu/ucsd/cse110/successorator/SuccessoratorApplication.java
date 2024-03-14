@@ -8,11 +8,12 @@ import java.time.LocalDate;
 
 import edu.ucsd.cse110.successorator.data.db.RoomTasksRepository;
 import edu.ucsd.cse110.successorator.data.db.TasksDatabase;
+import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
 import edu.ucsd.cse110.successorator.lib.domain.TaskRepository;
-import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 public class SuccessoratorApplication extends Application {
     private TaskRepository taskRepository;
+    private MockLocalDate mockDate;
 
     @Override
     public void onCreate(){
@@ -38,10 +39,14 @@ public class SuccessoratorApplication extends Application {
                     .apply();
         }
 
-        MockLocalDate.setDate(LocalDate.now());
+        //MockLocalDate.setDate(LocalDate.now());
+        mockDate = new MockLocalDate(LocalDate.now());
     }
 
     public TaskRepository getTaskRepository(){
         return taskRepository;
+    }
+    public MockLocalDate getMockLocalDate(){
+        return mockDate;
     }
 }

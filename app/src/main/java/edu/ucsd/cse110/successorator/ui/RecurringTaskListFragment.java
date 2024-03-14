@@ -34,6 +34,7 @@ import edu.ucsd.cse110.successorator.databinding.FragmentRecurringTasksBinding;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
+import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 public class RecurringTaskListFragment extends Fragment {
     private MainViewModel activityModel;
@@ -143,8 +144,8 @@ public class RecurringTaskListFragment extends Fragment {
         });
 
         // Create dates for date dropdown
-        LocalDateTime myDateObj = LocalDateTime.now();
-        LocalDateTime myNextDateObj = myDateObj.plusDays(1);
+        LocalDate myDateObj = MockLocalDate.now();
+        LocalDate myNextDateObj = myDateObj.plusDays(1);
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
 
         String StringOfDate = myDateObj.format(myFormatObj).toString();
@@ -178,8 +179,9 @@ public class RecurringTaskListFragment extends Fragment {
                         break;
                     case 2:
                         loadFragment(new TomorrowTaskListFragment());
+                        break;
                     case 3:
-                        // loadFragment(new PendingTaskListFragment());
+                        loadFragment(new PendingTaskListFragment());
                         break;
                 }
 
@@ -251,16 +253,13 @@ public class RecurringTaskListFragment extends Fragment {
     }
 
     private void updateCurrentTime() {
-        LocalDateTime timeNow = LocalDateTime.now();
-        lastTime = lastTime.plusDays(1);
+        LocalDate timeNow = MockLocalDate.now();
         DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
-
-        String StringOfNewNowDate = lastTime.format(myFormatObj2).toString();
-        String StringOfNewTmrwDate = lastTime.plusDays(1).format(myFormatObj2).toString();
+        String StringOfNewNowDate = timeNow.format(myFormatObj2).toString();
+        String StringOfNewTmrwDate = timeNow.plusDays(1).format(myFormatObj2).toString();
         //DateDisplay.setText(StringOfNewNowDate);
 
         updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
-
         //here we need to call some method to remove all tasks that are completed
 
     }

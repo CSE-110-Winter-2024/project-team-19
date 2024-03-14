@@ -34,6 +34,7 @@ import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentRecurringTasksBinding;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
+import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 public class TomorrowTaskListFragment extends Fragment {
     private static final String PREF_TASK_DATE = "task_date";
@@ -130,7 +131,7 @@ public class TomorrowTaskListFragment extends Fragment {
         // Assign values to task view by date dropdown in header
         //viewTitleDropdown is a Spinner, viewTitleAdapter is the Spinner Adapter, spinnerItems is list of strings
         viewTitleDropdown = view.viewTitle;
-        spinnerItems = new ArrayList<String>(Arrays.asList( "Tomorrow (current view), " + StringOfDate, "Today, " + StringOfNextDate, "Recurring", "Pending"));
+        spinnerItems = new ArrayList<String>(Arrays.asList( "Tomorrow, " + StringOfDate, "Today, " + StringOfNextDate, "Recurring", "Pending"));
         viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
 
@@ -206,8 +207,8 @@ public class TomorrowTaskListFragment extends Fragment {
 
     private void updateCurrentDate() {
         LocalDateTime timeNow = LocalDateTime.now().plusDays(1);
-        LocalDateTime timeTmrw = timeNow.minusDays(1); //remember here its switched for tomorrow view
-        LocalDate dateNow = LocalDate.now();
+        LocalDate dateNow = MockLocalDate.now();
+        Log.d("ugh", "" + dateNow);
         LocalTime tNow = LocalTime.now();
         if (dateNow.isAfter(lastDate) && tNow.isAfter(LocalTime.of(2, 0))) {
             lastDate = dateNow;
@@ -218,8 +219,8 @@ public class TomorrowTaskListFragment extends Fragment {
             DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
 
             //declaring strings to put into the spinner dropdown
-            String StringOfNewNowDate = lastTime.format(myFormatObj2).toString();
-            String StringOfNewTmrwDate = lastTime.minusDays(1).format(myFormatObj2).toString();
+            String StringOfNewNowDate = dateNow.format(myFormatObj2).toString();
+            String StringOfNewTmrwDate = dateNow.plusDays(1).format(myFormatObj2).toString();
             //DateDisplay.setText(StringOfNewNowDate);
 
             updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
@@ -255,11 +256,11 @@ public class TomorrowTaskListFragment extends Fragment {
     private void updateDropdown(String newDate, String newTmrwDate) {
         //updating dates on dropdown spinner item viewTitleDropdown
         spinnerItems = new ArrayList<String>(Arrays.asList(
-                "Tomorrow (currentView), " + newDate,
-                "Today, " + newTmrwDate,
+                "Tomorrow, " + newTmrwDate,
+                "Today, " + newDate,
                 "Recurring",
                 "Pending"
-                    ));
+        ));
         //viewTitleAdapter.notifyDataSetChanged();
         viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
