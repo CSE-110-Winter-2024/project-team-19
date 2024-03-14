@@ -76,10 +76,8 @@ public class TomorrowTaskListFragment extends Fragment {
         // Initialize the Adapter (with an empty list for now)
         this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
             if (task.complete()) {
-                Log.d("Debug", "Fragment called uncompleteTask");
                 activityModel.uncompleteTask(task);
             } else {
-                Log.d("Debug", "Fragment called completeTask");
                 //since its tomorrow view, if it's a daily task, reject operation
                 //and show toast
                 if (task.frequency().equals(Frequency.DAILY))
@@ -150,6 +148,7 @@ public class TomorrowTaskListFragment extends Fragment {
                         break;
                     case 2:
                         loadFragment(new RecurringTaskListFragment());
+                        break;
                     case 3:
                         loadFragment(new PendingTaskListFragment());
                         break;
