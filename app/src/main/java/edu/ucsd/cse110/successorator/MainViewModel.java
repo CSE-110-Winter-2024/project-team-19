@@ -83,4 +83,9 @@ public class MainViewModel extends ViewModel {
     public Subject<LocalDate> getLocalDate() {
         return dateSubject;
     }
+
+    public void timeTravelForward(){
+        mockDate.advanceDate();
+        dateSubject.setValue(mockDate.now());
+    }
 }
