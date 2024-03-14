@@ -1,10 +1,14 @@
 package edu.ucsd.cse110.successorator.lib.data;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
@@ -37,12 +41,16 @@ public class InMemoryDataSource {
     public InMemoryDataSource() {
     }
 
-//    public final static List<Task> DEFAULT_TASKS = List.of(
-//            new Task(null, "Get groceries", 0,  false),
-//            new Task(null, "Find cookie recipe", 1, false),
-//            new Task(null, "Study", 2, true),
-//            new Task(null, "Sleep", 3, true)
-//    );
+    public final static List<Task> DEFAULT_TASKS = List.of(
+            new Task(2001, "Get 2 Groceries",1, false,
+                    LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), null),
+
+           new Task(2002, "Weekly Recurring ",2, false,
+                    LocalDate.now(), Frequency.WEEKLY, LocalDate.now().getDayOfWeek(), null)
+
+
+
+    );
 
     public static InMemoryDataSource fromDefault() {
         var data = new InMemoryDataSource();
@@ -127,15 +135,17 @@ public class InMemoryDataSource {
     }
 
     public void completeTask(int id){
-        var task = tasks.get(id);
-        var sortOrder = task.sortOrder();
+        Task task = tasks.get(id);
+
+        //var sortOrder = task.sortOrder();
 
         tasks.remove(id);
-        shiftSortOrders(sortOrder, maxSortOrder, -1);
+        //shiftSortOrders(sortOrder, maxSortOrder, -1);
 
         putTask(task.withComplete(true).withSortOrder(getMaxSortOrder() + 1));
     }
 
+    public void clear(){tasks.clear();}
     public void uncompleteTask(int id){
         var task = tasks.get(id);
         var sortOrder = task.sortOrder();

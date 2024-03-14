@@ -84,6 +84,7 @@ public class Tasks {
                 return task.withActiveDate(task.activeDate().plusDays(1));
             case WEEKLY:
                 return task.withActiveDate(task.activeDate().plusWeeks(1));
+
             case YEARLY:
                 return task.withActiveDate(task.activeDate().plusYears(1));
             case MONTHLY:
