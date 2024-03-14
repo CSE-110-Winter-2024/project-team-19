@@ -7,9 +7,11 @@ import android.os.Looper;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,8 +34,13 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
+
+import edu.ucsd.cse110.successorator.lib.domain.Context;
+import edu.ucsd.cse110.successorator.lib.domain.Task;
+
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.util.MockLocalDate;
+
 
 
 /*
@@ -44,11 +51,15 @@ public class TaskListFragment extends Fragment {
 
     private static final String PREF_TASK_DATE = "task_date";
     private static final String PREF_TASK_TIME = "task_time";
+    //for when there are no tasks in the view
+    private static final String DEFAULT_TEXT = "No goals for the Day.  Click the + at the upper right to enter your Most Important Thing.";
     private MainViewModel activityModel;
     private FragmentTaskListBinding view;
 
 
     private TextView DateDisplay;
+    //display for the default text when there are no tasks in the view
+    private TextView DefaultTextDisplay;
     private Handler handler;
 
     private LocalDateTime lastTime;
@@ -108,6 +119,7 @@ public class TaskListFragment extends Fragment {
         });
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -120,8 +132,7 @@ public class TaskListFragment extends Fragment {
         LocalDate myDateObj = MockLocalDate.now();
         handler = new Handler(Looper.getMainLooper());
 
-
-//        DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
+        //DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
         lastTime = LocalDateTime.now();
         lastDate = MockLocalDate.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
@@ -147,6 +158,73 @@ public class TaskListFragment extends Fragment {
                     fragmentTransaction.commit();
                 }
         );
+
+        ImageButton hamburgerButton = view.hamburgerButton;
+
+        hamburgerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Initializing the popup menu and giving the reference as current context
+                PopupMenu popupMenu = new PopupMenu(requireContext(), hamburgerButton);
+
+                // Inflating popup menu from popup_menu.xml file
+                popupMenu.getMenuInflater().inflate(R.menu.context_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        // Toast message on menu item clicked
+
+                        Context focusMode;
+
+                        Bundle args = new Bundle();
+                        String selectedItem = menuItem.getTitle().toString();
+                        if(selectedItem.equals("Home")) {
+                            focusMode = Context.HOME;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_yellow));
+                        }
+                        else if(selectedItem.equals("Work")) {
+                            focusMode = Context.WORK;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_blue));
+                        }
+                        else if(selectedItem.equals("School")) {
+                            focusMode = Context.SCHOOL;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_pink));
+                        }
+                        else if(selectedItem.equals("Errand")) {
+                            focusMode = Context.ERRAND;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_green));
+                        }
+                        else {
+                            focusMode = Context.NONE;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_transparent));
+                        }
+
+
+                        activityModel.getOrderedTasks().observe(tasks -> {
+                            if (tasks == null) return;
+                            adapter.clear();
+                            List<Task> focusTasks = new ArrayList<Task>();
+                            if (focusMode == Context.NONE) {
+                                focusTasks.addAll(tasks);
+                            }
+                            for (Task i: tasks)
+                            {
+                                if (i.context() == focusMode) {
+                                    focusTasks.add(i);
+                                }
+                            }
+                            adapter.addAll(new ArrayList<>(focusTasks)); // remember the mutable copy here!
+                            adapter.notifyDataSetChanged();
+                        });
+                        return true;
+                    }
+
+                });
+                // Showing the popup menu
+                popupMenu.show();
+            }
+        });
+
 
         view.addTaskButton.setOnClickListener(v -> {
             var dialogFragment = TaskFormFragment.newInstance();
@@ -178,6 +256,14 @@ public class TaskListFragment extends Fragment {
 //                activityModel.deleteCompletedTasks();
             }
         });
+
+
+        activityModel.getOrderedTasks().observe(tasks -> {
+            if(tasks == null) return;
+            updateDefaultText();
+        });
+
+
         return view.getRoot();
     }
 
@@ -196,4 +282,35 @@ public class TaskListFragment extends Fragment {
             activityModel.deleteCompletedTasks();
         }
     }
+
+
+    private void updateCurrentTime() {
+        LocalDateTime timeNow = LocalDateTime.now();
+        lastTime = lastTime.plusDays(1);
+            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+
+            String StringOfDate2 = lastTime.format(myFormatObj2).toString();
+            DateDisplay.setText(StringOfDate2);
+
+            //here we need to call some method to remove all tasks that are completed
+
+    }
+
+    public void updateDefaultText() {
+        //check if there are no tasks available. if so, set default text. otherwise, set to empty
+        this.DefaultTextDisplay = this.view.defaultText;
+
+        if(activityModel.getOrderedTasks().getValue() == null) {
+            DefaultTextDisplay.setText(DEFAULT_TEXT);
+        }
+        else if(activityModel.getOrderedTasks().getValue() != null && activityModel.getOrderedTasks().getValue().size()== 0) {
+            DefaultTextDisplay.setText(DEFAULT_TEXT);
+        }
+        else {
+            DefaultTextDisplay.setText("");
+        }
+    }
+
+
+
 }

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
+import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.util.MockLocalDate;
@@ -56,11 +58,33 @@ public class PendingFormFragment extends DialogFragment {
 
 
         btnSubmit.setOnClickListener(v -> {
+            //determine context
+            Context taskContext = Context.NONE;
+
+            RadioGroup contextGroup = view.findViewById(R.id.context_group);
+            int selectedContextButtonId = contextGroup.getCheckedRadioButtonId();
+            if (selectedContextButtonId != -1) {
+                if (selectedContextButtonId == R.id.home_context_btn) {
+                    taskContext = Context.HOME;
+                }
+                else if (selectedContextButtonId == R.id.work_context_btn) {
+                    taskContext = Context.WORK;
+                }
+                else if (selectedContextButtonId == R.id.school_context_btn) {
+                    taskContext = Context.SCHOOL;
+                }
+                else if (selectedContextButtonId == R.id.errand_context_btn) {
+                    taskContext = Context.ERRAND;
+                }
+            } else {
+                taskContext = Context.NONE;
+            }
+
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
             Task toInsert = new Task(null, taskTextString, 2, false,
                     MockLocalDate.now(), Frequency.PENDING,
-                    MockLocalDate.now().getDayOfWeek(), 1);
+                    MockLocalDate.now().getDayOfWeek(), 1,taskContext);
             activityModel.insertNewTask(toInsert);
             dismiss();
         });

@@ -5,22 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <EditText
-        android:id="@+id/task_text"
-        android:layout_width="247dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="Enter a task..."
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/pendingCancelButton"
         android:layout_width="wrap_content"
@@ -34,6 +18,87 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/task_text" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioGroup
+            android:id="@+id/context_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.446"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.062">
+
+            <RadioButton
+                android:id="@+id/home_context_btn"
+                android:layout_width="100px"
+                android:layout_height="100px"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/round_buttons"
+                android:backgroundTint="#FBE67A"
+                android:button="@android:color/transparent"
+                android:gravity="center"
+                android:text="H"
+                app:layout_constraintEnd_toStartOf="@+id/work_context_btn"
+                tools:layout_editor_absoluteY="43dp" />
+
+            <RadioButton
+                android:id="@+id/work_context_btn"
+                android:layout_width="100px"
+                android:layout_height="100px"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/round_buttons"
+                android:backgroundTint="#5FEAEF"
+                android:button="@android:color/transparent"
+                android:gravity="center"
+                android:text="W"
+                app:layout_constraintEnd_toStartOf="@+id/school_context_btn"
+                tools:layout_editor_absoluteY="43dp" />
+
+            <RadioButton
+                android:id="@+id/school_context_btn"
+                android:layout_width="100px"
+                android:layout_height="100px"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/round_buttons"
+                android:backgroundTint="#DDB3FB"
+                android:button="@android:color/transparent"
+                android:gravity="center"
+                android:text="S"
+                app:layout_constraintEnd_toStartOf="@+id/errand_context_btn"
+                tools:layout_editor_absoluteY="43dp" />
+
+            <RadioButton
+                android:id="@+id/errand_context_btn"
+                android:layout_width="100px"
+                android:layout_height="100px"
+                android:background="@drawable/round_buttons"
+                android:backgroundTint="#BFF4B1"
+                android:button="@android:color/transparent"
+                android:gravity="center"
+                android:text="E"
+                tools:layout_editor_absoluteX="267dp"
+                tools:layout_editor_absoluteY="43dp" />
+
+        </RadioGroup>
+
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/pendingSubmitButton"
         android:layout_width="wrap_content"
@@ -46,5 +111,20 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/pendingCancelButton"
         app:layout_constraintTop_toBottomOf="@+id/task_text" />
+
+    <EditText
+        android:id="@+id/task_text"
+        android:layout_width="247dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="Enter a task..."
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.537"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

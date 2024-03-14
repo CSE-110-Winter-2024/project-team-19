@@ -23,9 +23,11 @@ public class Task implements Serializable {
     private final @Nullable DayOfWeek dayOfWeek;
     private final @Nullable Integer dayOccurrence;
 
+    private final Context context;
+
     public Task(Integer id, String taskName, int sortOrder, boolean complete,
                 LocalDate activeDate, Frequency frequency, DayOfWeek dayOfWeek,
-                Integer dayOccurrence){
+                Integer dayOccurrence, Context context){
         this.id = id;
         this.taskName = taskName;
         this.sortOrder = sortOrder;
@@ -34,6 +36,7 @@ public class Task implements Serializable {
         this.frequency = frequency;
         this.dayOfWeek = dayOfWeek;
         this.dayOccurrence = dayOccurrence;
+        this.context = context;
     }
 
     public @Nullable Integer id(){
@@ -68,9 +71,11 @@ public class Task implements Serializable {
         return dayOccurrence;
     }
 
+    public Context context() {return context;}
+
     public Task withId(Integer id){
         return new Task(id, this.taskName, this.sortOrder, this.complete, this.activeDate,
-                this.frequency, this.dayOfWeek, this.dayOccurrence);
+                this.frequency, this.dayOfWeek, this.dayOccurrence, this.context);
     }
 
     @Override
@@ -93,27 +98,32 @@ public class Task implements Serializable {
 
     public Task withSortOrder(int sortOrder){
         return new Task(this.id, this.taskName, sortOrder, this.complete, this.activeDate,
-                this.frequency, this.dayOfWeek, this.dayOccurrence);
+                this.frequency, this.dayOfWeek, this.dayOccurrence, this.context);
     }
 
     public Task withComplete(boolean complete){
         return new Task(this.id, this.taskName, this.sortOrder, complete, this.activeDate,
-                this.frequency, this.dayOfWeek, this.dayOccurrence);
+                this.frequency, this.dayOfWeek, this.dayOccurrence, this.context);
     }
 
     public Task withActiveDate(LocalDate activeDate){
         return new Task(this.id, this.taskName, this.sortOrder, this.complete, activeDate,
-                this.frequency, this.dayOfWeek, this.dayOccurrence);
+                this.frequency, this.dayOfWeek, this.dayOccurrence, this.context);
     }
 
     public Task withFrequency(Frequency frequency){
         return new Task(this.id, this.taskName, this.sortOrder, this.complete, this.activeDate,
-                frequency, this.dayOfWeek, this.dayOccurrence);
+                frequency, this.dayOfWeek, this.dayOccurrence, this.context);
     }
 
     public Task withDayOccurrence(int dayOccurrence){
         return new Task(this.id, this.taskName, this.sortOrder, this.complete, this.activeDate,
-                this.frequency, this.dayOfWeek, dayOccurrence);
+                this.frequency, this.dayOfWeek, dayOccurrence, this.context);
+    }
+
+    public Task withContext(Context context){
+        return new Task(this.id, this.taskName, this.sortOrder, this.complete, this.activeDate,
+                this.frequency, this.dayOfWeek, this.dayOccurrence, context);
     }
 
     @Override
