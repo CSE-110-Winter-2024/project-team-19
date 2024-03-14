@@ -48,7 +48,7 @@ public class RecurringFormFragment extends DialogFragment {
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
         var activityModel = modelProvider.get(MainViewModel.class);
 
-        var calDialog = TaskRecurringDatePickerFragment.newInstance();
+        var calDialog = TaskRecurringDatePickerFragment.newInstance(activityModel.getLocalDate().getValue());
 
         //open the calendar
         ImageButton calButton = view.findViewById(R.id.openCalendarButton);
@@ -66,17 +66,8 @@ public class RecurringFormFragment extends DialogFragment {
 
         Button btnSubmit = view.findViewById(R.id.recurringSubmitButton);
 
-        //TODO - get the value of the date picker and radio buttons
         //save them as variables and log them
         RadioGroup radioGroup = view.findViewById(R.id.recurring_radio_group);
-        RadioButton dailyRadio = view.findViewById(R.id.daily_button);
-        RadioButton weeklyRadio = view.findViewById(R.id.weekly_button);
-        RadioButton monthlyRadio = view.findViewById(R.id.monthly_button);
-        RadioButton yearlyRadio = view.findViewById(R.id.yearly_button);
-
-        //set daily button as default
-        dailyRadio.setChecked(true);
-
 
         btnSubmit.setOnClickListener(v -> {
             int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
@@ -89,7 +80,6 @@ public class RecurringFormFragment extends DialogFragment {
                     calDialog.getPickedDate().getDayOfWeek(),
                     Tasks.calculateOccurrence(calDialog.getPickedDate()));
             activityModel.insertNewTask(toInsert);
-            Log.d("ReccurringFormFragment", toInsert.toString());
             dismiss();
         });
 

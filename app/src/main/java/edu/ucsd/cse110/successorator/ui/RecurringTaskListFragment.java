@@ -38,14 +38,9 @@ import edu.ucsd.cse110.successorator.util.MockLocalDate;
 public class RecurringTaskListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentRecurringTasksBinding view;
-
     private RecurringTaskListAdapter adapter;
 
-    private boolean deleteFlag = false;
-
-    private SharedPreferences sharedPreferences;
-
-    private LocalDateTime lastTime;
+    private LocalDate timeNow;
 
     //initializing Spinner variables
     Spinner viewTitleDropdown;
@@ -73,6 +68,8 @@ public class RecurringTaskListFragment extends Fragment {
         var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
         this.activityModel = modelProvider.get(MainViewModel.class);
+
+        this.timeNow = activityModel.getLocalDate().getValue();
 
         // Initialize the Adapter (with an empty list for now)
         this.adapter = new RecurringTaskListAdapter(requireContext(), List.of(), task -> {
@@ -103,6 +100,13 @@ public class RecurringTaskListFragment extends Fragment {
             adapter.addAll(new ArrayList<>(recurringTasks)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
+        activityModel.getLocalDate().observe(date ->{
+            timeNow = date;
+            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+            String StringOfNewNowDate = timeNow.format(myFormatObj2).toString();
+            String StringOfNewTmrwDate = timeNow.plusDays(1).format(myFormatObj2).toString();
+            updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
+        });
     }
     @Nullable
     @Override
@@ -111,8 +115,6 @@ public class RecurringTaskListFragment extends Fragment {
 
         // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);
-
-        lastTime = LocalDateTime.now();
 
         //no time functionality for this view yet, id like to move to main activity
 
@@ -142,19 +144,14 @@ public class RecurringTaskListFragment extends Fragment {
 
         });
 
-        // Create dates for date dropdown
-        LocalDate myDateObj = MockLocalDate.now();
-        LocalDate myNextDateObj = myDateObj.plusDays(1);
+        // Prepparing dropdown
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
-
-        String StringOfDate = myDateObj.format(myFormatObj).toString();
-        String StringOfNextDate = myNextDateObj.format(myFormatObj).toString();
-
-        // Assign values to task view by date dropdown in header
-        //viewTitleDropdown is a Spinner, viewTitleAdapter is the Spinner Adapter, spinnerItems is list of strings
         viewTitleDropdown = view.viewTitle;
-        spinnerItems = new ArrayList<String>(Arrays.asList( "Recurring", "Today, " + StringOfDate, "Tomorrow, " + StringOfNextDate, "Pending"));
-        viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        spinnerItems = new ArrayList<String>(Arrays.asList("Recurring", "Today, "
+                + timeNow.format(myFormatObj), "Tomorrow, "
+                + timeNow.plusDays(1).format(myFormatObj), "Pending"));
+        viewTitleAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
 
         /*
@@ -172,7 +169,6 @@ public class RecurringTaskListFragment extends Fragment {
                         // WARNING: uncommenting the below will disable the dropdown
                         //loadFragment(new RecurringTaskListFragment());
                         break;
-
                     case 1:
                         loadFragment(new TaskListFragment());
                         break;
@@ -195,11 +191,7 @@ public class RecurringTaskListFragment extends Fragment {
         view.mockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //calling updateTime with mocked = true just moves date forward
-                updateCurrentTime();
-                //Call deleteCompletedTasks from the taskDao
-                activityModel.updateTasks();
-
+                activityModel.timeTravelForward();
             }
         });
 
@@ -219,28 +211,15 @@ public class RecurringTaskListFragment extends Fragment {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int position = info.position;
-        Log.d("adpater info is", ""+ info);
-
-
         if (item.getItemId() == R.id.menu_delete_recurring) {
-
             //deletion logic here
-
             Task tobeDeleted = adapter.getItem(position);
-
-
             activityModel.removeTask(tobeDeleted);
-
-
             adapter.notifyDataSetChanged();
-
-
-
             return true;
         } else {
             return super.onContextItemSelected(item);
         }
-
     }
 
     private void loadFragment(Fragment fragment) {
@@ -251,19 +230,8 @@ public class RecurringTaskListFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
-    private void updateCurrentTime() {
-        LocalDate timeNow = MockLocalDate.now();
-        DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
-        String StringOfNewNowDate = timeNow.format(myFormatObj2).toString();
-        String StringOfNewTmrwDate = timeNow.plusDays(1).format(myFormatObj2).toString();
-        //DateDisplay.setText(StringOfNewNowDate);
-
-        updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
-        //here we need to call some method to remove all tasks that are completed
-
-    }
-
     private void updateDropdown(String newDate, String newTmrwDate) {
+        if(viewTitleAdapter == null) return;
         //updating dates on dropdown spinner item viewTitleDropdown
         spinnerItems = new ArrayList<String>(Arrays.asList(
                 "Recurring",
@@ -271,8 +239,8 @@ public class RecurringTaskListFragment extends Fragment {
                 "Tomorrow, " + newTmrwDate,
                 "Pending"
         ));
-        //viewTitleAdapter.notifyDataSetChanged();
-        viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        viewTitleAdapter.clear();
+        viewTitleAdapter.addAll(spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
     }
 

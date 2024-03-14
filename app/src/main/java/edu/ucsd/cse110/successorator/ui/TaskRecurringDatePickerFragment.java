@@ -17,15 +17,11 @@ public class TaskRecurringDatePickerFragment extends DialogFragment implements D
     private int month;
     private int day;
 
-    public static TaskRecurringDatePickerFragment newInstance() {
+    public static TaskRecurringDatePickerFragment newInstance(LocalDate date) {
         var fragment = new TaskRecurringDatePickerFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-        final Calendar c = Calendar.getInstance();
-        int yearTemp = c.get(Calendar.YEAR);
-        int monthTemp = c.get(Calendar.MONTH);
-        int dayTemp = c.get(Calendar.DAY_OF_MONTH);
-        fragment.onDateSet(null, yearTemp, monthTemp, dayTemp);
+        fragment.onDateSet(null, date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
         return fragment;
     }
 
