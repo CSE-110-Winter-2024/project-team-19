@@ -69,6 +69,8 @@ public class TomorrowTaskListFragment extends Fragment {
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
         this.activityModel = modelProvider.get(MainViewModel.class);
 
+        this.timeNow = activityModel.getLocalDate().getValue();
+
         // Initialize the Adapter (with an empty list for now)
         this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
             if (task.complete()) {
@@ -84,7 +86,8 @@ public class TomorrowTaskListFragment extends Fragment {
             if (tasks == null) return;
             adapter.clear();
             adapter.addAll(new ArrayList<>(tasks).stream()
-                    .filter(task -> task.activeDate().isAfter(LocalDate.now()) && task.activeDate().isBefore(LocalDate.now().plusDays(2)))
+                    .filter(task -> task.activeDate().isAfter(timeNow)
+                            && task.activeDate().isBefore(timeNow.plusDays(2)))
                     .collect(Collectors.toList())); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
@@ -101,7 +104,6 @@ public class TomorrowTaskListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.view = FragmentTaskListBinding.inflate(inflater, container, false);
-
 
         // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);

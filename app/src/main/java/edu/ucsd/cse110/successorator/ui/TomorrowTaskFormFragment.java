@@ -78,7 +78,7 @@ public class TomorrowTaskFormFragment extends DialogFragment {
 
         RadioButton monthlyButton = view.findViewById(R.id.monthly_button);
 
-        LocalDate currentDate = LocalDate.now().plusDays(1); //just added one from today
+        LocalDate currentDate = activityModel.getLocalDate().getValue().plusDays(1); //just added one from today
         Month currentMonth = currentDate.getMonth();
         DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
         int occurrence = getDayOccurrenceInMonth(currentDate.getYear(), currentMonth, currentDayOfWeek);
@@ -102,38 +102,38 @@ public class TomorrowTaskFormFragment extends DialogFragment {
             if (selectedRadioButtonId != -1) {
                 if (selectedRadioButtonId == R.id.onetime_button) {
                     activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, LocalDate.now().plusDays(1), Frequency.ONE_TIME,
-                            LocalDate.now().getDayOfWeek().plus(1), occurrence));
+                            false, currentDate, Frequency.ONE_TIME,
+                            currentDate.getDayOfWeek(), occurrence));
                     dismiss();
                 }
                 else if (selectedRadioButtonId == R.id.daily_button) {
                     activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, LocalDate.now().plusDays(1), Frequency.DAILY,
-                            LocalDate.now().getDayOfWeek().plus(1), occurrence));
+                            false, currentDate, Frequency.DAILY,
+                            currentDate.getDayOfWeek(), occurrence));
                     dismiss();
                 }
                 else if (selectedRadioButtonId == R.id.weekly_button) {
                     activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, LocalDate.now().plusDays(1), Frequency.WEEKLY,
-                            LocalDate.now().getDayOfWeek().plus(1), occurrence));
+                            false, currentDate, Frequency.WEEKLY,
+                            currentDate.getDayOfWeek(), occurrence));
                     dismiss();
                 }
                 else if (selectedRadioButtonId == R.id.monthly_button) {
                     activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, LocalDate.now().plusDays(1), Frequency.MONTHLY,
-                            LocalDate.now().getDayOfWeek().plus(1), occurrence));
+                            false, currentDate, Frequency.MONTHLY,
+                            currentDate.getDayOfWeek(), occurrence));
                     dismiss();
                 } else if (selectedRadioButtonId == R.id.yearly_button) {
                     activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                            false, LocalDate.now().plusDays(1), Frequency.YEARLY,
-                            LocalDate.now().getDayOfWeek().plus(1), occurrence));
+                            false, currentDate, Frequency.YEARLY,
+                            currentDate.getDayOfWeek(), occurrence));
                     dismiss();
                 }
             }
             else {
                 activityModel.insertNewTask(new Task(null, taskTextString, 2,
-                        false, LocalDate.now().plusDays(1), Frequency.ONE_TIME,
-                        LocalDate.now().getDayOfWeek().plus(1), occurrence));
+                        false, currentDate, Frequency.ONE_TIME,
+                        currentDate.getDayOfWeek(), occurrence));
                 dismiss();
             }
         });
