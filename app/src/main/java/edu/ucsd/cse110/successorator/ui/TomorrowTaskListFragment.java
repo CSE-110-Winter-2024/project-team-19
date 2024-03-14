@@ -37,27 +37,11 @@ import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 public class TomorrowTaskListFragment extends Fragment {
-    private static final String PREF_TASK_DATE = "task_date";
-    private static final String PREF_TASK_TIME = "task_time";
     private MainViewModel activityModel;
     private FragmentTaskListBinding view;
 
-
-    private TextView DateDisplay;
-    private Handler handler;
-
-    private LocalDateTime lastTime;
-
-    private LocalDate lastDate;
-
-    private LocalTime rolloverTime;
-    private ListItemTaskBinding taskItem;
-
+    private LocalDate timeNow;
     private TaskListAdapter adapter;
-
-    private boolean deleteFlag = false;
-
-    private SharedPreferences sharedPreferences;
 
     //initializing Spinner variables
     Spinner viewTitleDropdown;
@@ -104,6 +88,13 @@ public class TomorrowTaskListFragment extends Fragment {
                     .collect(Collectors.toList())); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
+        activityModel.getLocalDate().observe(date ->{
+            timeNow = date;
+            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+            String StringOfNewNowDate = timeNow.format(myFormatObj2).toString();
+            String StringOfNewTmrwDate = timeNow.plusDays(1).format(myFormatObj2).toString();
+            updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
+        });
     }
 
     @Nullable
@@ -115,26 +106,22 @@ public class TomorrowTaskListFragment extends Fragment {
         // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);
 
-        lastTime = LocalDateTime.now().plusDays(1);
-
-        lastDate = LocalDate.now().plusDays(1);
-
         // Create dates for date dropdown
-        LocalDateTime myDateObj = LocalDateTime.now().plusDays(1);
-        LocalDateTime myNextDateObj = myDateObj.minusDays(1); //this is "yesterday of tomorrow" aka today
-        handler = new Handler(Looper.getMainLooper());
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
-
-        String StringOfDate = myDateObj.format(myFormatObj).toString();
-        String StringOfNextDate = myNextDateObj.format(myFormatObj).toString();
 
         // Assign values to task view by date dropdown in header
         //viewTitleDropdown is a Spinner, viewTitleAdapter is the Spinner Adapter, spinnerItems is list of strings
         viewTitleDropdown = view.viewTitle;
-        spinnerItems = new ArrayList<String>(Arrays.asList( "Tomorrow, " + StringOfDate, "Today, " + StringOfNextDate, "Recurring", "Pending"));
-        viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
-        viewTitleDropdown.setAdapter(viewTitleAdapter);
+//        spinnerItems = new ArrayList<String>(Arrays.asList( "Tomorrow, " + StringOfDate, "Today, " + StringOfNextDate, "Recurring", "Pending"));
+//        viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+//        viewTitleDropdown.setAdapter(viewTitleAdapter);
 
+        spinnerItems = new ArrayList<String>(Arrays.asList( "Tomorrow, "
+                + timeNow.plusDays(1).format(myFormatObj), "Today, "
+                + timeNow.format(myFormatObj), "Recurring", "Pending"));
+        viewTitleAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        viewTitleDropdown.setAdapter(viewTitleAdapter);
         /*
          * adding cases to tell the spinner what to do when switching to Today (TaskListFragment),
          * Tomorrow (TmrwTaskListFragment), Recurring (RecurringTaskListFragment), and
@@ -169,28 +156,24 @@ public class TomorrowTaskListFragment extends Fragment {
         });
 
         //This is the runner that checks the time every second
-        Runnable updateTimeRunnable = new Runnable() {
+//        Runnable updateTimeRunnable = new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                updateCurrentDate();
+//                handler.postDelayed(this, 1000);
+//            }
+//
+//
+//
+//        };
 
-            @Override
-            public void run() {
-                updateCurrentDate();
-                handler.postDelayed(this, 1000);
-            }
-
-
-
-        };
-
-        handler.post(updateTimeRunnable);
-
+//        handler.post(updateTimeRunnable);
+//
         view.mockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //calling updateTime with mocked = true just moves date forward
-                updateCurrentTime();
-                //Call deleteCompletedTasks from the taskDao
-                activityModel.deleteCompletedTasks();
-
+                activityModel.timeTravelForward();
             }
         });
 
@@ -205,45 +188,45 @@ public class TomorrowTaskListFragment extends Fragment {
     }
 
 
-    private void updateCurrentDate() {
-        LocalDateTime timeNow = LocalDateTime.now().plusDays(1);
-        LocalDate dateNow = MockLocalDate.now();
-        Log.d("ugh", "" + dateNow);
-        LocalTime tNow = LocalTime.now();
-        if (dateNow.isAfter(lastDate) && tNow.isAfter(LocalTime.of(2, 0))) {
-            lastDate = dateNow;
-            activityModel.deleteCompletedTasks();
-        } else if (timeNow.isAfter(lastTime) )
-        {
-            lastTime = timeNow;
-            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+//    private void updateCurrentDate() {
+//        LocalDateTime timeNow = LocalDateTime.now().plusDays(1);
+//        LocalDate dateNow = MockLocalDate.now();
+//        Log.d("ugh", "" + dateNow);
+//        LocalTime tNow = LocalTime.now();
+//        if (dateNow.isAfter(lastDate) && tNow.isAfter(LocalTime.of(2, 0))) {
+//            lastDate = dateNow;
+//            activityModel.deleteCompletedTasks();
+//        } else if (timeNow.isAfter(lastTime) )
+//        {
+//            lastTime = timeNow;
+//            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+//
+//            //declaring strings to put into the spinner dropdown
+//            String StringOfNewNowDate = dateNow.format(myFormatObj2).toString();
+//            String StringOfNewTmrwDate = dateNow.plusDays(1).format(myFormatObj2).toString();
+//            //DateDisplay.setText(StringOfNewNowDate);
+//
+//            updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
+//
+//            //here we need to call some method to remove all tasks that are completed
+//
+//        }
+//    }
 
-            //declaring strings to put into the spinner dropdown
-            String StringOfNewNowDate = dateNow.format(myFormatObj2).toString();
-            String StringOfNewTmrwDate = dateNow.plusDays(1).format(myFormatObj2).toString();
-            //DateDisplay.setText(StringOfNewNowDate);
-
-            updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
-
-            //here we need to call some method to remove all tasks that are completed
-
-        }
-    }
-
-    private void updateCurrentTime() {
-        LocalDateTime timeNow = LocalDateTime.now();
-        lastTime = lastTime.plusDays(1); //its tomorrow now
-        DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
-
-        String StringOfNewNowDate = lastTime.format(myFormatObj2).toString();
-        String StringOfNewTmrwDate = lastTime.minusDays(1).format(myFormatObj2).toString();
-        //DateDisplay.setText(StringOfNewNowDate);
-
-        updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
-
-        //here we need to call some method to remove all tasks that are completed
-
-    }
+//    private void updateCurrentTime() {
+//        LocalDateTime timeNow = LocalDateTime.now();
+//        lastTime = lastTime.plusDays(1); //its tomorrow now
+//        DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+//
+//        String StringOfNewNowDate = lastTime.format(myFormatObj2).toString();
+//        String StringOfNewTmrwDate = lastTime.minusDays(1).format(myFormatObj2).toString();
+//        //DateDisplay.setText(StringOfNewNowDate);
+//
+//        updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
+//
+//        //here we need to call some method to remove all tasks that are completed
+//
+//    }
 
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -255,14 +238,16 @@ public class TomorrowTaskListFragment extends Fragment {
 
     private void updateDropdown(String newDate, String newTmrwDate) {
         //updating dates on dropdown spinner item viewTitleDropdown
+        if(viewTitleAdapter == null) return;
+        //updating dates on dropdown spinner item viewTitleDropdown
         spinnerItems = new ArrayList<String>(Arrays.asList(
                 "Tomorrow, " + newTmrwDate,
                 "Today, " + newDate,
                 "Recurring",
                 "Pending"
         ));
-        //viewTitleAdapter.notifyDataSetChanged();
-        viewTitleAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        viewTitleAdapter.clear();
+        viewTitleAdapter.addAll(spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
     }
         }
