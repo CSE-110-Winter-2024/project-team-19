@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
@@ -42,9 +43,12 @@ public class TaskEntity {
     @ColumnInfo(name = "day_occurrence")
     public Integer dayOccurrence;
 
+    @ColumnInfo(name = "creation_date")
+    public String creationDate;
+
     TaskEntity(String taskName, int sortOrder, boolean complete,
                LocalDate activeDate, Frequency frequency, DayOfWeek dayOfWeek,
-               Integer dayOccurrence){
+               Integer dayOccurrence,String creationDate){
         this.taskName = taskName;
         this.sortOrder = sortOrder;
         this.complete = complete;
@@ -52,17 +56,19 @@ public class TaskEntity {
         this.frequency = frequency;
         this.dayOfWeek = dayOfWeek;
         this.dayOccurrence = dayOccurrence;
+        this.creationDate = creationDate;
     }
 
     public static TaskEntity fromTask(@NonNull Task task){
         var taskEntity = new TaskEntity(task.taskName(), task.sortOrder(), task.complete(),
-                task.activeDate(), task.frequency(), task.dayOfWeek(), task.dayOccurrence());
+                task.activeDate(), task.frequency(), task.dayOfWeek(), task.dayOccurrence(),task.creationDate().toString());
         taskEntity.id = task.id();
         return taskEntity;
     }
 
     public @NonNull Task toTask(){
         return new Task(id, taskName, sortOrder, complete, activeDate, frequency, dayOfWeek,
-                dayOccurrence);
+                dayOccurrence); //i dont think I need to specify here but im worried
+        //it will grab the time now and mess the ordering up.
     }
 }

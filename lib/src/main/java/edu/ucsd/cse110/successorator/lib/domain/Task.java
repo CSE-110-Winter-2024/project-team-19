@@ -23,6 +23,8 @@ public class Task implements Serializable {
     private final @Nullable DayOfWeek dayOfWeek;
     private final @Nullable Integer dayOccurrence;
 
+    private final @Nullable LocalDateTime creationDate;
+
     public Task(Integer id, String taskName, int sortOrder, boolean complete,
                 LocalDate activeDate, Frequency frequency, DayOfWeek dayOfWeek,
                 Integer dayOccurrence){
@@ -34,6 +36,21 @@ public class Task implements Serializable {
         this.frequency = frequency;
         this.dayOfWeek = dayOfWeek;
         this.dayOccurrence = dayOccurrence;
+        this.creationDate = LocalDateTime.now();
+    }
+    //potential constructor with creationDate added since it should be optional
+    public Task(Integer id, String taskName, int sortOrder, boolean complete,
+                LocalDate activeDate, Frequency frequency, DayOfWeek dayOfWeek,
+                Integer dayOccurrence,LocalDateTime creationDate){
+        this.id = id;
+        this.taskName = taskName;
+        this.sortOrder = sortOrder;
+        this.complete = complete;
+        this.activeDate = activeDate;
+        this.frequency = frequency;
+        this.dayOfWeek = dayOfWeek;
+        this.dayOccurrence = dayOccurrence;
+        this.creationDate = creationDate;
     }
 
     public @Nullable Integer id(){
@@ -67,6 +84,8 @@ public class Task implements Serializable {
     public int dayOccurrence(){
         return dayOccurrence;
     }
+
+    public LocalDateTime creationDate(){return creationDate;}
 
     public Task withId(Integer id){
         return new Task(id, this.taskName, this.sortOrder, this.complete, this.activeDate,
@@ -115,6 +134,10 @@ public class Task implements Serializable {
         return new Task(this.id, this.taskName, this.sortOrder, this.complete, this.activeDate,
                 this.frequency, this.dayOfWeek, dayOccurrence);
     }
+
+
+
+
 
     @Override
     public String toString(){
