@@ -28,7 +28,10 @@ public class TaskRecurringDatePickerFragment extends DialogFragment implements D
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Create a new instance of DatePickerDialog and return it.
-        return new DatePickerDialog(requireContext(), this, year, month, day);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), this, year, month, day);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        return datePickerDialog;
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
