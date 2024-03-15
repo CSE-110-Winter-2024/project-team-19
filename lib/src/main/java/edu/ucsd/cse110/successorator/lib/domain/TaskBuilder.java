@@ -41,6 +41,10 @@ public class TaskBuilder {
         return this;
     }
 
+    public TaskBuilder withID(Integer id){
+        this.id = id;
+        return this;
+    }
     public TaskBuilder withFrequency(Frequency frequency){
         this.frequency = frequency;
         if(frequency != Frequency.ONE_TIME && frequency != Frequency.PENDING)
@@ -50,6 +54,15 @@ public class TaskBuilder {
 
     public TaskBuilder withContext(Context context){
         this.context = context;
+        return this;
+    }
+
+    public TaskBuilder withActiveDate(LocalDate activeDate){
+        this.activeDate = activeDate;
+        this.dayOfWeek = activeDate.getDayOfWeek();
+        this.dayOccurrence = Tasks.calculateOccurrence(activeDate);
+        if(frequency != Frequency.ONE_TIME && frequency != Frequency.PENDING)
+            updateExpirationDate();
         return this;
     }
 

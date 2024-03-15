@@ -102,7 +102,6 @@ public class MainViewModel extends ViewModel {
 
     public void insertNewTask(Task task){
 
-
         taskRepository.save(task);
     }
 

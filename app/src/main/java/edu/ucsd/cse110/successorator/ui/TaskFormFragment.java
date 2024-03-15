@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator.ui;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,6 +128,7 @@ public class TaskFormFragment extends DialogFragment {
                 }
             }
 
+            Log.d("TaskFormFragment", "Called activityModel insertNewTask");
             activityModel.insertNewTask(new TaskBuilder().withTaskName(taskTextString)
                     .withFrequency(taskFreq)
                     .withContext(taskContext)

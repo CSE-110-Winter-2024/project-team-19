@@ -26,6 +26,7 @@ import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
+import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.lib.domain.TaskBuilder;
 import edu.ucsd.cse110.successorator.lib.domain.Tasks;
@@ -140,6 +141,7 @@ public class TomorrowTaskFormFragment extends DialogFragment {
             activityModel.insertNewTask(new TaskBuilder().withTaskName(taskTextString)
                     .withFrequency(taskFreq)
                     .withContext(taskContext)
+                    .withActiveDate(MockLocalDate.now().plusDays(1))
                     .build());
             dismiss();
         });

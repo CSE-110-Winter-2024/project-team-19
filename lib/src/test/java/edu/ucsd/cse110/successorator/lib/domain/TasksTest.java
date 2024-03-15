@@ -45,9 +45,13 @@ public class TasksTest {
         watchPaintDryWeekly = new Task(null, "Watch paint dry", 6, true,
                 LocalDate.now(), Frequency.WEEKLY, LocalDate.now().getDayOfWeek(), 1,
                 LocalDateTime.now().withNano(0), LocalDate.now().plusWeeks(1), Context.HOME);
+
+        LocalDate placeholder = LocalDate.of(2024, 3, 14);
+
         watchPaintDryMonthly = new Task(null, "Watch paint dry", 6, true,
-                LocalDate.now(), Frequency.MONTHLY, LocalDate.now().getDayOfWeek(), 1,
-                LocalDateTime.now().withNano(0), LocalDate.now().plusMonths(1), Context.HOME);
+                placeholder, Frequency.MONTHLY, placeholder.getDayOfWeek(), 2,
+                LocalDateTime.now().withNano(0), LocalDate.of(2024, 4, 11), Context.HOME);
+
         watchPaintDryYearly = new Task(null, "Watch paint dry", 6, true,
                 LocalDate.now(), Frequency.YEARLY, LocalDate.now().getDayOfWeek(), 1,
                 LocalDateTime.now().withNano(0), LocalDate.now().plusYears(1), Context.HOME);
@@ -58,11 +62,11 @@ public class TasksTest {
         tasksDaily = new ArrayList<>(Arrays.asList(cookies, waterDog, getGroceries, drinkMilk,
                 cutHair, watchPaintDryDaily));
         tasksWeekly = new ArrayList<>(Arrays.asList(cookies, waterDog, getGroceries, drinkMilk,
-                cutHair, watchPaintDryDaily));
+                cutHair, watchPaintDryWeekly));
         tasksMonthly = new ArrayList<>(Arrays.asList(cookies, waterDog, getGroceries, drinkMilk,
-                cutHair, watchPaintDryDaily));
+                cutHair, watchPaintDryMonthly));
         tasksYearly = new ArrayList<>(Arrays.asList(cookies, waterDog, getGroceries, drinkMilk,
-                cutHair, watchPaintDryDaily));
+                cutHair, watchPaintDryYearly));
     }
 
     @Test
@@ -125,7 +129,29 @@ public class TasksTest {
     }
 
     @Test
-    public void removeTask() {
-        List<Task> tasks = List.of();
+    public void recurrWeeklyTask(){
+        var actual = Tasks.updateTasks(tasksWeekly);
+
+        var expected = List.of(cookies, waterDog, getGroceries, watchPaintDryWeekly.withActiveDate(LocalDate.now().plusDays(7)).withExpirationDate(LocalDate.now().plusDays(14)).withComplete(false).withSortOrder(4));
+
+        assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+    }
+
+    @Test
+    public void recurrYearlyTask(){
+        var actual = Tasks.updateTasks(tasksYearly);
+
+        var expected = List.of(cookies, waterDog, getGroceries, watchPaintDryYearly.withActiveDate(LocalDate.now().plusYears(1)).withExpirationDate(LocalDate.now().plusYears(2)).withComplete(false).withSortOrder(4));
+
+        assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+    }
+
+    @Test
+    public void recurrMonthlyTask(){
+        var actual = Tasks.updateTasks(tasksMonthly);
+
+        var expected = List.of(cookies, waterDog, getGroceries, watchPaintDryMonthly.withActiveDate(watchPaintDryMonthly.expirationDate()).withExpirationDate(LocalDate.of(2024, 5, 9)).withComplete(false).withSortOrder(4));
+
+        assertEquals(new HashSet<>(expected), new HashSet<>(actual));
     }
 }

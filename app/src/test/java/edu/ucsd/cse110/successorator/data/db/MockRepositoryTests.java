@@ -63,7 +63,9 @@ public class MockRepositoryTests {
         var repo = new SimpleTaskRepository(dataSource);
         var model = new MainViewModelMock(repo);
 
-        Task recurDaily = new TaskBuilder().withTaskName("Get 2 Groceries").withFrequency(Frequency.DAILY).build();
+        Task recurDaily = new TaskBuilder().withID(4).withTaskName("Get 2 Groceries").withFrequency(Frequency.DAILY).
+        build();
+
 
         dataSource.putTask(recurDaily);
 
@@ -152,7 +154,7 @@ public class MockRepositoryTests {
         var repo = new SimpleTaskRepository(dataSource);
         var model = new MainViewModelMock(repo);
 
-        Task pending1 = new TaskBuilder().withTaskName("Get 2 Groceries").withFrequency(Frequency.PENDING).build();
+        Task pending1 = new TaskBuilder().withID(4).withTaskName("Get 2 Groceries").withFrequency(Frequency.PENDING).build();
 
         model.insertNewTask(pending1);
 

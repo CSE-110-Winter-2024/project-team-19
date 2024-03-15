@@ -159,4 +159,18 @@ public class Task implements Serializable {
                 this.frequency, this.dayOfWeek, this.dayOccurrence, this.creationDate,
                 expirationDate, this.context);
     }
+
+    public String toString(){
+        return id + "\n"
+                + taskName + "\n"
+                + sortOrder + "\n"
+                + complete + "\n"
+                + activeDate + "\n"
+                + frequency + "\n"
+                + dayOfWeek + "\n"
+                + dayOccurrence + "\n"
+                + creationDate + "\n"
+                + expirationDate + "\n"
+                + context + "\n";
+    }
 }

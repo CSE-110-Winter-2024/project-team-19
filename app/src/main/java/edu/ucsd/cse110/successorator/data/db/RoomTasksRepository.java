@@ -47,6 +47,7 @@ public class RoomTasksRepository implements TaskRepository {
         var tasks = tasksDao.findAll().stream()
                                 .map(TaskEntity::toTask)
                                 .collect(Collectors.toList());
+        Log.d("RoomTaskRepo", tasks.toString());
         tasks = Tasks.insertTask(tasks, task);
 
 
@@ -54,8 +55,6 @@ public class RoomTasksRepository implements TaskRepository {
                                 .map(TaskEntity::fromTask)
                                 .collect(Collectors.toList());
 
-        for (TaskEntity t: tasksEntities)
-       // {Log.d("converting back to tasks yields ", "" + t.toTask().taskName());}
         tasksDao.insert(tasksEntities);
     }
 
