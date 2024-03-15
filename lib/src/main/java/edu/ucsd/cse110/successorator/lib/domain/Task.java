@@ -136,6 +136,12 @@ public class Task implements Serializable {
                 this.expirationDate);
     }
 
+    public Task withCreationDate(LocalDateTime creationDate){
+        return new Task(this.id, this.taskName, this.sortOrder, this.complete, this.activeDate,
+                this.frequency, this.dayOfWeek, this.dayOccurrence, creationDate,
+                this.expirationDate);
+    }
+
     public Task withExpirationDate(LocalDate expirationDate){
         return new Task(this.id, this.taskName, this.sortOrder, this.complete, this.activeDate,
                 this.frequency, this.dayOfWeek, this.dayOccurrence, this.creationDate,
