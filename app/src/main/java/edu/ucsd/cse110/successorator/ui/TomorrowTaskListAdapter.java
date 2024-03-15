@@ -24,7 +24,7 @@ import edu.ucsd.cse110.successorator.lib.domain.Task;
 This class was adapted from the CardListAdapter class provided in CSE 110 Lab 5.
 https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
  */
-public class TaskListAdapter extends ArrayAdapter<Task> {
+public class TomorrowTaskListAdapter extends ArrayAdapter<Task> {
     Consumer<Task> onCompleteClick;
 
 
@@ -33,7 +33,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
 
     private TextView taskText;
 
-    public TaskListAdapter(Context context, List<Task> flashcards, Consumer<Task> onDeleteClick) {
+    public TomorrowTaskListAdapter(Context context, List<Task> flashcards, Consumer<Task> onDeleteClick) {
         // This sets a bunch of stuff internally, which we can access
         // with getContext() and getItem() for example.
         //
@@ -74,11 +74,20 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
 
         final boolean isTaskCompleted = task.complete();
 
+        List<Frequency> recurring = List.of(Frequency.DAILY, Frequency.WEEKLY,
+                Frequency.MONTHLY, Frequency.YEARLY);
+
         if (isTaskCompleted) {
             binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             binding.taskDash.setText("+");
             binding.taskDash.setTextColor(Color.LTGRAY);
         } else {
+            binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            binding.taskDash.setText("−");
+            binding.taskDash.setTextColor(Color.RED);
+        }
+        if (recurring.contains(task.frequency()) && task.expirationDate()
+                .equals(MockLocalDate.now().plusDays(1))){
             binding.taskContent.setPaintFlags(binding.taskContent.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             binding.taskDash.setText("−");
             binding.taskDash.setTextColor(Color.RED);

@@ -27,13 +27,14 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
+import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
 
 public class TomorrowTaskListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentTaskListBinding view;
 
     private LocalDate timeNow;
-    private TaskListAdapter adapter;
+    private TomorrowTaskListAdapter adapter;
 
     //initializing Spinner variables
     Spinner viewTitleDropdown;
@@ -64,16 +65,18 @@ public class TomorrowTaskListFragment extends Fragment {
         this.timeNow = activityModel.getLocalDate().getValue();
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
-            if (task.complete()) {
+        this.adapter = new TomorrowTaskListAdapter(requireContext(), List.of(), task -> {
+            List<Frequency> recurring = List.of(Frequency.DAILY, Frequency.WEEKLY,
+                                        Frequency.MONTHLY, Frequency.YEARLY);
+            if (!recurring.contains(task.frequency()) && task.complete()) {
                 activityModel.uncompleteTask(task);
             } else {
                 //since its tomorrow view, if it's a daily task, reject operation
                 //and show toast
-                if (task.frequency().equals(Frequency.DAILY))
+                if (task.expirationDate().equals(MockLocalDate.now().plusDays(1)))
                 {
                     Toast.makeText(getContext(), "This goal is still active for Today." +
-                            "  If you've finished this goal for Today, mark it finished in that view.", Toast.LENGTH_SHORT).show();
+                            "Mark it finished in the Today view.", Toast.LENGTH_SHORT).show();
                 }
 
                 else {activityModel.completeTask(task);}
@@ -81,12 +84,15 @@ public class TomorrowTaskListFragment extends Fragment {
             adapter.notifyDataSetChanged();
         });
         activityModel.getOrderedTasks().observe(tasks -> {
+            List<Frequency> recurring = List.of(Frequency.DAILY, Frequency.WEEKLY,
+                    Frequency.MONTHLY, Frequency.YEARLY);
             if (tasks == null) return;
             adapter.clear();
             adapter.addAll(new ArrayList<>(tasks).stream()
                     .filter(task -> task.activeDate().isAfter(timeNow)
-                            && task.activeDate().isBefore(timeNow.plusDays(2))
-                    || task.frequency().equals(Frequency.DAILY))
+                                && task.activeDate().isBefore(timeNow.plusDays(2))
+                                || (recurring.contains(task.frequency())
+                                && task.expirationDate().equals(timeNow.plusDays(1))))
                     .collect(Collectors.toList())); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
