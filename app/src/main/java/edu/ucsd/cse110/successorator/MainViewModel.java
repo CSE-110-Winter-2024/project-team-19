@@ -5,6 +5,8 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import java.time.LocalDate;
@@ -30,6 +32,7 @@ public class MainViewModel extends ViewModel {
     private final MutableSubject<List<Task>> orderedTasks;
     private final MutableSubject<LocalDate> dateSubject;
 
+    private Handler handler;
 
     public static final ViewModelInitializer<MainViewModel> initializer =
             new ViewModelInitializer<>(
@@ -45,6 +48,20 @@ public class MainViewModel extends ViewModel {
         this.taskRepository = taskRepository;
 
         this.orderedTasks = new SimpleSubject<>();
+
+        this.handler = new Handler(Looper.getMainLooper());
+
+        Runnable updateTimeRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                if(LocalDate.now().isAfter(MockLocalDate.now())){
+                    updateDate(LocalDate.now());
+                }
+                handler.postDelayed(this, 1000);
+            }
+        };
+        handler.post(updateTimeRunnable);
 
         taskRepository.findAll().observe(tasks -> {
             if (tasks == null) return; // not ready yet, ignore
