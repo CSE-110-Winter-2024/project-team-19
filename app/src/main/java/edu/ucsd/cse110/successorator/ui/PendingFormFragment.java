@@ -59,10 +59,6 @@ public class PendingFormFragment extends DialogFragment {
         btnSubmit.setOnClickListener(v -> {
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
-//            Task toInsert = new Task(null, taskTextString, 2, false,
-//                    currentDate, Frequency.PENDING,
-//                    currentDate.getDayOfWeek(), 1);
-//            activityModel.insertNewTask(toInsert);
             activityModel.insertNewTask(new TaskBuilder()
                     .withTaskName(taskTextString)
                     .withFrequency(Frequency.PENDING)

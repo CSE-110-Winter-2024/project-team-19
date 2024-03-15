@@ -77,11 +77,6 @@ public class RecurringFormFragment extends DialogFragment {
             String frequencyString = selectedRadioButton.getText().toString();
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
-//            Task toInsert = new Task(null, taskTextString, 2, false,
-//                    calDialog.getPickedDate(), Tasks.convertString(frequencyString),
-//                    calDialog.getPickedDate().getDayOfWeek(),
-//                    Tasks.calculateOccurrence(calDialog.getPickedDate()));
-//            activityModel.insertNewTask(toInsert);
             activityModel.insertNewTask(new TaskBuilder()
                     .withTaskName(taskTextString)
                     .withFrequency(Tasks.convertString(frequencyString))

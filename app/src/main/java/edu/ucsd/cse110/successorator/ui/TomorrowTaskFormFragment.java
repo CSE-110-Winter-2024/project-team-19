@@ -103,9 +103,6 @@ public class TomorrowTaskFormFragment extends DialogFragment {
             int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             if (selectedRadioButtonId != -1) {
                 if (selectedRadioButtonId == R.id.onetime_button) {
-//                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-//                            false, currentDate, Frequency.ONE_TIME,
-//                            currentDate.getDayOfWeek(), occurrence));
                     activityModel.insertNewTask(new TaskBuilder()
                             .withTaskName(taskTextString)
                             .withFrequency(Frequency.ONE_TIME)
@@ -113,9 +110,6 @@ public class TomorrowTaskFormFragment extends DialogFragment {
                     dismiss();
                 }
                 else if (selectedRadioButtonId == R.id.daily_button) {
-//                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-//                            false, currentDate, Frequency.DAILY,
-//                            currentDate.getDayOfWeek(), occurrence));
                     activityModel.insertNewTask(new TaskBuilder()
                             .withTaskName(taskTextString)
                             .withFrequency(Frequency.DAILY)
@@ -123,9 +117,6 @@ public class TomorrowTaskFormFragment extends DialogFragment {
                     dismiss();
                 }
                 else if (selectedRadioButtonId == R.id.weekly_button) {
-//                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-//                            false, currentDate, Frequency.WEEKLY,
-//                            currentDate.getDayOfWeek(), occurrence));
                     activityModel.insertNewTask(new TaskBuilder()
                             .withTaskName(taskTextString)
                             .withFrequency(Frequency.WEEKLY)
@@ -133,18 +124,12 @@ public class TomorrowTaskFormFragment extends DialogFragment {
                     dismiss();
                 }
                 else if (selectedRadioButtonId == R.id.monthly_button) {
-//                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-//                            false, currentDate, Frequency.MONTHLY,
-//                            currentDate.getDayOfWeek(), occurrence));
                     activityModel.insertNewTask(new TaskBuilder()
                             .withTaskName(taskTextString)
                             .withFrequency(Frequency.MONTHLY)
                             .build());
                     dismiss();
                 } else if (selectedRadioButtonId == R.id.yearly_button) {
-//                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-//                            false, currentDate, Frequency.YEARLY,
-//                            currentDate.getDayOfWeek(), occurrence));
                     activityModel.insertNewTask(new TaskBuilder()
                             .withTaskName(taskTextString)
                             .withFrequency(Frequency.YEARLY)
@@ -153,9 +138,6 @@ public class TomorrowTaskFormFragment extends DialogFragment {
                 }
             }
             else {
-//                activityModel.insertNewTask(new Task(null, taskTextString, 2,
-//                        false, currentDate, Frequency.ONE_TIME,
-//                        currentDate.getDayOfWeek(), occurrence));
                 activityModel.insertNewTask(new TaskBuilder()
                         .withTaskName(taskTextString)
                         .withFrequency(Frequency.ONE_TIME)
