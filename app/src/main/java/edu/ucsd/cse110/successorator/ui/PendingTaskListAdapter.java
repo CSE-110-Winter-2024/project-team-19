@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.ListItemNotTaskBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
@@ -58,6 +59,27 @@ public class PendingTaskListAdapter extends ArrayAdapter<Task> {
             v.showContextMenu();
             return true;
         });
+
+        edu.ucsd.cse110.successorator.lib.domain.Context taskContext = task.context();
+        if (taskContext == edu.ucsd.cse110.successorator.lib.domain.Context.HOME) {
+            binding.taskContext.setText("H");
+            binding.taskContext.setBackgroundTintList(getContext().getColorStateList(R.color.context_yellow));
+        }
+        else if (taskContext == edu.ucsd.cse110.successorator.lib.domain.Context.WORK) {
+            binding.taskContext.setText("W");
+            binding.taskContext.setBackgroundTintList(getContext().getColorStateList(R.color.context_blue));
+        }
+        else if (taskContext == edu.ucsd.cse110.successorator.lib.domain.Context.SCHOOL) {
+            binding.taskContext.setText("S");
+            binding.taskContext.setBackgroundTintList(getContext().getColorStateList(R.color.context_pink));
+        }
+        else if (taskContext == edu.ucsd.cse110.successorator.lib.domain.Context.ERRAND) {
+            binding.taskContext.setText("E");
+            binding.taskContext.setBackgroundTintList(getContext().getColorStateList(R.color.context_green));
+        } else {
+            binding.taskContext.setText("");
+            binding.taskContext.setBackgroundTintList(getContext().getColorStateList(R.color.context_transparent));
+        }
         return binding.getRoot();
     }
 }

@@ -33,6 +33,7 @@
                 android:background="@drawable/round_buttons"
                 android:backgroundTint="#FBE67A"
                 android:button="@android:color/transparent"
+                android:checked="true"
                 android:gravity="center"
                 android:text="H"
                 app:layout_constraintEnd_toStartOf="@+id/work_context_btn"
