@@ -1,25 +1,190 @@
 package edu.ucsd.cse110.successorator.data.db;
 
 import org.junit.Test;
+import org.junit.runner.manipulation.Ordering;
 
 import static org.junit.Assert.*;
 
+import android.content.Context;
+import android.util.Log;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
+import edu.ucsd.cse110.successorator.lib.domain.Frequency;
+import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
 import edu.ucsd.cse110.successorator.lib.domain.SimpleTaskRepository;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
+import edu.ucsd.cse110.successorator.lib.domain.Tasks;
+import edu.ucsd.cse110.successorator.ui.TaskListAdapter;
 
 public class MockRepositoryTests {
-//
-//    @Test
-//    public void addNewTaskFromEmpty() {
-//        // GIVEN
-//        var dataSource = new InMemoryDataSource();
-//        var repo = new SimpleTaskRepository(dataSource);
-//        var model = new MainViewModel(repo);
+
+    @Test
+    public void US11BDDScenario() {
+        // GIVEN we create a weekly Task Today from the today view
+        var dataSource = new InMemoryDataSource();
+        var repo = new SimpleTaskRepository(dataSource);
+        MockLocalDate mockLocalDate = new MockLocalDate(LocalDate.now());
+        var model = new MainViewModel(repo,mockLocalDate);
+
+        Task recurWeekly = new Task(20,"Get 2 Groceries",1, true,
+                mockLocalDate.now(), Frequency.WEEKLY, mockLocalDate.now().getDayOfWeek(), 1);
+
+        List<Task> myTasks = new ArrayList<>();
+
+        myTasks.add(recurWeekly);
+
+        myTasks =  Tasks.updateTasks(myTasks);
+
+        model.insertNewTask(myTasks.get(0));
+
+        assertEquals(mockLocalDate.now().plusDays(7),myTasks.get(0).activeDate());
+
+        //WHEN I move forward a week
+        for (int i = 0; i < 7; i++){
+        mockLocalDate.advanceDate();}
+
+
+
+
+        //THEN The task should be set to display now
+        LocalDate actual = model.getOrderedTasks().getValue().get(0).activeDate();
+        assertEquals(mockLocalDate.now(),actual);
+
+    }
+    @Test
+    public void US12BDDScenario(){
+        //GIVEN I have a daily task that I can see on the today view
+        var dataSource = new InMemoryDataSource();
+        var repo = new SimpleTaskRepository(dataSource);
+        MockLocalDate mockLocalDate = new MockLocalDate(LocalDate.now());
+        var model = new MainViewModel(repo,mockLocalDate);
+
+
+        Task recurDaily = new Task(20,"Get 2 Groceries",1, true,
+                mockLocalDate.now(), Frequency.DAILY, mockLocalDate.now().getDayOfWeek(), 1);
+
+
+
+        List<Task> myTasks = new ArrayList<>();
+        myTasks.add(recurDaily);
+
+        List<Task> tomorrowTasks = new ArrayList<>();
+
+        tomorrowTasks.addAll(new ArrayList<>(myTasks).stream()
+                    .filter(task -> task.activeDate().isAfter(mockLocalDate.now())
+                            && task.activeDate().isBefore(mockLocalDate.now().plusDays(2))
+                            || task.frequency().equals(Frequency.DAILY))
+                    .collect(Collectors.toList()));
+
+        //THEN it should also appear in the Tomorrow View
+        assertTrue(tomorrowTasks.size() > 0);
+        assertEquals(mockLocalDate.now(),tomorrowTasks.get(0).activeDate());
+
+
+        model.insertNewTask(recurDaily);
+        //AND WHEN I complete a task and move forward a day,
+        model.completeTask(recurDaily);
+        assertNotNull(model.getOrderedTasks().getValue());
+        model.timeTravelForward();
+        model.updateTasks();
+
+        // THEN the task should appear uncompleted
+        List<Task> result =  model.getOrderedTasks().getValue();
+        assertEquals(false,result.get(0).complete());
+
+
+    }
+    @Test
+    public void US13BDDScenario(){
+        //Given Im in recurring view and I create a daily recurring task
+        var dataSource = new InMemoryDataSource();
+        var repo = new SimpleTaskRepository(dataSource);
+        MockLocalDate mockLocalDate = new MockLocalDate(LocalDate.now());
+        var model = new MainViewModel(repo,mockLocalDate);
+
+
+        Task recurDaily = new Task(20,"Get 2 Groceries",1, true,
+                mockLocalDate.now(), Frequency.DAILY, mockLocalDate.now().getDayOfWeek(), 1);
+
+
+
+        List<Task> myTasks = new ArrayList<>();
+        myTasks.add(recurDaily);
+
+        myTasks = Tasks.updateTasks(myTasks);
+        model.insertNewTask(myTasks.get(0));
+
+
+
+        //When I fast forward 1 day
+        mockLocalDate.advanceDate();
+
+        //The task should have its active date be today
+        LocalDate actual = model.getOrderedTasks().getValue().get(0).activeDate();
+        assertEquals(mockLocalDate.now(),actual);
+
+    }
+    @Test
+    public void US14BDDScenario(){
+        //Given I have a school task “study for midterm” in my Today list,
+
+        //When I create a one-time task with the work context, “Fire employees”,
+
+        //Then it should be in my list of tasks above the task “Study for midterm”.
+    }
+    @Test
+    public void US15BDDScenario(){
+//        Given I have no tasks in the “today” view,
+//                When I open the menu for selecting a context for focus mode,
+//        AND select the  context “work”,
+//        Then nothing should change in the UI,
+//                When I add a task called “Write email” with the work context,
+//        Then it should show up on the UI,
+//        When I add a task called “Study” with the school context,
+//        Then it should not visible,
+//                When I exit focus mode,
+//        Then both tasks, “Write email” and “Study” are now visible.
+
+    }
+    @Test
+    public void US16BDDScenario(){
+        //        Given Sara has the context menu open for the pending task “Walk the plant”
+        var dataSource = new InMemoryDataSource();
+        var repo = new SimpleTaskRepository(dataSource);
+        MockLocalDate mockLocalDate = new MockLocalDate(LocalDate.now());
+        var model = new MainViewModel(repo,mockLocalDate);
+
+
+        Task pending1 = new Task(20,"Get 2 Groceries",1, false,
+                mockLocalDate.now(), Frequency.PENDING, null ,1);
+
+        model.insertNewTask(pending1);
+
+
+
+//        When Sara longpresses the task, and selectes "finish" from the context menu
+//        Then “Walk the plant” is removed from Pending
+//        And “Walk the plant” appears as a slashed through item under today’s finished tasks
+
+
+            dataSource.sendPendingtoToday(pending1.id());
+
+
+        Task resultingTask = model.getOrderedTasks().getValue().get(0);
+        assertNotNull(resultingTask);
+        assertEquals(resultingTask.frequency() , Frequency.ONE_TIME);
+        assertEquals(resultingTask.activeDate() , mockLocalDate.now());
+
+    }
+    //MS1 Tests Below
 
         // WHEN
 //        model.insertNewTask(new Task(null, "New Task", 0, false));
