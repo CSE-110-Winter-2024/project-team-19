@@ -26,7 +26,7 @@ public class TaskBuilderTest {
                 MockLocalDate.now(), Frequency.ONE_TIME, MockLocalDate.now().getDayOfWeek(),
                 Tasks.calculateOccurrence(MockLocalDate.now()),
                 LocalDateTime.of(MockLocalDate.now(), LocalTime.now()).withNano(0),
-                MockLocalDate.now().plusDays(1));
+                MockLocalDate.now().plusDays(1), Context.HOME);
         assertEquals(expected, actual);
     }
 
@@ -40,7 +40,7 @@ public class TaskBuilderTest {
                 MockLocalDate.now(), Frequency.WEEKLY, MockLocalDate.now().getDayOfWeek(),
                 Tasks.calculateOccurrence(MockLocalDate.now()),
                 LocalDateTime.of(MockLocalDate.now(), LocalTime.now()).withNano(0),
-                MockLocalDate.now().plusWeeks(1));
+                MockLocalDate.now().plusWeeks(1), Context.HOME);
         assertEquals(expected, actual);
     }
 
@@ -58,7 +58,7 @@ public class TaskBuilderTest {
                         "", 0, false, MockLocalDate.now(),
                         Frequency.MONTHLY, null,
                         Tasks.calculateOccurrence(MockLocalDate.now()),
-                        null, null)));
+                        null, null, Context.HOME)), Context.HOME);
         assertEquals(expected, actual);
     }
 
@@ -72,7 +72,7 @@ public class TaskBuilderTest {
                 MockLocalDate.now(), Frequency.YEARLY, MockLocalDate.now().getDayOfWeek(),
                 Tasks.calculateOccurrence(MockLocalDate.now()),
                 LocalDateTime.of(MockLocalDate.now(), LocalTime.now()).withNano(0),
-                MockLocalDate.now().plusYears(1));
+                MockLocalDate.now().plusYears(1), Context.HOME);
         assertEquals(expected, actual);
     }
 }
