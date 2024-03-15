@@ -101,6 +101,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void insertNewTask(Task task){
+        Log.d("MainViewModel", "Called save");
         taskRepository.save(task);
     }
 

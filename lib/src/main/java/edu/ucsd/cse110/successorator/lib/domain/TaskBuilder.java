@@ -23,7 +23,7 @@ public class TaskBuilder {
     private Context context;
 
     public TaskBuilder(){
-        id = 1;
+        id = null;
         taskName = "";
         sortOrder = 0;
         complete = false;
@@ -50,6 +50,15 @@ public class TaskBuilder {
 
     public TaskBuilder withContext(Context context){
         this.context = context;
+        return this;
+    }
+
+    public TaskBuilder withActiveDate(LocalDate activeDate){
+        this.activeDate = activeDate;
+        this.dayOfWeek = activeDate.getDayOfWeek();
+        this.dayOccurrence = Tasks.calculateOccurrence(activeDate);
+        if(frequency != Frequency.ONE_TIME && frequency != Frequency.PENDING)
+            updateExpirationDate();
         return this;
     }
 
