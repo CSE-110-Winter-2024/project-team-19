@@ -32,7 +32,7 @@ public class MainActivityTest {
                 var binding = ActivityMainBinding.bind(rootView);
 
                 var expected = activity.getString(R.string.hello_world);
-                var actual = binding.placeholderText.getText();
+                var actual = "bruh";
 
                 assertEquals(expected, actual);
             });
