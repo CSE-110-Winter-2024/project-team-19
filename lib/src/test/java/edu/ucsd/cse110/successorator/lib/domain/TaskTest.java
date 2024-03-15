@@ -77,7 +77,7 @@ public class TaskTest {
         var creation = LocalDateTime.now();
 
         Task task1 = new Task(10,"Get 2 Groceries",5, false,
-                LocalDate.now(), Frequency.ONE_TIME, null, 1, creation, null);
+                LocalDate.now(), Frequency.ONE_TIME, null, 1, creation, null, Context.ERRAND);
         assertEquals(creation, task1.creationDate());
     }
 
@@ -86,7 +86,7 @@ public class TaskTest {
         var expire = LocalDate.now();
 
         Task task1 = new Task(10,"Get 2 Groceries",5, false,
-                LocalDate.now(), Frequency.ONE_TIME, null, 1, null, expire);
+                LocalDate.now(), Frequency.ONE_TIME, null, 1, null, expire, Context.ERRAND);
         assertEquals(expire, task1.expirationDate());
     }
 
