@@ -22,7 +22,7 @@ public class TaskBuilderTest {
                 .withTaskName("Hello")
                 .withFrequency(Frequency.ONE_TIME);
         var actual = oneTime.build();
-        var expected = new Task(null, "Hello", 0, false,
+        var expected = new Task(1, "Hello", 0, false,
                 MockLocalDate.now(), Frequency.ONE_TIME, MockLocalDate.now().getDayOfWeek(),
                 Tasks.calculateOccurrence(MockLocalDate.now()),
                 LocalDateTime.of(MockLocalDate.now(), LocalTime.now()).withNano(0),
@@ -36,7 +36,7 @@ public class TaskBuilderTest {
                 .withTaskName("Hello")
                 .withFrequency(Frequency.WEEKLY);
         var actual = oneTime.build();
-        var expected = new Task(null, "Hello", 0, false,
+        var expected = new Task(1, "Hello", 0, false,
                 MockLocalDate.now(), Frequency.WEEKLY, MockLocalDate.now().getDayOfWeek(),
                 Tasks.calculateOccurrence(MockLocalDate.now()),
                 LocalDateTime.of(MockLocalDate.now(), LocalTime.now()).withNano(0),
@@ -50,7 +50,7 @@ public class TaskBuilderTest {
                 .withTaskName("Hello")
                 .withFrequency(Frequency.MONTHLY);
         var actual = oneTime.build();
-        var expected = new Task(null, "Hello", 0, false,
+        var expected = new Task(1, "Hello", 0, false,
                 MockLocalDate.now(), Frequency.MONTHLY, MockLocalDate.now().getDayOfWeek(),
                 Tasks.calculateOccurrence(MockLocalDate.now()),
                 LocalDateTime.of(MockLocalDate.now(), LocalTime.now()).withNano(0),
@@ -64,14 +64,11 @@ public class TaskBuilderTest {
 
     @Test
     public void buildYearly() {
-
-        var creationTime = LocalDateTime.of(MockLocalDate.now(), LocalTime.now());
-
         TaskBuilder oneTime = new TaskBuilder()
                 .withTaskName("Hello")
                 .withFrequency(Frequency.YEARLY);
         var actual = oneTime.build();
-        var expected = new Task(null, "Hello", 0, false,
+        var expected = new Task(1, "Hello", 0, false,
                 MockLocalDate.now(), Frequency.YEARLY, MockLocalDate.now().getDayOfWeek(),
                 Tasks.calculateOccurrence(MockLocalDate.now()),
                 LocalDateTime.of(MockLocalDate.now(), LocalTime.now()).withNano(0),
