@@ -5,7 +5,6 @@ import org.junit.runner.manipulation.Ordering;
 
 import static org.junit.Assert.*;
 
-import android.content.Context;
 import android.util.Log;
 
 import java.time.LocalDate;
@@ -18,6 +17,7 @@ import java.util.stream.Collectors;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.MainViewModelMock;
 import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
+import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
 import edu.ucsd.cse110.successorator.lib.domain.SimpleTaskRepository;
@@ -127,10 +127,40 @@ public class MockRepositoryTests {
     @Test
     public void US14BDDScenario(){
         //Given I have a school task “study for midterm” in my Today list,
+        MockLocalDate.setDate(LocalDate.now());
+        var dataSource = new InMemoryDataSource();
+        var repo = new SimpleTaskRepository(dataSource);
+        var model = new MainViewModelMock(repo);
+
+        Task studyMidterm = new TaskBuilder().withID(4).withTaskName("Study Midterm").withFrequency(Frequency.DAILY).
+                withContext(Context.SCHOOL).build();
+
+
+        List<Task> myTasks = new ArrayList<>();
+        myTasks.add(studyMidterm);
+
+        myTasks = Tasks.updateTasks(myTasks);
+        model.insertNewTask(myTasks.get(0));
 
         //When I create a one-time task with the work context, “Fire employees”,
+        Task fireEmployees = new TaskBuilder().withID(4).withTaskName("Fire Employees").withFrequency(Frequency.DAILY).
+                withContext(Context.WORK).build();
+
+
+        myTasks.add(studyMidterm);
+
+        myTasks = Tasks.updateTasks(myTasks);
+        model.insertNewTask(myTasks.get(0));
 
         //Then it should be in my list of tasks above the task “Study for midterm”.
+        List<Task> result = model.getOrderedTasks().getValue();
+        result = result.stream()
+                .sorted((task1, task2) -> task1.context().compareTo(task2.context()))
+                .collect(Collectors.toList());
+
+        assertEquals(Context.SCHOOL,result.get(0).context());
+
+
     }
     @Test
     public void US15BDDScenario(){
