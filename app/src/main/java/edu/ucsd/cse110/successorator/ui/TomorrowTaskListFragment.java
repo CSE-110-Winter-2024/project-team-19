@@ -1,3 +1,12 @@
+/*
+ * We used the following sources when writing this class (more specifics are listed in the code
+ * areas where we actually used these citations):
+ *
+ * https://chat.openai.com/share/8e03a47b-1015-4363-9607-d591ca83188c
+ * https://chat.openai.com/share/e6d2f830-6364-4ad2-9303-96f523479849
+ * https://stackoverflow.com/questions/3283337/how-to-update-a-spinner-dynamically
+ */
+
 package edu.ucsd.cse110.successorator.ui;
 
 import android.os.Bundle;
@@ -187,6 +196,12 @@ public class TomorrowTaskListFragment extends Fragment {
         // Create dates for date dropdown
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
 
+        /*
+         * the code below was taken from ChatGPT; we used it as a reference
+         * to create our spinner object
+         *
+         * link to the conversation: https://chat.openai.com/share/8e03a47b-1015-4363-9607-d591ca83188c
+         */
         viewTitleDropdown = view.viewTitle;
         spinnerItems = new ArrayList<String>(Arrays.asList( "Tomorrow, "
                 + timeNow.plusDays(1).format(myFormatObj), "Today, "
@@ -198,6 +213,11 @@ public class TomorrowTaskListFragment extends Fragment {
          * adding cases to tell the spinner what to do when switching to Today (TaskListFragment),
          * Tomorrow (TmrwTaskListFragment), Recurring (RecurringTaskListFragment), and
          * Pending (PendingTaskListFragment)
+         *
+         * the code below was taken from ChatGPT; we used it as a reference
+         * to let our spinner switch between different cases
+         *
+         * link to the conversation: https://chat.openai.com/share/e6d2f830-6364-4ad2-9303-96f523479849
          */
         viewTitleDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -253,6 +273,12 @@ public class TomorrowTaskListFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
+    /*
+     * the code below was adapted from a StackOverflow post; we used it as a
+     * reference to dynamically update the text in our spinner object
+     *
+     * link to the post: https://stackoverflow.com/questions/3283337/how-to-update-a-spinner-dynamically
+     */
     private void updateDropdown(String newDate, String newTmrwDate) {
         //updating dates on dropdown spinner item viewTitleDropdown
         if(viewTitleAdapter == null) return;

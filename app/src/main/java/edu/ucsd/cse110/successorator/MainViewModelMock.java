@@ -44,15 +44,13 @@ public class MainViewModelMock extends ViewModel {
                     }
             );
 
+    //this function reorders the tasks in taskRepository based on context as well as updates the date
     public MainViewModelMock(TaskRepository taskRepository){
         this.taskRepository = taskRepository;
 
         this.orderedTasks = new SimpleSubject<>();
 
-
-
-
-
+        //we use this to sort the tasks (if there are any) by context
         taskRepository.findAll().observe(tasks -> {
             if (tasks == null) return; // not ready yet, ignore
 
