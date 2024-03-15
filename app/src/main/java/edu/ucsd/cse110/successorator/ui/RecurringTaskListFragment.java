@@ -32,7 +32,9 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentRecurringTasksBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
+import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
+import edu.ucsd.cse110.successorator.lib.domain.TaskBuilder;
 
 public class RecurringTaskListFragment extends Fragment {
     private MainViewModel activityModel;
@@ -219,6 +221,12 @@ public class RecurringTaskListFragment extends Fragment {
             //deletion logic here
             Task tobeDeleted = adapter.getItem(position);
             activityModel.removeTask(tobeDeleted);
+            if(tobeDeleted.activeDate().isBefore(MockLocalDate.now().plusDays(1))){
+                activityModel.insertNewTask(new TaskBuilder()
+                        .withTaskName(tobeDeleted.taskName())
+                        .withFrequency(Frequency.ONE_TIME)
+                        .build());
+            }
             adapter.notifyDataSetChanged();
             return true;
         } else {
