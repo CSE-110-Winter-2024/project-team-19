@@ -23,7 +23,7 @@ public class TaskBuilder {
     private Context context;
 
     public TaskBuilder(){
-        id = 1;
+        id = null;
         taskName = "";
         sortOrder = 0;
         complete = false;

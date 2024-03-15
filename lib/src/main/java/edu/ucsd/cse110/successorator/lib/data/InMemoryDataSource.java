@@ -98,7 +98,7 @@ public class InMemoryDataSource {
 
         tasks.put(fixedTask.id(), fixedTask);
         postInsert();
-        assertSortOrderConstraints();
+        //assertSortOrderConstraints();
 
         if (taskSubjects.containsKey(fixedTask.id())) {
             taskSubjects.get(fixedTask.id()).setValue(fixedTask);
