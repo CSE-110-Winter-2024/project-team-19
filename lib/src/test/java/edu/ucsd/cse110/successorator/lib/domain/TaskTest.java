@@ -96,7 +96,7 @@ public class TaskTest {
                 LocalDate.now(), Frequency.ONE_TIME, null, null, null, null, Context.SCHOOL);
         task = task.withId(5);
         Task expected = new Task(5, "Get 2 Groceries",3, false,
-                LocalDate.now(), Frequency.ONE_TIME, null, null, null, null, Contect.SCHOOL);
+                LocalDate.now(), Frequency.ONE_TIME, null, null, null, null, Context.SCHOOL);
 
         boolean taskEquality = expected.equals(task);
         assertTrue(taskEquality);
