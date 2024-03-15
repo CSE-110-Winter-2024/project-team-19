@@ -18,6 +18,10 @@ import androidx.lifecycle.ViewModelProvider;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
+
+import edu.ucsd.cse110.successorator.lib.domain.Frequency;
+import edu.ucsd.cse110.successorator.lib.domain.Context;
+
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.lib.domain.TaskBuilder;
 import edu.ucsd.cse110.successorator.lib.domain.Tasks;
@@ -72,6 +76,29 @@ public class RecurringFormFragment extends DialogFragment {
         RadioGroup radioGroup = view.findViewById(R.id.recurring_radio_group);
 
         btnSubmit.setOnClickListener(v -> {
+            //determine context
+            Context taskContext = Context.NONE;
+
+            RadioGroup contextGroup = view.findViewById(R.id.context_group);
+            int selectedContextButtonId = contextGroup.getCheckedRadioButtonId();
+            if (selectedContextButtonId != -1) {
+                if (selectedContextButtonId == R.id.home_context_btn) {
+                    taskContext = Context.HOME;
+                }
+                else if (selectedContextButtonId == R.id.work_context_btn) {
+                    taskContext = Context.WORK;
+                }
+                else if (selectedContextButtonId == R.id.school_context_btn) {
+                    taskContext = Context.SCHOOL;
+                }
+                else if (selectedContextButtonId == R.id.errand_context_btn) {
+                    taskContext = Context.ERRAND;
+                }
+            } else {
+                taskContext = Context.NONE;
+            }
+
+
             int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             RadioButton selectedRadioButton = view.findViewById(selectedRadioButtonId);
             String frequencyString = selectedRadioButton.getText().toString();

@@ -8,11 +8,13 @@ import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLI
 import android.util.Log;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
+import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.lib.domain.TaskRepository;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
@@ -47,9 +49,28 @@ public class MainViewModel extends ViewModel {
         taskRepository.findAll().observe(tasks -> {
             if (tasks == null) return; // not ready yet, ignore
 
-            var newOrderedTasks = tasks.stream()
-                    .sorted(Comparator.comparingInt(Task::sortOrder))
+            List<Task>homeTasks = tasks.stream()
+                    .filter(task -> task.context() == Context.HOME).sorted(Comparator.comparingInt(Task::sortOrder))
                     .collect(Collectors.toList());
+            List<Task>workTasks = tasks.stream()
+                    .filter(task -> task.context() == Context.WORK).sorted(Comparator.comparingInt(Task::sortOrder))
+                    .collect(Collectors.toList());
+            List<Task>schoolTasks = tasks.stream()
+                    .filter(task -> task.context() == Context.SCHOOL).sorted(Comparator.comparingInt(Task::sortOrder))
+                    .collect(Collectors.toList());
+            List<Task>errandTasks = tasks.stream()
+                    .filter(task -> task.context() == Context.ERRAND).sorted(Comparator.comparingInt(Task::sortOrder))
+                    .collect(Collectors.toList());
+
+
+//            var newOrderedTasks = tasks.stream()
+//                    .sorted(Comparator.comparingInt(Task::sortOrder))
+//                    .collect(Collectors.toList());
+            List<Task> newOrderedTasks= new ArrayList<>();
+            newOrderedTasks.addAll(homeTasks);
+            newOrderedTasks.addAll(workTasks);
+            newOrderedTasks.addAll(schoolTasks);
+            newOrderedTasks.addAll(errandTasks);
 
             orderedTasks.setValue(newOrderedTasks);
         });
