@@ -2,7 +2,6 @@ package edu.ucsd.cse110.successorator.ui;
 
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +30,6 @@ import java.util.stream.Collectors;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
-import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 
 import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
@@ -52,6 +50,7 @@ public class TaskListFragment extends Fragment {
     private static final String DEFAULT_TEXT = "No goals for the Day.  Click the + at the upper right to enter your Most Important Thing.";
     private MainViewModel activityModel;
     private FragmentTaskListBinding view;
+    private TextView defaultTextDisplay;
 
     //TIME VARIABLES
     private LocalDate timeNow;
@@ -120,25 +119,9 @@ public class TaskListFragment extends Fragment {
         // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);
 
-//        handler = new Handler(Looper.getMainLooper());
-
-
-        //this is the button responsible for switching to the recurring task fragment
-        ImageButton switchButton = view.switchtorecurringbutton;
-        switchButton.setOnClickListener(
-                v -> {
-                    PendingTaskListFragment recur = new PendingTaskListFragment();
-
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, recur);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                }
-        );
-
         ImageButton hamburgerButton = view.hamburgerButton;
+
+        defaultTextDisplay = view.defaultText;
 
         hamburgerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,16 +279,16 @@ public class TaskListFragment extends Fragment {
 
     public void updateDefaultText() {
         //check if there are no tasks available. if so, set default text. otherwise, set to empty
-        this.DefaultTextDisplay = this.view.defaultText;
+        this.defaultTextDisplay = this.view.defaultText;
 
         if(activityModel.getOrderedTasks().getValue() == null) {
-            DefaultTextDisplay.setText(DEFAULT_TEXT);
+            defaultTextDisplay.setText(DEFAULT_TEXT);
         }
         else if(activityModel.getOrderedTasks().getValue() != null && activityModel.getOrderedTasks().getValue().size()== 0) {
-            DefaultTextDisplay.setText(DEFAULT_TEXT);
+            defaultTextDisplay.setText(DEFAULT_TEXT);
         }
         else {
-            DefaultTextDisplay.setText("");
+            defaultTextDisplay.setText("");
         }
     }
 
