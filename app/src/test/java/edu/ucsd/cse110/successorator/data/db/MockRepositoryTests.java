@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
+import edu.ucsd.cse110.successorator.MainViewModelMock;
 import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
@@ -33,7 +34,7 @@ public class MockRepositoryTests {
         MockLocalDate.setDate(LocalDate.now());
         var dataSource = new InMemoryDataSource();
         var repo = new SimpleTaskRepository(dataSource);
-        var model = new MainViewModel(repo);
+        var model = new MainViewModelMock(repo);
 
         Task recurWeekly = new TaskBuilder().withTaskName("Get 2 Groceries").withFrequency(Frequency.WEEKLY).build();
 
@@ -60,9 +61,11 @@ public class MockRepositoryTests {
         MockLocalDate.setDate(LocalDate.now());
         var dataSource = new InMemoryDataSource();
         var repo = new SimpleTaskRepository(dataSource);
-        var model = new MainViewModel(repo);
+        var model = new MainViewModelMock(repo);
 
-        Task recurDaily = new TaskBuilder().withTaskName("Get 2 Groceries").withFrequency(Frequency.DAILY).build();
+        Task recurDaily = new TaskBuilder().withID(4).withTaskName("Get 2 Groceries").withFrequency(Frequency.DAILY).
+        build();
+
 
         dataSource.putTask(recurDaily);
 
@@ -100,7 +103,7 @@ public class MockRepositoryTests {
         MockLocalDate.setDate(LocalDate.now());
         var dataSource = new InMemoryDataSource();
         var repo = new SimpleTaskRepository(dataSource);
-        var model = new MainViewModel(repo);
+        var model = new MainViewModelMock(repo);
 
         Task recurDaily = new TaskBuilder().withTaskName("Get 2 Groceries").withFrequency(Frequency.DAILY).build();
 
@@ -149,9 +152,9 @@ public class MockRepositoryTests {
         MockLocalDate.setDate(LocalDate.now());
         var dataSource = new InMemoryDataSource();
         var repo = new SimpleTaskRepository(dataSource);
-        var model = new MainViewModel(repo);
+        var model = new MainViewModelMock(repo);
 
-        Task pending1 = new TaskBuilder().withTaskName("Get 2 Groceries").withFrequency(Frequency.PENDING).build();
+        Task pending1 = new TaskBuilder().withID(4).withTaskName("Get 2 Groceries").withFrequency(Frequency.PENDING).build();
 
         model.insertNewTask(pending1);
 

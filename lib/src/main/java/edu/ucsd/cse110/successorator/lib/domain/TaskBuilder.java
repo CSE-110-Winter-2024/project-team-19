@@ -41,6 +41,10 @@ public class TaskBuilder {
         return this;
     }
 
+    public TaskBuilder withID(Integer id){
+        this.id = id;
+        return this;
+    }
     public TaskBuilder withFrequency(Frequency frequency){
         this.frequency = frequency;
         if(frequency != Frequency.ONE_TIME && frequency != Frequency.PENDING)

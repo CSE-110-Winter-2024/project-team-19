@@ -49,10 +49,12 @@ public class RoomTasksRepository implements TaskRepository {
                                 .collect(Collectors.toList());
         Log.d("RoomTaskRepo", tasks.toString());
         tasks = Tasks.insertTask(tasks, task);
-        var tasksEntities = tasks.stream()
+
+
+        List<TaskEntity> tasksEntities = tasks.stream()
                                 .map(TaskEntity::fromTask)
                                 .collect(Collectors.toList());
-        Log.d("RoomTaskRepo", tasks.toString());
+
         tasksDao.insert(tasksEntities);
     }
 
@@ -60,6 +62,7 @@ public class RoomTasksRepository implements TaskRepository {
         var entities = flashcards.stream()
                 .map(TaskEntity::fromTask)
                 .collect(Collectors.toList());
+
         tasksDao.insert(entities);
     }
 
