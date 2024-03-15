@@ -21,7 +21,7 @@ public class TaskBuilder {
     private @Nullable LocalDate expirationDate;
 
     public TaskBuilder(){
-        id = null;
+        id = 1;
         taskName = "";
         sortOrder = 0;
         complete = false;

@@ -21,6 +21,7 @@ import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
 import edu.ucsd.cse110.successorator.lib.domain.SimpleTaskRepository;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
+import edu.ucsd.cse110.successorator.lib.domain.TaskBuilder;
 import edu.ucsd.cse110.successorator.lib.domain.Tasks;
 import edu.ucsd.cse110.successorator.ui.TaskListAdapter;
 
@@ -29,64 +30,55 @@ public class MockRepositoryTests {
     @Test
     public void US11BDDScenario() {
         // GIVEN we create a weekly Task Today from the today view
+        MockLocalDate.setDate(LocalDate.now());
         var dataSource = new InMemoryDataSource();
         var repo = new SimpleTaskRepository(dataSource);
-        MockLocalDate mockLocalDate = new MockLocalDate(LocalDate.now());
-        var model = new MainViewModel(repo,mockLocalDate);
+        var model = new MainViewModel(repo);
 
-        Task recurWeekly = new Task(20,"Get 2 Groceries",1, true,
-                mockLocalDate.now(), Frequency.WEEKLY, mockLocalDate.now().getDayOfWeek(), 1);
+        Task recurWeekly = new TaskBuilder().withTaskName("Get 2 Groceries").withFrequency(Frequency.WEEKLY).build();
 
         List<Task> myTasks = new ArrayList<>();
 
         myTasks.add(recurWeekly);
 
-        myTasks =  Tasks.updateTasks(myTasks);
+        myTasks = Tasks.updateTasks(myTasks);
 
         model.insertNewTask(myTasks.get(0));
 
-        assertEquals(mockLocalDate.now().plusDays(7),myTasks.get(0).activeDate());
-
         //WHEN I move forward a week
         for (int i = 0; i < 7; i++){
-        mockLocalDate.advanceDate();}
-
-
-
+        model.timeTravelForward();}
 
         //THEN The task should be set to display now
         LocalDate actual = model.getOrderedTasks().getValue().get(0).activeDate();
-        assertEquals(mockLocalDate.now(),actual);
+        assertEquals(MockLocalDate.now(), actual);
 
     }
     @Test
     public void US12BDDScenario(){
         //GIVEN I have a daily task that I can see on the today view
+        MockLocalDate.setDate(LocalDate.now());
         var dataSource = new InMemoryDataSource();
         var repo = new SimpleTaskRepository(dataSource);
-        MockLocalDate mockLocalDate = new MockLocalDate(LocalDate.now());
-        var model = new MainViewModel(repo,mockLocalDate);
+        var model = new MainViewModel(repo);
 
+        Task recurDaily = new TaskBuilder().withTaskName("Get 2 Groceries").withFrequency(Frequency.DAILY).build();
 
-        Task recurDaily = new Task(20,"Get 2 Groceries",1, true,
-                mockLocalDate.now(), Frequency.DAILY, mockLocalDate.now().getDayOfWeek(), 1);
+        dataSource.putTask(recurDaily);
 
-
-
-        List<Task> myTasks = new ArrayList<>();
-        myTasks.add(recurDaily);
+        List<Task> myTasks = dataSource.getTasks();
 
         List<Task> tomorrowTasks = new ArrayList<>();
 
         tomorrowTasks.addAll(new ArrayList<>(myTasks).stream()
-                    .filter(task -> task.activeDate().isAfter(mockLocalDate.now())
-                            && task.activeDate().isBefore(mockLocalDate.now().plusDays(2))
+                    .filter(task -> task.activeDate().isAfter(MockLocalDate.now())
+                            && task.activeDate().isBefore(MockLocalDate.now().plusDays(2))
                             || task.frequency().equals(Frequency.DAILY))
                     .collect(Collectors.toList()));
 
         //THEN it should also appear in the Tomorrow View
         assertTrue(tomorrowTasks.size() > 0);
-        assertEquals(mockLocalDate.now(),tomorrowTasks.get(0).activeDate());
+        assertEquals(MockLocalDate.now(),tomorrowTasks.get(0).activeDate());
 
 
         model.insertNewTask(recurDaily);
@@ -98,22 +90,19 @@ public class MockRepositoryTests {
 
         // THEN the task should appear uncompleted
         List<Task> result =  model.getOrderedTasks().getValue();
-        assertEquals(false,result.get(0).complete());
+        assertEquals(false, result.get(0).complete());
 
 
     }
     @Test
     public void US13BDDScenario(){
         //Given Im in recurring view and I create a daily recurring task
+        MockLocalDate.setDate(LocalDate.now());
         var dataSource = new InMemoryDataSource();
         var repo = new SimpleTaskRepository(dataSource);
-        MockLocalDate mockLocalDate = new MockLocalDate(LocalDate.now());
-        var model = new MainViewModel(repo,mockLocalDate);
+        var model = new MainViewModel(repo);
 
-
-        Task recurDaily = new Task(20,"Get 2 Groceries",1, true,
-                mockLocalDate.now(), Frequency.DAILY, mockLocalDate.now().getDayOfWeek(), 1);
-
+        Task recurDaily = new TaskBuilder().withTaskName("Get 2 Groceries").withFrequency(Frequency.DAILY).build();
 
 
         List<Task> myTasks = new ArrayList<>();
@@ -125,11 +114,11 @@ public class MockRepositoryTests {
 
 
         //When I fast forward 1 day
-        mockLocalDate.advanceDate();
+        model.timeTravelForward();
 
         //The task should have its active date be today
         LocalDate actual = model.getOrderedTasks().getValue().get(0).activeDate();
-        assertEquals(mockLocalDate.now(),actual);
+        assertEquals(MockLocalDate.now(),actual);
 
     }
     @Test
@@ -157,14 +146,12 @@ public class MockRepositoryTests {
     @Test
     public void US16BDDScenario(){
         //        Given Sara has the context menu open for the pending task “Walk the plant”
+        MockLocalDate.setDate(LocalDate.now());
         var dataSource = new InMemoryDataSource();
         var repo = new SimpleTaskRepository(dataSource);
-        MockLocalDate mockLocalDate = new MockLocalDate(LocalDate.now());
-        var model = new MainViewModel(repo,mockLocalDate);
+        var model = new MainViewModel(repo);
 
-
-        Task pending1 = new Task(20,"Get 2 Groceries",1, false,
-                mockLocalDate.now(), Frequency.PENDING, null ,1);
+        Task pending1 = new TaskBuilder().withTaskName("Get 2 Groceries").withFrequency(Frequency.PENDING).build();
 
         model.insertNewTask(pending1);
 
@@ -175,13 +162,13 @@ public class MockRepositoryTests {
 //        And “Walk the plant” appears as a slashed through item under today’s finished tasks
 
 
-            dataSource.sendPendingtoToday(pending1.id());
+        dataSource.sendPendingtoToday(pending1.id());
 
 
         Task resultingTask = model.getOrderedTasks().getValue().get(0);
         assertNotNull(resultingTask);
         assertEquals(resultingTask.frequency() , Frequency.ONE_TIME);
-        assertEquals(resultingTask.activeDate() , mockLocalDate.now());
+        assertEquals(resultingTask.activeDate() , MockLocalDate.now());
 
     }
     //MS1 Tests Below
