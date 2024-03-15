@@ -10,10 +10,7 @@
 package edu.ucsd.cse110.successorator.ui;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,38 +32,35 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
-import edu.ucsd.cse110.successorator.databinding.FragmentRecurringTasksBinding;
+import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
-import edu.ucsd.cse110.successorator.lib.domain.TaskBuilder;
 
-public class RecurringTaskListFragment extends Fragment {
+public class TomorrowTaskListFragment extends Fragment {
     private MainViewModel activityModel;
-    private FragmentRecurringTasksBinding view;
-    private RecurringTaskListAdapter adapter;
+    private FragmentTaskListBinding view;
 
     private LocalDate timeNow;
+    private TomorrowTaskListAdapter adapter;
 
     //initializing Spinner variables
     Spinner viewTitleDropdown;
     ArrayAdapter<String> viewTitleAdapter;
     ArrayList<String> spinnerItems;
 
-
-    public RecurringTaskListFragment() {
+    public TomorrowTaskListFragment() {
         // Required empty public constructor
     }
 
-    public static RecurringTaskListFragment newInstance() {
-        RecurringTaskListFragment fragment = new RecurringTaskListFragment();
+    public static TomorrowTaskListFragment newInstance() {
+        TomorrowTaskListFragment fragment = new TomorrowTaskListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -84,37 +79,35 @@ public class RecurringTaskListFragment extends Fragment {
         this.timeNow = activityModel.getLocalDate().getValue();
 
         // Initialize the Adapter (with an empty list for now)
-        this.adapter = new RecurringTaskListAdapter(requireContext(), List.of(), task -> {
-            if (task.complete()) {
-                Log.d("Debug", "Fragment called insertNewTask");
-                var id = task.id();
-                assert id != null;
-                activityModel.removeTask(task);
-                activityModel.insertNewTask(task.withComplete(false));
+        this.adapter = new TomorrowTaskListAdapter(requireContext(), List.of(), task -> {
+            List<Frequency> recurring = List.of(Frequency.DAILY, Frequency.WEEKLY,
+                                        Frequency.MONTHLY, Frequency.YEARLY);
+            if (!recurring.contains(task.frequency()) && task.complete()) {
+                activityModel.uncompleteTask(task);
             } else {
-                Log.d("Debug", "Fragment called completeTask");
-                activityModel.completeTask(task);
+                //since its tomorrow view, if it's a daily task, reject operation
+                //and show toast
+                if (task.expirationDate().equals(MockLocalDate.now().plusDays(1)))
+                {
+                    Toast.makeText(getContext(), "This goal is still active for Today." +
+                            "Mark it finished in the Today view.", Toast.LENGTH_SHORT).show();
+                }
+
+                else {activityModel.completeTask(task);}
             }
             adapter.notifyDataSetChanged();
-        }
-
-        );
+        });
         activityModel.getOrderedTasks().observe(tasks -> {
+            List<Frequency> recurring = List.of(Frequency.DAILY, Frequency.WEEKLY,
+                    Frequency.MONTHLY, Frequency.YEARLY);
             if (tasks == null) return;
             adapter.clear();
-            List<Task> recurringTasks = new ArrayList<Task>();
-            for (Task i: tasks)
-            {
-                if (!i.frequency().equals(Frequency.ONE_TIME) && !i.frequency().equals(Frequency.PENDING)) {
-                    recurringTasks.add(i);
-                }
-            }
-            List<Task> orderedRecurringTasks = recurringTasks;
-            Collections.sort(orderedRecurringTasks, Comparator.comparing(Task::creationDate));
-
-            //do i have to manipulate sortOrder too hmmm
-
-            adapter.addAll(new ArrayList<>(orderedRecurringTasks)); // remember the mutable copy here!
+            adapter.addAll(new ArrayList<>(tasks).stream()
+                    .filter(task -> task.activeDate().isAfter(timeNow)
+                                && task.activeDate().isBefore(timeNow.plusDays(2))
+                                || (recurring.contains(task.frequency())
+                                && task.expirationDate().equals(timeNow.plusDays(1))))
+                    .collect(Collectors.toList())); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
         activityModel.getLocalDate().observe(date ->{
@@ -125,20 +118,15 @@ public class RecurringTaskListFragment extends Fragment {
             updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
         });
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        this.view = FragmentRecurringTasksBinding.inflate(inflater, container, false);
+        this.view = FragmentTaskListBinding.inflate(inflater, container, false);
 
         // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);
 
-        //no time functionality for this view yet, id like to move to main activity
-
-        //When a task is long-pressed, open a menu with the option to remove it.
-        //if they press remove at that point, it's deleted from the database.
-
-        //this allows all recurring tasks to have menus when long-pressed
         registerForContextMenu(view.taskList);
         ImageButton hamburgerButton = view.hamburgerButton;
         hamburgerButton.setOnClickListener(new View.OnClickListener() {
@@ -205,28 +193,22 @@ public class RecurringTaskListFragment extends Fragment {
             }
         });
 
-        view.addTaskButton.setOnClickListener(v -> {
-            var dialogFragment = RecurringFormFragment.newInstance();
-           dialogFragment.show(getParentFragmentManager(), "RecurringForm");
+        // Create dates for date dropdown
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
 
-        });
-
-        // Preparing dropdown
         /*
          * the code below was taken from ChatGPT; we used it as a reference
          * to create our spinner object
          *
          * link to the conversation: https://chat.openai.com/share/8e03a47b-1015-4363-9607-d591ca83188c
          */
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
         viewTitleDropdown = view.viewTitle;
-        spinnerItems = new ArrayList<String>(Arrays.asList("Recurring", "Today, "
-                + timeNow.format(myFormatObj), "Tomorrow, "
-                + timeNow.plusDays(1).format(myFormatObj), "Pending"));
+        spinnerItems = new ArrayList<String>(Arrays.asList( "Tomorrow, "
+                + timeNow.plusDays(1).format(myFormatObj), "Today, "
+                + timeNow.format(myFormatObj), "Recurring", "Pending"));
         viewTitleAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
-
         /*
          * adding cases to tell the spinner what to do when switching to Today (TaskListFragment),
          * Tomorrow (TmrwTaskListFragment), Recurring (RecurringTaskListFragment), and
@@ -247,11 +229,12 @@ public class RecurringTaskListFragment extends Fragment {
                         // WARNING: uncommenting the below will disable the dropdown
                         //loadFragment(new RecurringTaskListFragment());
                         break;
+
                     case 1:
                         loadFragment(new TaskListFragment());
                         break;
                     case 2:
-                        loadFragment(new TomorrowTaskListFragment());
+                        loadFragment(new RecurringTaskListFragment());
                         break;
                     case 3:
                         loadFragment(new PendingTaskListFragment());
@@ -259,7 +242,6 @@ public class RecurringTaskListFragment extends Fragment {
                 }
 
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 // Do nothing here
@@ -273,37 +255,14 @@ public class RecurringTaskListFragment extends Fragment {
             }
         });
 
+
+        view.addTaskButton.setOnClickListener(v -> {
+            var dialogFragment = TomorrowTaskFormFragment.newInstance();
+            //var dialogFragment = TaskRecurringDatePickerFragment.newInstance();
+            dialogFragment.show(getParentFragmentManager(), "DatePicker");
+        });
+
         return view.getRoot();
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-
-        if (v.getId() == R.id.task_list) {
-            //menu.setHeaderTitle("Options");
-            menu.add(Menu.NONE, R.id.menu_delete_recurring, Menu.NONE, "Delete");
-        }
-    }
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int position = info.position;
-        if (item.getItemId() == R.id.menu_delete_recurring) {
-            //deletion logic here
-            Task tobeDeleted = adapter.getItem(position);
-            activityModel.removeTask(tobeDeleted);
-            if(tobeDeleted.activeDate().isBefore(MockLocalDate.now().plusDays(1))){
-                activityModel.insertNewTask(new TaskBuilder()
-                        .withTaskName(tobeDeleted.taskName())
-                        .withFrequency(Frequency.ONE_TIME)
-                        .build());
-            }
-            adapter.notifyDataSetChanged();
-            return true;
-        } else {
-            return super.onContextItemSelected(item);
-        }
     }
 
     private void loadFragment(Fragment fragment) {
@@ -321,17 +280,17 @@ public class RecurringTaskListFragment extends Fragment {
      * link to the post: https://stackoverflow.com/questions/3283337/how-to-update-a-spinner-dynamically
      */
     private void updateDropdown(String newDate, String newTmrwDate) {
+        //updating dates on dropdown spinner item viewTitleDropdown
         if(viewTitleAdapter == null) return;
         //updating dates on dropdown spinner item viewTitleDropdown
         spinnerItems = new ArrayList<String>(Arrays.asList(
-                "Recurring",
-                "Today, " + newDate,
                 "Tomorrow, " + newTmrwDate,
+                "Today, " + newDate,
+                "Recurring",
                 "Pending"
         ));
         viewTitleAdapter.clear();
         viewTitleAdapter.addAll(spinnerItems);
         viewTitleDropdown.setAdapter(viewTitleAdapter);
     }
-
-}
+        }

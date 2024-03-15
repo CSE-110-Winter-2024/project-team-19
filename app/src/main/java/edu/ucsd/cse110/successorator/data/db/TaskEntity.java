@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Context;
@@ -43,12 +44,19 @@ public class TaskEntity {
     @ColumnInfo(name = "day_occurrence")
     public Integer dayOccurrence;
 
+    @ColumnInfo(name = "creation_date")
+    public LocalDateTime creationDate;
+
+    @ColumnInfo(name = "expiration_date")
+    public LocalDate expirationDate;
+
     @ColumnInfo(name = "context")
     public Context context;
 
     TaskEntity(String taskName, int sortOrder, boolean complete,
                LocalDate activeDate, Frequency frequency, DayOfWeek dayOfWeek,
-               Integer dayOccurrence, Context context){
+               Integer dayOccurrence, LocalDateTime creationDate,
+               LocalDate expirationDate, Context context){
         this.taskName = taskName;
         this.sortOrder = sortOrder;
         this.complete = complete;
@@ -56,18 +64,21 @@ public class TaskEntity {
         this.frequency = frequency;
         this.dayOfWeek = dayOfWeek;
         this.dayOccurrence = dayOccurrence;
+        this.creationDate = creationDate;
+        this.expirationDate = expirationDate;
         this.context = context;
     }
 
     public static TaskEntity fromTask(@NonNull Task task){
         var taskEntity = new TaskEntity(task.taskName(), task.sortOrder(), task.complete(),
-                task.activeDate(), task.frequency(), task.dayOfWeek(), task.dayOccurrence(), task.context());
+                task.activeDate(), task.frequency(), task.dayOfWeek(), task.dayOccurrence(),
+                task.creationDate(), task.expirationDate(), task.context());
         taskEntity.id = task.id();
         return taskEntity;
     }
 
     public @NonNull Task toTask(){
         return new Task(id, taskName, sortOrder, complete, activeDate, frequency, dayOfWeek,
-                dayOccurrence, context);
+                dayOccurrence, creationDate, expirationDate, context);
     }
 }

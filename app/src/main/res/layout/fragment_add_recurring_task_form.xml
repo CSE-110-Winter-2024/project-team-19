@@ -33,6 +33,7 @@
                 android:background="@drawable/round_buttons"
                 android:backgroundTint="#FBE67A"
                 android:button="@android:color/transparent"
+                android:checked="true"
                 android:gravity="center"
                 android:text="H"
                 app:layout_constraintEnd_toStartOf="@+id/work_context_btn"
@@ -122,8 +123,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Daily..."
+            android:checked="true"
             tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="123dp" />
+            tools:layout_editor_absoluteY="123dp" />>
 
         <RadioButton
             android:id="@+id/weekly_button"

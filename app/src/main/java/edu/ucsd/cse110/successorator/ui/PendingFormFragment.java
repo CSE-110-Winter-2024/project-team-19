@@ -1,6 +1,5 @@
 package edu.ucsd.cse110.successorator.ui;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,8 @@ import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
-import edu.ucsd.cse110.successorator.util.MockLocalDate;
+import edu.ucsd.cse110.successorator.lib.domain.TaskBuilder;
+import edu.ucsd.cse110.successorator.lib.domain.Tasks;
 
 /*
 This class was adapted from the CardListFragment provided in CSE 110 Lab 5.
@@ -56,6 +56,7 @@ public class PendingFormFragment extends DialogFragment {
 
         Button btnSubmit = view.findViewById(R.id.pendingSubmitButton);
 
+        var currentDate = activityModel.getLocalDate().getValue();
 
         btnSubmit.setOnClickListener(v -> {
             //determine context
@@ -82,10 +83,11 @@ public class PendingFormFragment extends DialogFragment {
 
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
-            Task toInsert = new Task(null, taskTextString, 2, false,
-                    MockLocalDate.now(), Frequency.PENDING,
-                    MockLocalDate.now().getDayOfWeek(), 1,taskContext);
-            activityModel.insertNewTask(toInsert);
+            activityModel.insertNewTask(new TaskBuilder()
+                    .withTaskName(taskTextString)
+                    .withFrequency(Frequency.PENDING)
+                    .withContext(taskContext)
+                    .build());
             dismiss();
         });
 

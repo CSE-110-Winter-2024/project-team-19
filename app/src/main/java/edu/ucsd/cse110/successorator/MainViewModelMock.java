@@ -27,7 +27,7 @@ import edu.ucsd.cse110.successorator.lib.util.Subject;
 This class was adapted from the MainViewModel class provided in CSE 110 Lab 5.
 https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
  */
-public class MainViewModel extends ViewModel {
+public class MainViewModelMock extends ViewModel {
     private final TaskRepository taskRepository;
     private final MutableSubject<List<Task>> orderedTasks;
     private final MutableSubject<LocalDate> dateSubject;
@@ -44,25 +44,13 @@ public class MainViewModel extends ViewModel {
                     }
             );
 
-    public MainViewModel(TaskRepository taskRepository){
+    //this function reorders the tasks in taskRepository based on context as well as updates the date
+    public MainViewModelMock(TaskRepository taskRepository){
         this.taskRepository = taskRepository;
 
         this.orderedTasks = new SimpleSubject<>();
 
-        this.handler = new Handler(Looper.getMainLooper());
-
-        Runnable updateTimeRunnable = new Runnable() {
-
-            @Override
-            public void run() {
-                if(LocalDate.now().isAfter(MockLocalDate.now())){
-                    updateDate(LocalDate.now());
-                }
-                handler.postDelayed(this, 1000);
-            }
-        };
-        handler.post(updateTimeRunnable);
-
+        //we use this to sort the tasks (if there are any) by context
         taskRepository.findAll().observe(tasks -> {
             if (tasks == null) return; // not ready yet, ignore
 
@@ -101,6 +89,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void insertNewTask(Task task){
+
 
         taskRepository.save(task);
     }

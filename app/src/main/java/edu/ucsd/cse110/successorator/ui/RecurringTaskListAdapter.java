@@ -1,10 +1,6 @@
 package edu.ucsd.cse110.successorator.ui;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +15,13 @@ import java.util.function.Consumer;
 
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.ListItemNotTaskBinding;
-import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 /*
 This class was adapted from the CardListAdapter class provided in CSE 110 Lab 5.
 https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
  */
-public class RecurringListAdapter extends ArrayAdapter<Task> {
+public class RecurringTaskListAdapter extends ArrayAdapter<Task> {
     Consumer<Task> onCompleteClick;
 
 
@@ -35,7 +30,7 @@ public class RecurringListAdapter extends ArrayAdapter<Task> {
 
     private TextView taskText;
 
-    public RecurringListAdapter(Context context, List<Task> tasks, Consumer<Task> onDeleteClick) {
+    public RecurringTaskListAdapter(Context context, List<Task> tasks, Consumer<Task> onDeleteClick) {
         //the difference between this and the normal adapter is that there
         //is an onlickListener for long presses that allows you to delete
 

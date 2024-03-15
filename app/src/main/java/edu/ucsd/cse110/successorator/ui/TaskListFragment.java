@@ -1,16 +1,24 @@
+/*
+ * We used the following sources when writing this class (more specifics are listed in the code
+ * areas where we actually used these citations):
+ *
+ * https://chat.openai.com/share/8e03a47b-1015-4363-9607-d591ca83188c
+ * https://chat.openai.com/share/e6d2f830-6364-4ad2-9303-96f523479849
+ * https://stackoverflow.com/questions/3283337/how-to-update-a-spinner-dynamically
+ */
+
 package edu.ucsd.cse110.successorator.ui;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import android.os.Looper;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -22,24 +30,20 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import android.os.Handler;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
-import edu.ucsd.cse110.successorator.databinding.ListItemTaskBinding;
 
 import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
-import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 
 
@@ -55,26 +59,16 @@ public class TaskListFragment extends Fragment {
     private static final String DEFAULT_TEXT = "No goals for the Day.  Click the + at the upper right to enter your Most Important Thing.";
     private MainViewModel activityModel;
     private FragmentTaskListBinding view;
+    private TextView defaultTextDisplay;
 
-
-    private TextView DateDisplay;
-    //display for the default text when there are no tasks in the view
-    private TextView DefaultTextDisplay;
-    private Handler handler;
-
-    private LocalDateTime lastTime;
-
-    private LocalDate lastDate;
-
-    private LocalTime rolloverTime;
-    private ListItemTaskBinding taskItem;
-
+    //TIME VARIABLES
+    private LocalDate timeNow;
     private TaskListAdapter adapter;
 
-    private boolean deleteFlag = false;
-
-    private SharedPreferences sharedPreferences;
-
+    //initializing Spinner variables
+    Spinner viewTitleDropdown;
+    ArrayAdapter<String> viewTitleAdapter;
+    ArrayList<String> spinnerItems;
 
     public TaskListFragment() {
         // Required empty public constructor
@@ -97,13 +91,13 @@ public class TaskListFragment extends Fragment {
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
         this.activityModel = modelProvider.get(MainViewModel.class);
 
+        this.timeNow = activityModel.getLocalDate().getValue();
+
         // Initialize the Adapter (with an empty list for now)
         this.adapter = new TaskListAdapter(requireContext(), List.of(), task -> {
             if (task.complete()) {
-                Log.d("Debug", "Fragment called uncompleteTask");
                 activityModel.uncompleteTask(task);
             } else {
-                Log.d("Debug", "Fragment called completeTask");
                 activityModel.completeTask(task);
             }
             adapter.notifyDataSetChanged();
@@ -112,13 +106,19 @@ public class TaskListFragment extends Fragment {
             if (tasks == null) return;
             adapter.clear();
             adapter.addAll(new ArrayList<>(tasks).stream()
-                    .filter(task -> task.activeDate().isBefore(MockLocalDate.now().plusDays(1)))
+                    .filter(task -> task.activeDate().isBefore(timeNow.plusDays(1)))
                     .filter(task -> task.frequency() != Frequency.PENDING)
                     .collect(Collectors.toList())); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
+        activityModel.getLocalDate().observe(date ->{
+            timeNow = date;
+            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+            String StringOfNewNowDate = timeNow.format(myFormatObj2).toString();
+            String StringOfNewTmrwDate = timeNow.plusDays(1).format(myFormatObj2).toString();
+            updateDropdown(StringOfNewNowDate, StringOfNewTmrwDate);
+        });
     }
-
 
     @Nullable
     @Override
@@ -128,38 +128,9 @@ public class TaskListFragment extends Fragment {
         // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);
 
-        //Time functionality + mock
-        LocalDate myDateObj = MockLocalDate.now();
-        handler = new Handler(Looper.getMainLooper());
-
-        //DateRolloverMock mockTime = new DateRolloverMock(myDateObj);
-        lastTime = LocalDateTime.now();
-        lastDate = MockLocalDate.now();
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
-
-        String StringOfDate = myDateObj.format(myFormatObj);
-
-        this.DateDisplay = this.view.dateContent;
-        view.dateContent.setText(StringOfDate);
-
-
-        //this is the button responsible for switching to the recurring task fragment
-        ImageButton switchButton = view.switchtorecurringbutton;
-        switchButton.setOnClickListener(
-                v -> {
-//                    RecurringTaskListFragment recur = new RecurringTaskListFragment();
-                    PendingTaskListFragment recur = new PendingTaskListFragment();
-
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, recur);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                }
-        );
-
         ImageButton hamburgerButton = view.hamburgerButton;
+
+        defaultTextDisplay = view.defaultText;
 
         hamburgerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,86 +199,121 @@ public class TaskListFragment extends Fragment {
 
         view.addTaskButton.setOnClickListener(v -> {
             var dialogFragment = TaskFormFragment.newInstance();
-            //var dialogFragment = TaskRecurringDatePickerFragment.newInstance();
             dialogFragment.show(getParentFragmentManager(), "DatePicker");
         });
 
+        // Prepping dropdown
+        /*
+         * the code below was taken from ChatGPT; we used it as a reference
+         * to create our spinner object
+         *
+         * link to the conversation: https://chat.openai.com/share/8e03a47b-1015-4363-9607-d591ca83188c
+         */
+        //viewTitleDropdown is a Spinner, viewTitleAdapter is the Spinner Adapter, spinnerItems is list of strings
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+        viewTitleDropdown = view.viewTitle;
+        spinnerItems = new ArrayList<String>(Arrays.asList( "Today, "
+                + timeNow.format(myFormatObj), "Tomorrow, "
+                + timeNow.plusDays(1).format(myFormatObj), "Recurring", "Pending"));
+        viewTitleAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        viewTitleDropdown.setAdapter(viewTitleAdapter);
 
-        //This is the runner that checks the time every second
-        Runnable updateTimeRunnable = new Runnable() {
-
+        /*
+         * adding cases to tell the spinner what to do when switching to Today (TaskListFragment),
+         * Tomorrow (TmrwTaskListFragment), Recurring (RecurringTaskListFragment), and
+         * Pending (PendingTaskListFragment)
+         *
+         * the code below was taken from ChatGPT; we used it as a reference
+         * to let our spinner switch between different cases
+         *
+         * link to the conversation: https://chat.openai.com/share/e6d2f830-6364-4ad2-9303-96f523479849
+         */
+        viewTitleDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void run() {
-                updateCurrentDate();
-                handler.postDelayed(this, 1000);
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Handle item selection and switch fragments here
+
+                switch (position) {
+                    case 0:
+                        // WARNING: uncommenting the below will disable the dropdown
+                        //loadFragment(new TaskListFragment());
+                        break;
+                    case 1:
+                        TomorrowTaskListFragment tmrw = new TomorrowTaskListFragment();
+                        loadFragment(tmrw);
+                        break;
+                    case 2:
+                        loadFragment(new RecurringTaskListFragment());
+                        break;
+                    case 3:
+                        loadFragment(new PendingTaskListFragment());
+                        break;
+                }
+
             }
 
-
-        };
-        handler.post(updateTimeRunnable);
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing here
+            }
+        });
 
         view.mockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //calling updateTime with mocked = true just moves date forward
-                MockLocalDate.advanceDate();
-                updateCurrentDate();
-                //Call deleteCompletedTasks from the taskDao
-//                activityModel.deleteCompletedTasks();
+                activityModel.timeTravelForward();
             }
         });
 
-
         activityModel.getOrderedTasks().observe(tasks -> {
-            if(tasks == null) return;
-            updateDefaultText();
-        });
-
+                if(tasks == null) return;
+                updateDefaultText();
+            });
 
         return view.getRoot();
     }
 
-
-    private void updateCurrentDate() {
-        if(LocalDate.now().isAfter(MockLocalDate.now())){
-            MockLocalDate.setDate(LocalDate.now());
-        }
-        LocalDate dateNow = MockLocalDate.now();
-        LocalTime tNow = LocalTime.now();
-        if (dateNow.isAfter(lastDate) && tNow.isAfter(LocalTime.of(2, 0))) {
-            lastDate = dateNow;
-            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
-            String StringOfDate2 = dateNow.format(myFormatObj2);
-            DateDisplay.setText(StringOfDate2);
-            activityModel.deleteCompletedTasks();
-        }
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
-
-    private void updateCurrentTime() {
-        LocalDateTime timeNow = LocalDateTime.now();
-        lastTime = lastTime.plusDays(1);
-            DateTimeFormatter myFormatObj2 = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
-
-            String StringOfDate2 = lastTime.format(myFormatObj2).toString();
-            DateDisplay.setText(StringOfDate2);
-
-            //here we need to call some method to remove all tasks that are completed
-
+    /*
+     * the code below was adapted from a StackOverflow post; we used it as a
+     * reference to dynamically update the text in our spinner object
+     *
+     * link to the post: https://stackoverflow.com/questions/3283337/how-to-update-a-spinner-dynamically
+     */
+    private void updateDropdown(String newDate, String newTmrwDate) {
+        if(viewTitleAdapter == null) return;
+        //updating dates on dropdown spinner item viewTitleDropdown
+        spinnerItems = new ArrayList<String>(Arrays.asList(
+                "Today, " + newDate,
+                "Tomorrow, " + newTmrwDate,
+                "Recurring",
+                "Pending"
+        ));
+        viewTitleAdapter.clear();
+        viewTitleAdapter.addAll(spinnerItems);
+        viewTitleDropdown.setAdapter(viewTitleAdapter);
     }
 
     public void updateDefaultText() {
         //check if there are no tasks available. if so, set default text. otherwise, set to empty
-        this.DefaultTextDisplay = this.view.defaultText;
+        this.defaultTextDisplay = this.view.defaultText;
 
         if(activityModel.getOrderedTasks().getValue() == null) {
-            DefaultTextDisplay.setText(DEFAULT_TEXT);
+            defaultTextDisplay.setText(DEFAULT_TEXT);
         }
         else if(activityModel.getOrderedTasks().getValue() != null && activityModel.getOrderedTasks().getValue().size()== 0) {
-            DefaultTextDisplay.setText(DEFAULT_TEXT);
+            defaultTextDisplay.setText(DEFAULT_TEXT);
         }
         else {
-            DefaultTextDisplay.setText("");
+            defaultTextDisplay.setText("");
         }
     }
 

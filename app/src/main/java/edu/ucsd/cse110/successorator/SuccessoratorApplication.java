@@ -8,8 +8,8 @@ import java.time.LocalDate;
 
 import edu.ucsd.cse110.successorator.data.db.RoomTasksRepository;
 import edu.ucsd.cse110.successorator.data.db.TasksDatabase;
+import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
 import edu.ucsd.cse110.successorator.lib.domain.TaskRepository;
-import edu.ucsd.cse110.successorator.util.MockLocalDate;
 
 public class SuccessoratorApplication extends Application {
     private TaskRepository taskRepository;
@@ -37,7 +37,6 @@ public class SuccessoratorApplication extends Application {
                     .putBoolean("isFirstRun", false)
                     .apply();
         }
-
         MockLocalDate.setDate(LocalDate.now());
     }
 

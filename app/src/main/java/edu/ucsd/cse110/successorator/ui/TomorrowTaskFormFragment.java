@@ -17,27 +17,32 @@ import androidx.lifecycle.ViewModelProvider;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Calendar;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
+import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
+import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.lib.domain.TaskBuilder;
+import edu.ucsd.cse110.successorator.lib.domain.Tasks;
 
 /*
 This class was adapted from the CardListFragment provided in CSE 110 Lab 5.
 https://docs.google.com/document/d/1hpG8UJLVru_pGrT3vCMee2vjA-8HadWwjyk5gGbUatI/edit
  */
-public class TaskFormFragment extends DialogFragment {
+public class TomorrowTaskFormFragment extends DialogFragment {
 
-    public TaskFormFragment() {
+    public TomorrowTaskFormFragment() {
 
     }
 
-    public static TaskFormFragment newInstance() {
-        var fragment = new TaskFormFragment();
+    public static TomorrowTaskFormFragment newInstance() {
+        var fragment = new TomorrowTaskFormFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -47,6 +52,7 @@ public class TaskFormFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_task_form, container, false);
 
+
         super.onCreate(savedInstanceState);
 
         var modelOwner = requireActivity();
@@ -55,6 +61,10 @@ public class TaskFormFragment extends DialogFragment {
         var activityModel = modelProvider.get(MainViewModel.class);
 
         Calendar calendar = Calendar.getInstance();
+        //move calendar up one day for tomorrows time
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+
+
 
         Button btnClose = view.findViewById(R.id.close_button);
         btnClose.setOnClickListener(v -> {
@@ -72,7 +82,7 @@ public class TaskFormFragment extends DialogFragment {
 
         RadioButton monthlyButton = view.findViewById(R.id.monthly_button);
 
-        LocalDate currentDate = activityModel.getLocalDate().getValue();
+        LocalDate currentDate = activityModel.getLocalDate().getValue().plusDays(1); //just added one from today
         Month currentMonth = currentDate.getMonth();
         DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
         int occurrence = getDayOccurrenceInMonth(currentDate.getYear(), currentMonth, currentDayOfWeek);
@@ -128,10 +138,10 @@ public class TaskFormFragment extends DialogFragment {
                 }
             }
 
-            Log.d("TaskFormFragment", "Called activityModel insertNewTask");
             activityModel.insertNewTask(new TaskBuilder().withTaskName(taskTextString)
                     .withFrequency(taskFreq)
                     .withContext(taskContext)
+                    .withActiveDate(MockLocalDate.now().plusDays(1))
                     .build());
             dismiss();
         });

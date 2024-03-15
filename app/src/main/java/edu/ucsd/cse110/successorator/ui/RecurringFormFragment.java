@@ -17,11 +17,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
+import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Context;
 
 import edu.ucsd.cse110.successorator.lib.domain.Task;
+import edu.ucsd.cse110.successorator.lib.domain.TaskBuilder;
 import edu.ucsd.cse110.successorator.lib.domain.Tasks;
 
 /*
@@ -52,7 +54,7 @@ public class RecurringFormFragment extends DialogFragment {
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
         var activityModel = modelProvider.get(MainViewModel.class);
 
-        var calDialog = TaskRecurringDatePickerFragment.newInstance();
+        var calDialog = TaskRecurringDatePickerFragment.newInstance(activityModel.getLocalDate().getValue());
 
         //open the calendar
         ImageButton calButton = view.findViewById(R.id.openCalendarButton);
@@ -70,17 +72,8 @@ public class RecurringFormFragment extends DialogFragment {
 
         Button btnSubmit = view.findViewById(R.id.recurringSubmitButton);
 
-        //TODO - get the value of the date picker and radio buttons
         //save them as variables and log them
         RadioGroup radioGroup = view.findViewById(R.id.recurring_radio_group);
-        RadioButton dailyRadio = view.findViewById(R.id.daily_button);
-        RadioButton weeklyRadio = view.findViewById(R.id.weekly_button);
-        RadioButton monthlyRadio = view.findViewById(R.id.monthly_button);
-        RadioButton yearlyRadio = view.findViewById(R.id.yearly_button);
-
-        //set daily button as default
-        dailyRadio.setChecked(true);
-
 
         btnSubmit.setOnClickListener(v -> {
             //determine context
@@ -111,12 +104,11 @@ public class RecurringFormFragment extends DialogFragment {
             String frequencyString = selectedRadioButton.getText().toString();
             EditText taskText = view.findViewById(R.id.task_text);
             String taskTextString = taskText.getText().toString();
-            Task toInsert = new Task(null, taskTextString, 2, false,
-                    calDialog.getPickedDate(), Tasks.convertString(frequencyString),
-                    calDialog.getPickedDate().getDayOfWeek(),
-                    Tasks.calculateOccurrence(calDialog.getPickedDate()), taskContext);
-            activityModel.insertNewTask(toInsert);
-            Log.d("ReccurringFormFragment", toInsert.toString());
+            activityModel.insertNewTask(new TaskBuilder()
+                    .withTaskName(taskTextString)
+                    .withFrequency(Tasks.convertString(frequencyString))
+                    .withContext(taskContext)
+                    .build());
             dismiss();
         });
 

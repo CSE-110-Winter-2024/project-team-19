@@ -1,8 +1,9 @@
-package edu.ucsd.cse110.successorator.util;
+package edu.ucsd.cse110.successorator.lib.domain;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class MockLocalDate {
+public class MockLocalDate implements Serializable {
 
     private static LocalDate date;
 
@@ -18,3 +19,4 @@ public class MockLocalDate {
         date = date.plusDays(1);
     }
 }
+
