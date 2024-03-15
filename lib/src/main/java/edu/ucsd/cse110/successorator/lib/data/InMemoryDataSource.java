@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
@@ -44,10 +45,10 @@ public class InMemoryDataSource {
 
     public final static List<Task> DEFAULT_TASKS = List.of(
             new Task(2001, "Get 2 Groceries",1, false,
-                    LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), null, null, null),
+                    LocalDate.now(), Frequency.ONE_TIME, LocalDate.now().getDayOfWeek(), null, null, null, Context.ERRAND),
 
            new Task(2002, "Weekly Recurring ",2, false,
-                    LocalDate.now(), Frequency.WEEKLY, LocalDate.now().getDayOfWeek(), null, null, null)
+                    LocalDate.now(), Frequency.WEEKLY, LocalDate.now().getDayOfWeek(), null, null, null, Context.NONE)
 
 
 

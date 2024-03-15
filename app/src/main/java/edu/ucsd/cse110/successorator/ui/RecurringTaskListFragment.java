@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ import java.util.List;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentRecurringTasksBinding;
+import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
 import edu.ucsd.cse110.successorator.lib.domain.Task;
@@ -129,20 +131,70 @@ public class RecurringTaskListFragment extends Fragment {
 
         //this allows all recurring tasks to have menus when long-pressed
         registerForContextMenu(view.taskList);
+        ImageButton hamburgerButton = view.hamburgerButton;
+        hamburgerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Initializing the popup menu and giving the reference as current context
+                PopupMenu popupMenu = new PopupMenu(requireContext(), hamburgerButton);
 
-        ImageButton switchButton = view.switchtoregularbutton;
-        switchButton.setOnClickListener(
-                v -> {
-                    TaskListFragment reg = new TaskListFragment();
+                // Inflating popup menu from popup_menu.xml file
+                popupMenu.getMenuInflater().inflate(R.menu.context_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        // Toast message on menu item clicked
 
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        Context focusMode;
 
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, reg);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                }
-        );
+                        Bundle args = new Bundle();
+                        String selectedItem = menuItem.getTitle().toString();
+                        if(selectedItem.equals("Home")) {
+                            focusMode = Context.HOME;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_yellow));
+                        }
+                        else if(selectedItem.equals("Work")) {
+                            focusMode = Context.WORK;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_blue));
+                        }
+                        else if(selectedItem.equals("School")) {
+                            focusMode = Context.SCHOOL;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_pink));
+                        }
+                        else if(selectedItem.equals("Errand")) {
+                            focusMode = Context.ERRAND;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_green));
+                        }
+                        else {
+                            focusMode = Context.NONE;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_transparent));
+                        }
+
+
+                        activityModel.getOrderedTasks().observe(tasks -> {
+                            if (tasks == null) return;
+                            adapter.clear();
+                            List<Task> focusTasks = new ArrayList<Task>();
+                            if (focusMode == Context.NONE) {
+                                focusTasks.addAll(tasks);
+                            }
+                            for (Task i: tasks)
+                            {
+                                if (i.context() == focusMode) {
+                                    focusTasks.add(i);
+                                }
+                            }
+                            adapter.addAll(new ArrayList<>(focusTasks)); // remember the mutable copy here!
+                            adapter.notifyDataSetChanged();
+                        });
+                        return true;
+                    }
+
+                });
+                // Showing the popup menu
+                popupMenu.show();
+            }
+        });
 
         view.addTaskButton.setOnClickListener(v -> {
             var dialogFragment = RecurringFormFragment.newInstance();

@@ -86,6 +86,7 @@ public class PendingFormFragment extends DialogFragment {
             activityModel.insertNewTask(new TaskBuilder()
                     .withTaskName(taskTextString)
                     .withFrequency(Frequency.PENDING)
+                    .withContext(taskContext)
                     .build());
             dismiss();
         });

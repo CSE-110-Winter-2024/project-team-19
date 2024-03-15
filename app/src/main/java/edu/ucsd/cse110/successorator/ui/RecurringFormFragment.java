@@ -107,6 +107,7 @@ public class RecurringFormFragment extends DialogFragment {
             activityModel.insertNewTask(new TaskBuilder()
                     .withTaskName(taskTextString)
                     .withFrequency(Tasks.convertString(frequencyString))
+                    .withContext(taskContext)
                     .build());
             dismiss();
         });

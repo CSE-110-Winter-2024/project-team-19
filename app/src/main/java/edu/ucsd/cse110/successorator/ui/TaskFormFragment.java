@@ -127,53 +127,11 @@ public class TaskFormFragment extends DialogFragment {
                 }
             }
 
-
-
-             if (selectedRadioButtonId == R.id.onetime_button) {
-//                    activityModel.insertNewTask(new Task(null, taskTextString, 2,
-//                            false, MockLocalDate.now(), Frequency.ONE_TIME,
-//                            MockLocalDate.now().getDayOfWeek(), occurrence,taskContext));
-                    activityModel.insertNewTask(new TaskBuilder()
-                            .withTaskName(taskTextString)
-                            .withFrequency(Frequency.ONE_TIME)
-                            .build());
-                    dismiss();
-                }
-                else if (selectedRadioButtonId == R.id.daily_button) {
-                    activityModel.insertNewTask(new TaskBuilder()
-                            .withTaskName(taskTextString)
-                            .withFrequency(Frequency.DAILY)
-                            .build());
-                    dismiss();
-                }
-                else if (selectedRadioButtonId == R.id.weekly_button) {
-                    activityModel.insertNewTask(new TaskBuilder()
-                            .withTaskName(taskTextString)
-                            .withFrequency(Frequency.WEEKLY)
-                            .build());
-                    dismiss();
-                }
-                else if (selectedRadioButtonId == R.id.monthly_button) {
-                    activityModel.insertNewTask(new TaskBuilder()
-                            .withTaskName(taskTextString)
-                            .withFrequency(Frequency.MONTHLY)
-                            .build());
-                    dismiss();
-                } else if (selectedRadioButtonId == R.id.yearly_button) {
-                    activityModel.insertNewTask(new TaskBuilder()
-                            .withTaskName(taskTextString)
-                            .withFrequency(Frequency.MONTHLY)
-                            .build());
-                    dismiss();
-                }
-
-            else {
-                activityModel.insertNewTask(new TaskBuilder()
-                        .withTaskName(taskTextString)
-                        .withFrequency(Frequency.ONE_TIME)
-                        .build());
-                dismiss();
-            }
+            activityModel.insertNewTask(new TaskBuilder().withTaskName(taskTextString)
+                    .withFrequency(taskFreq)
+                    .withContext(taskContext)
+                    .build());
+            dismiss();
         });
 
         return view;

@@ -2,10 +2,13 @@ package edu.ucsd.cse110.successorator.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -26,8 +29,10 @@ import java.util.stream.Collectors;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTaskListBinding;
+import edu.ucsd.cse110.successorator.lib.domain.Context;
 import edu.ucsd.cse110.successorator.lib.domain.Frequency;
 import edu.ucsd.cse110.successorator.lib.domain.MockLocalDate;
+import edu.ucsd.cse110.successorator.lib.domain.Task;
 
 public class TomorrowTaskListFragment extends Fragment {
     private MainViewModel activityModel;
@@ -112,6 +117,72 @@ public class TomorrowTaskListFragment extends Fragment {
 
         // Set the adapter on the ListView
         view.taskList.setAdapter(adapter);
+
+        registerForContextMenu(view.taskList);
+        ImageButton hamburgerButton = view.hamburgerButton;
+        hamburgerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Initializing the popup menu and giving the reference as current context
+                PopupMenu popupMenu = new PopupMenu(requireContext(), hamburgerButton);
+
+                // Inflating popup menu from popup_menu.xml file
+                popupMenu.getMenuInflater().inflate(R.menu.context_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        // Toast message on menu item clicked
+
+                        Context focusMode;
+
+                        Bundle args = new Bundle();
+                        String selectedItem = menuItem.getTitle().toString();
+                        if(selectedItem.equals("Home")) {
+                            focusMode = Context.HOME;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_yellow));
+                        }
+                        else if(selectedItem.equals("Work")) {
+                            focusMode = Context.WORK;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_blue));
+                        }
+                        else if(selectedItem.equals("School")) {
+                            focusMode = Context.SCHOOL;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_pink));
+                        }
+                        else if(selectedItem.equals("Errand")) {
+                            focusMode = Context.ERRAND;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_green));
+                        }
+                        else {
+                            focusMode = Context.NONE;
+                            hamburgerButton.setBackgroundTintList(getContext().getColorStateList(R.color.context_transparent));
+                        }
+
+
+                        activityModel.getOrderedTasks().observe(tasks -> {
+                            if (tasks == null) return;
+                            adapter.clear();
+                            List<Task> focusTasks = new ArrayList<Task>();
+                            if (focusMode == Context.NONE) {
+                                focusTasks.addAll(tasks);
+                            }
+                            for (Task i: tasks)
+                            {
+                                if (i.context() == focusMode) {
+                                    focusTasks.add(i);
+                                }
+                            }
+                            adapter.addAll(new ArrayList<>(focusTasks)); // remember the mutable copy here!
+                            adapter.notifyDataSetChanged();
+                        });
+                        return true;
+                    }
+
+                });
+                // Showing the popup menu
+                popupMenu.show();
+            }
+        });
 
         // Create dates for date dropdown
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");

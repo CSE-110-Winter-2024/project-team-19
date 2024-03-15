@@ -20,6 +20,8 @@ public class TaskBuilder {
     private @Nullable LocalDateTime creationDate;
     private @Nullable LocalDate expirationDate;
 
+    private Context context;
+
     public TaskBuilder(){
         id = 1;
         taskName = "";
@@ -31,6 +33,7 @@ public class TaskBuilder {
         dayOccurrence = Tasks.calculateOccurrence(MockLocalDate.now());
         creationDate = LocalDateTime.of(MockLocalDate.now(), LocalTime.now()).withNano(0);
         expirationDate = MockLocalDate.now().plusDays(1);
+        context = Context.HOME;
     }
 
     public TaskBuilder withTaskName(String taskName){
@@ -45,8 +48,13 @@ public class TaskBuilder {
         return this;
     }
 
+    public TaskBuilder withContext(Context context){
+        this.context = context;
+        return this;
+    }
+
     public Task build(){
-        return new Task(id, taskName, sortOrder, complete, activeDate, frequency, dayOfWeek, dayOccurrence, creationDate, expirationDate);
+        return new Task(id, taskName, sortOrder, complete, activeDate, frequency, dayOfWeek, dayOccurrence, creationDate, expirationDate, context);
     }
 
     private void updateExpirationDate(){
